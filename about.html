@@ -1,0 +1,745 @@
+<!DOCTYPE html>
+<html class="scroll-smooth dark" lang="en">
+
+<head>
+  <meta charset="utf-8" />
+  <meta content="width=device-width, initial-scale=1.0" name="viewport" />
+  <title>About — OriginLabs</title>
+  <link href="https://fonts.googleapis.com" rel="preconnect" />
+  <link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect" />
+  <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&display=swap"
+    rel="stylesheet" />
+  <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap"
+    rel="stylesheet" />
+  <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+  <script>
+    tailwind.config = {
+      darkMode: "class",
+      theme: {
+        extend: {
+          colors: {
+            "primary": "#2563EB",
+            "primary-hover": "#1D4ED8",
+          },
+          fontFamily: {
+            "display": ["Space Grotesk", "sans-serif"],
+            "mono": ["monospace"],
+          },
+        },
+      },
+    }
+  </script>
+  <style>
+    /* ── Base ── */
+    body {
+      font-family: "Space Grotesk", sans-serif;
+      transition: background-color 0.3s ease, color 0.3s ease;
+    }
+
+    *,
+    *::before,
+    *::after {
+      transition: background-color 0.3s ease, border-color 0.3s ease, color 0.2s ease, box-shadow 0.3s ease;
+    }
+
+    .btn-glow,
+    #cursor-ring,
+    #cursor-dot,
+    #cursor-crosshair-h,
+    #cursor-crosshair-v {
+      transition: none !important;
+    }
+
+    #cursor-ring {
+      transition: width 0.2s, height 0.2s, background 0.2s !important;
+    }
+
+    /* ── Custom cursor ── */
+    * {
+      cursor: none !important;
+    }
+
+    body.cursor-hover #cursor-ring {
+      width: 52px;
+      height: 52px;
+      border-color: rgba(37, 99, 235, 0.4);
+      background: rgba(37, 99, 235, 0.08);
+    }
+
+    /* ── Glass ── */
+    .dark .glass {
+      background: rgba(17, 25, 39, 0.75);
+      backdrop-filter: blur(14px);
+      -webkit-backdrop-filter: blur(14px);
+      border: 1px solid rgba(255, 255, 255, 0.06);
+    }
+
+    .light .glass {
+      background: rgba(255, 255, 255, 0.80);
+      backdrop-filter: blur(14px);
+      -webkit-backdrop-filter: blur(14px);
+      border: 1px solid rgba(0, 0, 0, 0.08);
+    }
+
+    /* ── Noise overlay ── */
+    .noise-overlay {
+      position: fixed;
+      inset: 0;
+      pointer-events: none;
+      z-index: 1;
+      background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.03'/%3E%3C/svg%3E");
+    }
+
+    /* ── Animated grid ── */
+    .bg-grid {
+      background-image:
+        linear-gradient(rgba(37, 99, 235, 0.04) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(37, 99, 235, 0.04) 1px, transparent 1px);
+      background-size: 48px 48px;
+    }
+
+    .light .bg-grid {
+      background-image:
+        linear-gradient(rgba(37, 99, 235, 0.06) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(37, 99, 235, 0.06) 1px, transparent 1px);
+    }
+
+    /* ── Nav links ── */
+    .nav-link {
+      position: relative;
+      padding-bottom: 4px;
+      font-size: 0.875rem;
+      font-weight: 500;
+      letter-spacing: 0.01em;
+    }
+
+    .dark .nav-link {
+      color: #94A3B8;
+    }
+
+    .light .nav-link {
+      color: #475569;
+    }
+
+    .nav-link::after {
+      content: '';
+      position: absolute;
+      bottom: 0;
+      left: 50%;
+      width: 0;
+      height: 2px;
+      background: #2563EB;
+      border-radius: 999px;
+      transition: width 0.3s ease, left 0.3s ease;
+    }
+
+    .dark .nav-link:hover {
+      color: #fff;
+    }
+
+    .light .nav-link:hover {
+      color: #0f172a;
+    }
+
+    .nav-link:hover::after {
+      width: 100%;
+      left: 0;
+    }
+
+    .nav-link.active {
+      color: #fff;
+    }
+
+    .nav-link.active::after {
+      width: 100%;
+      left: 0;
+    }
+
+    /* ── Mobile menu ── */
+    #mobile-menu {
+      max-height: 0;
+      overflow: hidden;
+      opacity: 0;
+      transition: max-height 0.4s ease, opacity 0.3s ease;
+    }
+
+    #mobile-menu.open {
+      max-height: 500px;
+      opacity: 1;
+    }
+
+    /* ── Glow pulse ── */
+    @keyframes glowPulse {
+
+      0%,
+      100% {
+        box-shadow: 0 0 20px rgba(37, 99, 235, 0.35);
+      }
+
+      50% {
+        box-shadow: 0 0 40px rgba(37, 99, 235, 0.65);
+      }
+    }
+
+    .btn-glow {
+      animation: glowPulse 2.5s ease-in-out infinite;
+    }
+
+    /* ── Marquee ── */
+    @keyframes marquee {
+      0% {
+        transform: translateX(0);
+      }
+
+      100% {
+        transform: translateX(-50%);
+      }
+    }
+
+    .animate-marquee {
+      animation: marquee 30s linear infinite;
+    }
+
+    /* ── Theme toggle ── */
+    #theme-toggle {
+      position: relative;
+      width: 44px;
+      height: 24px;
+      border-radius: 999px;
+      border: none;
+      cursor: none !important;
+      flex-shrink: 0;
+      transition: background 0.3s ease;
+    }
+
+    .dark #theme-toggle {
+      background: #1E2D45;
+    }
+
+    .light #theme-toggle {
+      background: #CBD5E1;
+    }
+
+    #theme-toggle-thumb {
+      position: absolute;
+      top: 3px;
+      left: 3px;
+      width: 18px;
+      height: 18px;
+      border-radius: 50%;
+      background: #2563EB;
+      transition: transform 0.3s cubic-bezier(.4, 0, .2, 1);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .light #theme-toggle-thumb {
+      transform: translateX(20px);
+    }
+
+    /* ── Logo wrapper for light mode ── */
+    .dark .light-logo-wrap {
+      background: transparent;
+      padding: 0;
+    }
+
+    .light .light-logo-wrap {
+      background: #0C1220;
+      border-radius: 8px;
+      padding: 4px 10px;
+    }
+
+    /* ── Stat card hover ── */
+    .stat-card:hover {
+      border-color: #2563EB;
+    }
+
+    /* ── Scrollbar ── */
+    .dark ::-webkit-scrollbar-track {
+      background: #0C1220;
+    }
+
+    .dark ::-webkit-scrollbar-thumb {
+      background: #1E2D45;
+      border-radius: 3px;
+    }
+
+    .light ::-webkit-scrollbar-track {
+      background: #f1f5f9;
+    }
+
+    .light ::-webkit-scrollbar-thumb {
+      background: #CBD5E1;
+      border-radius: 3px;
+    }
+
+    ::-webkit-scrollbar {
+      width: 6px;
+    }
+  </style>
+</head>
+
+<!-- Apply saved theme before paint -->
+<script>
+    (function () {
+      var saved = localStorage.getItem('ol-theme');
+      var isDark = saved ? saved === 'dark' : true;
+      document.documentElement.className = 'scroll-smooth ' + (isDark ? 'dark' : 'light');
+    })();
+</script>
+
+<body class="overflow-x-hidden relative antialiased">
+
+  <div class="noise-overlay"></div>
+
+  <!-- Ambient glows — dark -->
+  <div class="dark-only fixed inset-0 pointer-events-none overflow-hidden z-0">
+    <div class="absolute -top-32 -left-32 w-[600px] h-[600px] rounded-full bg-blue-600/[0.08] blur-[130px]"></div>
+    <div class="absolute top-1/3 -right-32 w-[500px] h-[500px] rounded-full bg-indigo-500/[0.06] blur-[120px]"></div>
+    <div
+      class="absolute bottom-0 left-1/2 w-[400px] h-[300px] -translate-x-1/2 rounded-full bg-blue-800/[0.05] blur-[100px]">
+    </div>
+  </div>
+  <!-- Ambient glows — light -->
+  <div class="light-only fixed inset-0 pointer-events-none overflow-hidden z-0">
+    <div class="absolute -top-32 -left-32 w-[600px] h-[600px] rounded-full bg-blue-400/[0.12] blur-[130px]"></div>
+    <div class="absolute top-1/3 -right-32 w-[500px] h-[500px] rounded-full bg-indigo-300/[0.10] blur-[120px]"></div>
+  </div>
+
+  <div class="bg-grid fixed inset-0 pointer-events-none z-0"></div>
+
+  <!-- ═══════════════════════════════════════════
+       NAVIGATION
+  ════════════════════════════════════════════ -->
+  <header id="site-header" class="fixed top-0 left-0 right-0 z-50 glass">
+    <div class="max-w-[1440px] mx-auto px-6 lg:px-12 flex h-[68px] items-center justify-between">
+
+      <!-- Logo -->
+      <div class="flex items-center flex-shrink-0">
+        <a href="home.html" class="light-logo-wrap">
+          <img src="OriginLabsLogo.png" alt="OriginLabs" class="h-8 w-auto object-contain">
+        </a>
+      </div>
+
+      <!-- Desktop nav -->
+      <nav id="desktop-nav" class="hidden lg:flex items-center gap-1 relative">
+        <div id="nav-hover-bg"
+          class="absolute inset-y-0 rounded-lg opacity-0 pointer-events-none transition-all duration-300 ease-out dark:bg-[#1A2437] bg-slate-100">
+        </div>
+        <a href="#" data-nav class="nav-link relative z-10 px-4 py-2 rounded-lg">Services</a>
+        <a href="#" data-nav class="nav-link relative z-10 px-4 py-2 rounded-lg">Work</a>
+        <a href="#" data-nav class="nav-link active relative z-10 px-4 py-2 rounded-lg">About</a>
+        <a href="#" data-nav class="nav-link relative z-10 px-4 py-2 rounded-lg">Blog</a>
+      </nav>
+
+      <!-- Desktop CTA + Theme toggle -->
+      <div class="hidden lg:flex items-center gap-3">
+        <button id="theme-toggle" aria-label="Toggle theme">
+          <div id="theme-toggle-thumb">
+            <span id="toggle-icon" class="material-symbols-outlined text-white" style="font-size:11px;">dark_mode</span>
+          </div>
+        </button>
+        <button
+          class="flex h-9 items-center gap-2 rounded-lg px-5 bg-primary hover:bg-primary-hover text-white text-sm font-semibold btn-glow group">
+          Get a Quote
+          <span
+            class="material-symbols-outlined text-base group-hover:translate-x-0.5 transition-transform">arrow_forward</span>
+        </button>
+      </div>
+
+      <!-- Mobile toggle -->
+      <button id="menu-toggle" class="lg:hidden p-1 dark:text-slate-300 text-slate-600 hover:text-primary">
+        <span id="icon-open" class="material-symbols-outlined">menu</span>
+        <span id="icon-close" class="material-symbols-outlined hidden">close</span>
+      </button>
+    </div>
+
+    <!-- Mobile menu -->
+    <div id="mobile-menu" class="lg:hidden dark:border-[#1E2D45]/60 border-slate-200 border-t">
+      <nav class="flex flex-col px-6 py-4 gap-1">
+        <a href="#"
+          class="text-sm font-medium dark:text-slate-300 text-slate-600 dark:hover:text-white hover:text-slate-900 dark:hover:bg-[#1A2437] hover:bg-slate-100 px-3 py-2.5 rounded-lg">Services</a>
+        <a href="#"
+          class="text-sm font-medium dark:text-slate-300 text-slate-600 dark:hover:text-white hover:text-slate-900 dark:hover:bg-[#1A2437] hover:bg-slate-100 px-3 py-2.5 rounded-lg">Work</a>
+        <a href="#"
+          class="text-sm font-medium text-primary px-3 py-2.5 rounded-lg dark:bg-[#1A2437] bg-slate-100">About</a>
+        <a href="#"
+          class="text-sm font-medium dark:text-slate-300 text-slate-600 dark:hover:text-white hover:text-slate-900 dark:hover:bg-[#1A2437] hover:bg-slate-100 px-3 py-2.5 rounded-lg">Blog</a>
+        <div class="pt-3 mt-1 dark:border-[#1E2D45]/60 border-slate-200 border-t flex items-center gap-3">
+          <button id="theme-toggle-mobile" aria-label="Toggle theme"
+            class="flex items-center gap-2 px-3 py-2 rounded-lg dark:bg-[#1A2437] bg-slate-100 dark:text-slate-300 text-slate-600 text-sm font-medium">
+            <span id="toggle-icon-mobile" class="material-symbols-outlined text-base">dark_mode</span>
+            <span id="toggle-label-mobile">Light mode</span>
+          </button>
+          <button class="flex-1 h-10 rounded-lg bg-primary hover:bg-primary-hover text-white text-sm font-semibold">Get
+            a Quote</button>
+        </div>
+      </nav>
+    </div>
+  </header>
+
+  <!-- ═══════════════════════════════════════════
+       HERO — ABOUT
+  ════════════════════════════════════════════ -->
+  <section class="relative z-10 pt-[68px] pb-16 px-6 text-center">
+    <div class="max-w-5xl mx-auto pt-20">
+      <h1
+        class="font-display text-6xl md:text-8xl font-bold leading-[1.1] tracking-tight mb-8 dark:text-white text-slate-900">
+        We Build the Web <br />
+        <span class="text-primary italic">Others Can't.</span>
+      </h1>
+      <p class="text-xl md:text-2xl max-w-2xl mx-auto leading-relaxed dark:text-slate-400 text-slate-500">
+        A specialized engineering studio focused on solving complex digital challenges
+        for market leaders who refuse to compromise on performance.
+      </p>
+    </div>
+  </section>
+
+  <!-- ═══════════════════════════════════════════
+       MARQUEE STRIP
+  ════════════════════════════════════════════ -->
+  <div class="relative z-10 py-16 mb-24">
+    <div class="w-full bg-primary py-4 md:py-6 -rotate-2 overflow-hidden border-y border-white/10 shadow-2xl">
+      <div class="flex whitespace-nowrap animate-marquee">
+        <div
+          class="flex items-center gap-12 text-[#061a40] font-bold text-xl md:text-3xl uppercase tracking-wider px-6">
+          <span>Healthcare Focused</span>
+          <span class="material-symbols-outlined text-2xl md:text-4xl">star</span>
+          <span>Performance First</span>
+          <span class="material-symbols-outlined text-2xl md:text-4xl">star</span>
+          <span>Indian Market</span>
+          <span class="material-symbols-outlined text-2xl md:text-4xl">star</span>
+          <span>End-to-End Delivery</span>
+          <span class="material-symbols-outlined text-2xl md:text-4xl">star</span>
+        </div>
+        <div
+          class="flex items-center gap-12 text-[#061a40] font-bold text-xl md:text-3xl uppercase tracking-wider px-6">
+          <span>Healthcare Focused</span>
+          <span class="material-symbols-outlined text-2xl md:text-4xl">star</span>
+          <span>Performance First</span>
+          <span class="material-symbols-outlined text-2xl md:text-4xl">star</span>
+          <span>Indian Market</span>
+          <span class="material-symbols-outlined text-2xl md:text-4xl">star</span>
+          <span>End-to-End Delivery</span>
+          <span class="material-symbols-outlined text-2xl md:text-4xl">star</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ═══════════════════════════════════════════
+       OUR STORY + STATS
+  ════════════════════════════════════════════ -->
+  <section class="relative z-10 max-w-7xl mx-auto px-6 py-24">
+    <div class="grid grid-cols-1 lg:grid-cols-2 gap-20 items-start">
+
+      <!-- Story -->
+      <div class="space-y-6">
+        <div
+          class="inline-block px-4 py-1 rounded-full border border-primary text-primary text-sm font-semibold tracking-widest uppercase">
+          Since 2016
+        </div>
+        <h2 class="font-display text-4xl md:text-5xl font-bold dark:text-white text-slate-900">Our Story</h2>
+        <p class="text-lg leading-relaxed max-w-xl dark:text-slate-400 text-slate-500">
+          OriginLabs was founded with a singular mission: to bridge the gap between visionary design and hardcore
+          engineering. We don't just ship code; we craft digital ecosystems that scale with your ambitions.
+        </p>
+        <p class="text-lg leading-relaxed max-w-xl dark:text-slate-400 text-slate-500">
+          Our team of specialists works at the intersection of performance, security, and user experience, ensuring that
+          every project we touch becomes a benchmark in its industry.
+        </p>
+        <div class="pt-4">
+          <button
+            class="flex h-12 items-center gap-2 rounded-lg px-6 bg-primary hover:bg-primary-hover text-white font-semibold btn-glow group text-[0.95rem]">
+            Start Your Project
+            <span
+              class="material-symbols-outlined text-lg group-hover:translate-x-1 transition-transform">arrow_forward</span>
+          </button>
+        </div>
+      </div>
+
+      <!-- Stats bento grid -->
+      <div class="grid grid-cols-2 gap-4">
+
+        <div
+          class="stat-card dark:bg-[#111927] bg-white p-8 rounded-2xl border dark:border-white/5 border-slate-200 flex flex-col justify-between aspect-square group transition-colors duration-300">
+          <span class="text-primary font-bold text-lg">01.</span>
+          <div>
+            <div class="font-display text-4xl md:text-5xl font-bold mb-2 dark:text-white text-slate-900">120+</div>
+            <div class="dark:text-slate-500 text-slate-400 uppercase text-xs tracking-widest font-semibold">Projects
+              Completed</div>
+          </div>
+        </div>
+
+        <div
+          class="stat-card dark:bg-[#111927] bg-white p-8 rounded-2xl border dark:border-white/5 border-slate-200 flex flex-col justify-between aspect-square group transition-colors duration-300">
+          <span class="text-primary font-bold text-lg">02.</span>
+          <div>
+            <div class="font-display text-4xl md:text-5xl font-bold mb-2 dark:text-white text-slate-900">8</div>
+            <div class="dark:text-slate-500 text-slate-400 uppercase text-xs tracking-widest font-semibold">Years
+              Experience</div>
+          </div>
+        </div>
+
+        <div
+          class="stat-card dark:bg-[#111927] bg-white p-8 rounded-2xl border dark:border-white/5 border-slate-200 flex flex-col justify-between aspect-square group transition-colors duration-300">
+          <span class="text-primary font-bold text-lg">03.</span>
+          <div>
+            <div class="font-display text-4xl md:text-5xl font-bold mb-2 dark:text-white text-slate-900">99%</div>
+            <div class="dark:text-slate-500 text-slate-400 uppercase text-xs tracking-widest font-semibold">Satisfaction
+            </div>
+          </div>
+        </div>
+
+        <div
+          class="stat-card dark:bg-[#111927] bg-white p-8 rounded-2xl border dark:border-white/5 border-slate-200 flex flex-col justify-between aspect-square group transition-colors duration-300">
+          <span class="text-primary font-bold text-lg">04.</span>
+          <div>
+            <div class="font-display text-4xl md:text-5xl font-bold mb-2 dark:text-white text-slate-900">EST.</div>
+            <div class="dark:text-slate-500 text-slate-400 uppercase text-xs tracking-widest font-semibold">October 2016
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+  <!-- ═══════════════════════════════════════════
+       TRUSTED BY
+  ════════════════════════════════════════════ -->
+  <section class="relative z-10 py-24 dark:border-t dark:border-white/5 border-t border-slate-200">
+    <div class="max-w-7xl mx-auto px-6 text-center">
+      <h3 class="dark:text-slate-500 text-slate-400 uppercase text-sm tracking-[0.3em] font-bold mb-12">Trusted by
+        Global Entities</h3>
+      <div
+        class="grid grid-cols-2 md:grid-cols-4 gap-12 opacity-50 grayscale hover:grayscale-0 hover:opacity-80 transition-all duration-500">
+        <div
+          class="flex items-center justify-center font-bold text-2xl italic tracking-tighter dark:text-white text-slate-800">
+          MED-ECH</div>
+        <div
+          class="flex items-center justify-center font-bold text-2xl italic tracking-tighter dark:text-white text-slate-800">
+          TECH.CORE</div>
+        <div
+          class="flex items-center justify-center font-bold text-2xl italic tracking-tighter dark:text-white text-slate-800">
+          VITALIS</div>
+        <div
+          class="flex items-center justify-center font-bold text-2xl italic tracking-tighter dark:text-white text-slate-800">
+          SYNERGY</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ═══════════════════════════════════════════
+       FOOTER
+  ════════════════════════════════════════════ -->
+  <footer class="relative z-10 w-full border-t dark:border-primary/10 border-slate-200">
+    <!-- CTA Section -->
+    <div class="max-w-7xl mx-auto px-6 py-20">
+      <div class="flex flex-col items-center text-center space-y-8">
+        <div class="space-y-4">
+          <h2 class="text-4xl md:text-6xl font-bold tracking-tight dark:text-white text-slate-900 max-w-3xl mx-auto">
+            Ready to Launch Your Project?
+          </h2>
+          <p class="dark:text-slate-400 text-slate-600 text-lg md:text-xl max-w-2xl mx-auto">
+            Partner with OriginLabs to build your next digital masterpiece. Our team is ready to bring your vision to
+            life.
+          </p>
+        </div>
+        <div class="flex flex-col sm:flex-row items-center justify-center gap-4 w-full max-w-md">
+          <button
+            class="w-full sm:w-auto min-w-[200px] px-8 py-4 bg-primary hover:bg-primary/90 text-white font-bold rounded-lg transition-all duration-200 flex items-center justify-center gap-2 group btn-glow">
+            <span>Start Your Project</span>
+            <span
+              class="material-symbols-outlined text-sm group-hover:translate-x-1 transition-transform">arrow_forward</span>
+          </button>
+          <button
+            class="w-full sm:w-auto min-w-[200px] px-8 py-4 border-2 dark:border-white border-slate-900 dark:text-white text-slate-900 font-bold rounded-lg dark:hover:bg-white dark:hover:text-[#0C1220] hover:bg-slate-900 hover:text-white transition-all duration-200">
+            View Services
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Divider -->
+    <div class="max-w-7xl mx-auto px-6">
+      <div class="h-px w-full bg-gradient-to-r from-transparent dark:via-primary/20 via-slate-200 to-transparent"></div>
+    </div>
+
+    <!-- Branding Bar -->
+    <div class="max-w-7xl mx-auto px-6 py-12">
+      <div class="flex flex-col md:flex-row items-center justify-between gap-8">
+
+        <!-- Logo -->
+        <a href="home.html" class="flex items-center">
+          <div class="light-logo-wrap">
+            <img src="OriginLabsLogo.png" alt="OriginLabs" class="h-8 w-auto object-contain">
+          </div>
+        </a>
+
+        <!-- Nav Links -->
+        <nav class="flex flex-wrap justify-center items-center gap-x-8 gap-y-4">
+          <a href="#"
+            class="text-sm font-medium dark:text-slate-400 text-slate-600 dark:hover:text-primary hover:text-primary transition-colors">Services</a>
+          <a href="#"
+            class="text-sm font-medium dark:text-slate-400 text-slate-600 dark:hover:text-primary hover:text-primary transition-colors">Case
+            Studies</a>
+          <a href="#" class="text-sm font-medium text-primary transition-colors">About</a>
+          <a href="#"
+            class="text-sm font-medium dark:text-slate-400 text-slate-600 dark:hover:text-primary hover:text-primary transition-colors">Blog</a>
+          <a href="#"
+            class="text-sm font-medium dark:text-slate-400 text-slate-600 dark:hover:text-primary hover:text-primary transition-colors">Contact</a>
+        </nav>
+
+        <!-- Socials + Copyright -->
+        <div class="flex flex-col items-center md:items-end gap-4">
+          <div class="flex items-center gap-4">
+            <!-- LinkedIn -->
+            <a href="#"
+              class="w-8 h-8 flex items-center justify-center rounded-full dark:bg-primary/10 bg-slate-100 dark:text-slate-400 text-slate-600 hover:bg-primary hover:text-white transition-all">
+              <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 24 24">
+                <path
+                  d="M19 0h-14c-2.761 0-5 2.239-5 5v14c0 2.761 2.239 5 5 5h14c2.762 0 5-2.239 5-5v-14c0-2.761-2.238-5-5-5zm-11 19h-3v-11h3v11zm-1.5-12.268c-.966 0-1.75-.79-1.75-1.764s.784-1.764 1.75-1.764 1.75.79 1.75 1.764-.783 1.764-1.75 1.764zm13.5 12.268h-3v-5.604c0-3.368-4-3.113-4 0v5.604h-3v-11h3v1.765c1.396-2.586 7-2.777 7 2.476v6.759z" />
+              </svg>
+            </a>
+            <!-- Twitter / X -->
+            <a href="#"
+              class="w-8 h-8 flex items-center justify-center rounded-full dark:bg-primary/10 bg-slate-100 dark:text-slate-400 text-slate-600 hover:bg-primary hover:text-white transition-all">
+              <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 24 24">
+                <path
+                  d="M24 4.557c-.883.392-1.832.656-2.828.775 1.017-.609 1.798-1.574 2.165-2.724-.951.564-2.005.974-3.127 1.195-.897-.957-2.178-1.555-3.594-1.555-3.179 0-5.515 2.966-4.797 6.045-4.091-.205-7.719-2.165-10.148-5.144-1.29 2.213-.669 5.108 1.523 6.574-.806-.026-1.566-.247-2.229-.616-.054 2.281 1.581 4.415 3.949 4.89-.693.188-1.452.232-2.224.084.626 1.956 2.444 3.379 4.6 3.419-2.07 1.623-4.678 2.348-7.29 2.04 2.179 1.397 4.768 2.212 7.548 2.212 9.142 0 14.307-7.721 13.995-14.646.962-.695 1.797-1.562 2.457-2.549z" />
+              </svg>
+            </a>
+            <!-- GitHub -->
+            <a href="#"
+              class="w-8 h-8 flex items-center justify-center rounded-full dark:bg-primary/10 bg-slate-100 dark:text-slate-400 text-slate-600 hover:bg-primary hover:text-white transition-all">
+              <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 24 24">
+                <path
+                  d="M12 0c-6.626 0-12 5.373-12 12 0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.041-1.416-4.041-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23.957-.266 1.983-.399 3.003-.404 1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576 4.765-1.589 8.199-6.086 8.199-11.386 0-6.627-5.373-12-12-12z" />
+              </svg>
+            </a>
+          </div>
+          <p class="text-xs dark:text-slate-500 text-slate-500 uppercase tracking-widest font-bold">
+            © 2024 OriginLabs. All rights reserved.
+          </p>
+        </div>
+
+      </div>
+    </div>
+  </footer>
+
+  <!-- ═══════════════════════════════════════════
+       SCRIPTS
+  ════════════════════════════════════════════ -->
+  <script>
+    // ── Theme ────────────────────────────────────────────────────
+    function isDark() { return document.documentElement.classList.contains('dark'); }
+
+    function applyTheme(dark) {
+      const html = document.documentElement;
+      html.classList.remove('dark', 'light');
+      html.classList.add(dark ? 'dark' : 'light');
+      localStorage.setItem('ol-theme', dark ? 'dark' : 'light');
+      document.body.style.backgroundColor = dark ? '#0C1220' : '#ffffff';
+      document.body.style.color = dark ? '#ffffff' : '#0f172a';
+
+      const icon = document.getElementById('toggle-icon');
+      const iconM = document.getElementById('toggle-icon-mobile');
+      const labelM = document.getElementById('toggle-label-mobile');
+      if (icon) icon.textContent = dark ? 'dark_mode' : 'light_mode';
+      if (iconM) iconM.textContent = dark ? 'dark_mode' : 'light_mode';
+      if (labelM) labelM.textContent = dark ? 'Light mode' : 'Dark mode';
+
+      document.querySelectorAll('.dark-only').forEach(el => el.style.display = dark ? '' : 'none');
+      document.querySelectorAll('.light-only').forEach(el => el.style.display = !dark ? '' : 'none');
+    }
+
+    applyTheme(isDark());
+    document.getElementById('theme-toggle').addEventListener('click', () => applyTheme(!isDark()));
+    document.getElementById('theme-toggle-mobile').addEventListener('click', () => applyTheme(!isDark()));
+
+    // ── Mobile nav ───────────────────────────────────────────────
+    const toggle = document.getElementById('menu-toggle');
+    const mMenu = document.getElementById('mobile-menu');
+    const iOpen = document.getElementById('icon-open');
+    const iClose = document.getElementById('icon-close');
+
+    toggle.addEventListener('click', () => {
+      const open = mMenu.classList.toggle('open');
+      iOpen.classList.toggle('hidden', open);
+      iClose.classList.toggle('hidden', !open);
+    });
+    mMenu.querySelectorAll('a, button').forEach(el =>
+      el.addEventListener('click', () => {
+        mMenu.classList.remove('open');
+        iOpen.classList.remove('hidden');
+        iClose.classList.add('hidden');
+      })
+    );
+
+    // ── Desktop nav hover pill ───────────────────────────────────
+    const navLinks = document.querySelectorAll('[data-nav]');
+    const hoverBg = document.getElementById('nav-hover-bg');
+    navLinks.forEach(link => {
+      link.addEventListener('mouseenter', () => {
+        const r = link.getBoundingClientRect();
+        const pr = link.parentElement.getBoundingClientRect();
+        hoverBg.style.left = (r.left - pr.left) + 'px';
+        hoverBg.style.width = r.width + 'px';
+        hoverBg.style.opacity = '1';
+      });
+      link.addEventListener('mouseleave', () => hoverBg.style.opacity = '0');
+    });
+  </script>
+
+  <!-- Custom cursor -->
+  <div id="custom-cursor" style="position:fixed;pointer-events:none;z-index:99999;top:0;left:0;">
+    <div id="cursor-ring"
+      style="width:36px;height:36px;border:1.5px solid rgba(37,99,235,0.8);border-radius:50%;position:absolute;transform:translate(-50%,-50%);transition:width 0.2s,height 0.2s,background 0.2s;">
+    </div>
+    <div id="cursor-dot"
+      style="width:4px;height:4px;background:#2563EB;border-radius:50%;position:absolute;transform:translate(-50%,-50%);">
+    </div>
+    <div id="cursor-crosshair-h"
+      style="width:12px;height:1px;background:rgba(37,99,235,0.5);position:absolute;transform:translate(-50%,-50%);">
+    </div>
+    <div id="cursor-crosshair-v"
+      style="width:1px;height:12px;background:rgba(37,99,235,0.5);position:absolute;transform:translate(-50%,-50%);">
+    </div>
+  </div>
+
+  <script>
+    (function () {
+      var dot = document.getElementById('cursor-dot');
+      var ring = document.getElementById('cursor-ring');
+      var crossH = document.getElementById('cursor-crosshair-h');
+      var crossV = document.getElementById('cursor-crosshair-v');
+      var mouseX = window.innerWidth / 2, mouseY = window.innerHeight / 2;
+      var ringX = mouseX, ringY = mouseY;
+
+      document.addEventListener('mousemove', function (e) {
+        mouseX = e.clientX; mouseY = e.clientY;
+        dot.style.left = mouseX + 'px'; dot.style.top = mouseY + 'px';
+        crossH.style.left = mouseX + 'px'; crossH.style.top = mouseY + 'px';
+        crossV.style.left = mouseX + 'px'; crossV.style.top = mouseY + 'px';
+      });
+
+      (function animateRing() {
+        ringX += (mouseX - ringX) * 0.25;
+        ringY += (mouseY - ringY) * 0.25;
+        ring.style.left = ringX + 'px';
+        ring.style.top = ringY + 'px';
+        requestAnimationFrame(animateRing);
+      })();
+
+      document.querySelectorAll('a, button').forEach(function (el) {
+        el.addEventListener('mouseenter', function () { document.body.classList.add('cursor-hover'); });
+        el.addEventListener('mouseleave', function () { document.body.classList.remove('cursor-hover'); });
+      });
+    })();
+  </script>
+
+</body>
+
+</html>

@@ -1,0 +1,1373 @@
+<!DOCTYPE html>
+<html class="dark" lang="en">
+
+<head>
+  <meta charset="utf-8" />
+  <meta content="width=device-width, initial-scale=1.0" name="viewport" />
+  <title>OriginLabs — Engineering Digital Excellence</title>
+  <link href="https://fonts.googleapis.com" rel="preconnect" />
+  <link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect" />
+  <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&display=swap"
+    rel="stylesheet" />
+  <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap"
+    rel="stylesheet" />
+  <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+  <script>
+    tailwind.config = {
+      darkMode: "class",
+      theme: {
+        extend: {
+          colors: {
+            "primary": "#2563EB",
+            "primary-hover": "#1D4ED8",
+          },
+          fontFamily: {
+            "display": ["Space Grotesk", "sans-serif"],
+            "mono": ["monospace"],
+          },
+          animation: {
+            'pulse-status': 'pulse-status 2s cubic-bezier(0.4, 0, 0.6, 1) infinite',
+          },
+          keyframes: {
+            'pulse-status': {
+              '0%, 100%': { opacity: '1' },
+              '50%': { opacity: '0.3' },
+            }
+          }
+        },
+      },
+    }
+  </script>
+  <style>
+    /* ── Base ── */
+    body {
+      font-family: "Space Grotesk", sans-serif;
+      transition: background-color 0.3s ease, color 0.3s ease;
+    }
+
+    /* ── Theme transition ── */
+    *,
+    *::before,
+    *::after {
+      transition: background-color 0.3s ease, border-color 0.3s ease, color 0.2s ease, box-shadow 0.3s ease;
+    }
+
+    .float-1,
+    .float-2,
+    .btn-glow,
+    .anim-fade-up,
+    .anim-fade-in,
+    .anim-slide-r,
+    .anim-scale-in,
+    .cursor,
+    #cursor-ring,
+    #cursor-dot,
+    #cursor-crosshair-h,
+    #cursor-crosshair-v {
+      transition: none !important;
+    }
+
+    #cursor-ring {
+      transition: width 0.2s, height 0.2s, background 0.2s !important;
+    }
+
+    /* ── Custom cursor ── */
+    * {
+      cursor: none !important;
+    }
+
+    body.cursor-hover #cursor-ring {
+      width: 52px;
+      height: 52px;
+      border-color: rgba(37, 99, 235, 0.4);
+      background: rgba(37, 99, 235, 0.08);
+    }
+
+    /* ── Glass ── */
+    .dark .glass {
+      background: rgba(17, 25, 39, 0.75);
+      backdrop-filter: blur(14px);
+      -webkit-backdrop-filter: blur(14px);
+      border: 1px solid rgba(255, 255, 255, 0.06);
+    }
+
+    .light .glass {
+      background: rgba(255, 255, 255, 0.80);
+      backdrop-filter: blur(14px);
+      -webkit-backdrop-filter: blur(14px);
+      border: 1px solid rgba(0, 0, 0, 0.08);
+    }
+
+    /* ── Noise overlay ── */
+    .noise-overlay {
+      position: fixed;
+      inset: 0;
+      pointer-events: none;
+      z-index: 1;
+      background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.03'/%3E%3C/svg%3E");
+    }
+
+    /* ── Animated grid ── */
+    .bg-grid {
+      background-image:
+        linear-gradient(rgba(37, 99, 235, 0.04) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(37, 99, 235, 0.04) 1px, transparent 1px);
+      background-size: 48px 48px;
+    }
+
+    .light .bg-grid {
+      background-image:
+        linear-gradient(rgba(37, 99, 235, 0.06) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(37, 99, 235, 0.06) 1px, transparent 1px);
+    }
+
+    /* ── Services dot grid ── */
+    .dot-grid {
+      background-image: radial-gradient(circle, rgba(37, 99, 235, 0.12) 1px, transparent 1px);
+      background-size: 30px 30px;
+    }
+
+    /* ── Nav links ── */
+    .nav-link {
+      position: relative;
+      padding-bottom: 4px;
+      font-size: 0.875rem;
+      font-weight: 500;
+      letter-spacing: 0.01em;
+    }
+
+    .dark .nav-link {
+      color: #94A3B8;
+    }
+
+    .light .nav-link {
+      color: #475569;
+    }
+
+    .nav-link::after {
+      content: '';
+      position: absolute;
+      bottom: 0;
+      left: 50%;
+      width: 0;
+      height: 2px;
+      background: #2563EB;
+      border-radius: 999px;
+      transition: width 0.3s ease, left 0.3s ease;
+    }
+
+    .dark .nav-link:hover {
+      color: #fff;
+    }
+
+    .light .nav-link:hover {
+      color: #0f172a;
+    }
+
+    .nav-link:hover::after {
+      width: 100%;
+      left: 0;
+    }
+
+    /* ── Mobile menu ── */
+    #mobile-menu {
+      max-height: 0;
+      overflow: hidden;
+      opacity: 0;
+      transition: max-height 0.4s ease, opacity 0.3s ease;
+    }
+
+    #mobile-menu.open {
+      max-height: 500px;
+      opacity: 1;
+    }
+
+    /* ── Animations ── */
+    @keyframes fadeUp {
+      from {
+        opacity: 0;
+        transform: translateY(28px)
+      }
+
+      to {
+        opacity: 1;
+        transform: translateY(0)
+      }
+    }
+
+    @keyframes fadeIn {
+      from {
+        opacity: 0
+      }
+
+      to {
+        opacity: 1
+      }
+    }
+
+    @keyframes slideRight {
+      from {
+        opacity: 0;
+        transform: translateX(-20px)
+      }
+
+      to {
+        opacity: 1;
+        transform: translateX(0)
+      }
+    }
+
+    @keyframes scaleIn {
+      from {
+        opacity: 0;
+        transform: scale(0.88)
+      }
+
+      to {
+        opacity: 1;
+        transform: scale(1)
+      }
+    }
+
+    .anim-fade-up {
+      animation: fadeUp 0.7s cubic-bezier(.4, 0, .2, 1) both;
+    }
+
+    .anim-fade-in {
+      animation: fadeIn 0.6s ease both;
+    }
+
+    .anim-slide-r {
+      animation: slideRight 0.6s cubic-bezier(.4, 0, .2, 1) both;
+    }
+
+    .anim-scale-in {
+      animation: scaleIn 0.8s cubic-bezier(.4, 0, .2, 1) both;
+    }
+
+    .delay-100 {
+      animation-delay: .10s
+    }
+
+    .delay-200 {
+      animation-delay: .20s
+    }
+
+    .delay-300 {
+      animation-delay: .30s
+    }
+
+    .delay-400 {
+      animation-delay: .40s
+    }
+
+    .delay-500 {
+      animation-delay: .50s
+    }
+
+    .delay-600 {
+      animation-delay: .60s
+    }
+
+    .delay-700 {
+      animation-delay: .70s
+    }
+
+    .delay-800 {
+      animation-delay: .80s
+    }
+
+    .delay-900 {
+      animation-delay: .90s
+    }
+
+    /* ── Floating badges ── */
+    @keyframes floatY {
+
+      0%,
+      100% {
+        transform: translateY(0)
+      }
+
+      50% {
+        transform: translateY(-8px)
+      }
+    }
+
+    @keyframes floatY2 {
+
+      0%,
+      100% {
+        transform: translateY(0)
+      }
+
+      50% {
+        transform: translateY(-6px)
+      }
+    }
+
+    .float-1 {
+      animation: floatY 3.5s ease-in-out infinite;
+    }
+
+    .float-2 {
+      animation: floatY2 4.2s ease-in-out infinite 0.8s;
+    }
+
+    /* ── Glow pulse ── */
+    @keyframes glowPulse {
+
+      0%,
+      100% {
+        box-shadow: 0 0 20px rgba(37, 99, 235, 0.35);
+      }
+
+      50% {
+        box-shadow: 0 0 40px rgba(37, 99, 235, 0.65);
+      }
+    }
+
+    .btn-glow {
+      animation: glowPulse 2.5s ease-in-out infinite;
+    }
+
+    /* ── Service card glow on hover ── */
+    .dark .service-card:hover {
+      box-shadow: 0 0 24px rgba(37, 99, 235, 0.2);
+      border-color: rgba(37, 99, 235, 0.4);
+    }
+
+    .light .service-card:hover {
+      box-shadow: 0 0 24px rgba(37, 99, 235, 0.12);
+      border-color: rgba(37, 99, 235, 0.3);
+    }
+
+    /* ── Blinking cursor in code ── */
+    @keyframes blink {
+
+      0%,
+      100% {
+        opacity: 1
+      }
+
+      50% {
+        opacity: 0
+      }
+    }
+
+    .cursor {
+      display: inline-block;
+      width: 2px;
+      height: 1em;
+      background: #2563EB;
+      vertical-align: text-bottom;
+      animation: blink 1s step-end infinite;
+      margin-left: 1px;
+    }
+
+    /* ── Code syntax ── */
+    .sy-kw {
+      color: #7DD3FC;
+    }
+
+    .sy-fn {
+      color: #FBBF24;
+    }
+
+    .sy-str {
+      color: #86EFAC;
+    }
+
+    .sy-cmt {
+      color: #4B5563;
+    }
+
+    .sy-var {
+      color: #F9A8D4;
+    }
+
+    .sy-prop {
+      color: #FCA5A5;
+    }
+
+    .sy-num {
+      color: #C4B5FD;
+    }
+
+    .sy-tag {
+      color: #93C5FD;
+    }
+
+    .sy-op {
+      color: #94A3B8;
+    }
+
+    /* ── Code tab states ── */
+    .code-tab {
+      color: #64748B;
+    }
+
+    .code-tab.active-tab {
+      background: #111927;
+      color: #93C5FD;
+      border: 1px solid rgba(37, 99, 235, 0.3);
+    }
+
+    /* ── Theme toggle ── */
+    #theme-toggle {
+      position: relative;
+      width: 44px;
+      height: 24px;
+      border-radius: 999px;
+      border: none;
+      cursor: none !important;
+      flex-shrink: 0;
+      transition: background 0.3s ease;
+    }
+
+    .dark #theme-toggle {
+      background: #1E2D45;
+    }
+
+    .light #theme-toggle {
+      background: #CBD5E1;
+    }
+
+    #theme-toggle-thumb {
+      position: absolute;
+      top: 3px;
+      left: 3px;
+      width: 18px;
+      height: 18px;
+      border-radius: 50%;
+      background: #2563EB;
+      transition: transform 0.3s cubic-bezier(.4, 0, .2, 1);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .light #theme-toggle-thumb {
+      transform: translateX(20px);
+    }
+
+    /* ── Logo wrapper for light mode ── */
+    .dark .light-logo-wrap {
+      background: transparent;
+      padding: 0;
+    }
+
+    .light .light-logo-wrap {
+      background: #0C1220;
+      border-radius: 8px;
+      padding: 4px 10px;
+    }
+
+    /* ── Scrollbar ── */
+    .dark ::-webkit-scrollbar-track {
+      background: #0C1220;
+    }
+
+    .dark ::-webkit-scrollbar-thumb {
+      background: #1E2D45;
+      border-radius: 3px;
+    }
+
+    .light ::-webkit-scrollbar-track {
+      background: #f1f5f9;
+    }
+
+    .light ::-webkit-scrollbar-thumb {
+      background: #CBD5E1;
+      border-radius: 3px;
+    }
+
+    ::-webkit-scrollbar {
+      width: 6px;
+    }
+  </style>
+</head>
+
+<!-- Apply saved theme before paint -->
+<script>
+    (function () {
+      var saved = localStorage.getItem('ol-theme');
+      var isDark = saved ? saved === 'dark' : true;
+      document.documentElement.className = isDark ? 'dark' : 'light';
+    })();
+</script>
+
+<body class="overflow-x-hidden relative">
+
+  <div class="noise-overlay"></div>
+
+  <!-- Ambient glows — dark -->
+  <div class="dark-only fixed inset-0 pointer-events-none overflow-hidden z-0">
+    <div class="absolute -top-32 -left-32 w-[600px] h-[600px] rounded-full bg-blue-600/[0.08] blur-[130px]"></div>
+    <div class="absolute top-1/3 -right-32 w-[500px] h-[500px] rounded-full bg-indigo-500/[0.06] blur-[120px]"></div>
+    <div
+      class="absolute bottom-0 left-1/2 w-[400px] h-[300px] -translate-x-1/2 rounded-full bg-blue-800/[0.05] blur-[100px]">
+    </div>
+  </div>
+  <!-- Ambient glows — light -->
+  <div class="light-only fixed inset-0 pointer-events-none overflow-hidden z-0">
+    <div class="absolute -top-32 -left-32 w-[600px] h-[600px] rounded-full bg-blue-400/[0.12] blur-[130px]"></div>
+    <div class="absolute top-1/3 -right-32 w-[500px] h-[500px] rounded-full bg-indigo-300/[0.10] blur-[120px]"></div>
+  </div>
+
+  <div class="bg-grid fixed inset-0 pointer-events-none z-0"></div>
+
+  <!-- ═══════════════════════════════════════════
+       NAVIGATION
+  ════════════════════════════════════════════ -->
+  <header id="site-header" class="fixed top-0 left-0 right-0 z-50 glass anim-fade-in">
+    <div class="max-w-[1440px] mx-auto px-6 lg:px-12 flex h-[68px] items-center justify-between">
+
+      <div class="flex items-center flex-shrink-0">
+        <a href="home.html" class="light-logo-wrap">
+          <img src="OriginLabsLogo.png" alt="OriginLabs" class="h-8 w-auto object-contain">
+        </a>
+      </div>
+
+      <nav id="desktop-nav" class="hidden lg:flex items-center gap-1 relative">
+        <div id="nav-hover-bg"
+          class="absolute inset-y-0 rounded-lg opacity-0 pointer-events-none transition-all duration-300 ease-out dark:bg-[#1A2437] bg-slate-100">
+        </div>
+        <a href="#" data-nav class="nav-link relative z-10 px-4 py-2 rounded-lg">Services</a>
+        <a href="#" data-nav class="nav-link relative z-10 px-4 py-2 rounded-lg">Work</a>
+        <a href="about.html" data-nav class="nav-link relative z-10 px-4 py-2 rounded-lg">About</a>
+        <a href="#" data-nav class="nav-link relative z-10 px-4 py-2 rounded-lg">Blog</a>
+      </nav>
+
+      <div class="hidden lg:flex items-center gap-3">
+        <button id="theme-toggle" aria-label="Toggle theme">
+          <div id="theme-toggle-thumb">
+            <span id="toggle-icon" class="material-symbols-outlined text-white" style="font-size:11px;">dark_mode</span>
+          </div>
+        </button>
+        <button
+          class="flex h-9 items-center gap-2 rounded-lg px-5 bg-primary hover:bg-primary-hover text-white text-sm font-semibold btn-glow group">
+          Get a Quote
+          <span
+            class="material-symbols-outlined text-base group-hover:translate-x-0.5 transition-transform">arrow_forward</span>
+        </button>
+      </div>
+
+      <button id="menu-toggle" class="lg:hidden p-1 dark:text-slate-300 text-slate-600 hover:text-primary">
+        <span id="icon-open" class="material-symbols-outlined">menu</span>
+        <span id="icon-close" class="material-symbols-outlined hidden">close</span>
+      </button>
+    </div>
+
+    <div id="mobile-menu" class="lg:hidden dark:border-[#1E2D45]/60 border-slate-200 border-t">
+      <nav class="flex flex-col px-6 py-4 gap-1">
+        <a href="#"
+          class="text-sm font-medium dark:text-slate-300 text-slate-600 dark:hover:text-white hover:text-slate-900 dark:hover:bg-[#1A2437] hover:bg-slate-100 px-3 py-2.5 rounded-lg">Services</a>
+        <a href="#"
+          class="text-sm font-medium dark:text-slate-300 text-slate-600 dark:hover:text-white hover:text-slate-900 dark:hover:bg-[#1A2437] hover:bg-slate-100 px-3 py-2.5 rounded-lg">Work</a>
+        <a href="#"
+          class="text-sm font-medium dark:text-slate-300 text-slate-600 dark:hover:text-white hover:text-slate-900 dark:hover:bg-[#1A2437] hover:bg-slate-100 px-3 py-2.5 rounded-lg">About</a>
+        <a href="#"
+          class="text-sm font-medium dark:text-slate-300 text-slate-600 dark:hover:text-white hover:text-slate-900 dark:hover:bg-[#1A2437] hover:bg-slate-100 px-3 py-2.5 rounded-lg">Blog</a>
+        <div class="pt-3 mt-1 dark:border-[#1E2D45]/60 border-slate-200 border-t flex items-center gap-3">
+          <button id="theme-toggle-mobile" aria-label="Toggle theme"
+            class="flex items-center gap-2 px-3 py-2 rounded-lg dark:bg-[#1A2437] bg-slate-100 dark:text-slate-300 text-slate-600 text-sm font-medium">
+            <span id="toggle-icon-mobile" class="material-symbols-outlined text-base">dark_mode</span>
+            <span id="toggle-label-mobile">Light mode</span>
+          </button>
+          <button class="flex-1 h-10 rounded-lg bg-primary hover:bg-primary-hover text-white text-sm font-semibold">Get
+            a Quote</button>
+        </div>
+      </nav>
+    </div>
+  </header>
+
+  <!-- ═══════════════════════════════════════════
+       HERO
+  ════════════════════════════════════════════ -->
+  <section class="relative z-10 min-h-screen flex items-center pt-[68px]">
+    <div class="max-w-[1440px] mx-auto px-6 lg:px-12 w-full py-12 lg:py-[30px]">
+      <div class="grid grid-cols-1 lg:grid-cols-2 gap-10 lg:gap-16 items-center">
+
+        <!-- LEFT -->
+        <div class="flex flex-col gap-7">
+
+          <div
+            class="anim-slide-r delay-100 inline-flex items-center gap-2 my-3.5 px-3 py-1.5 rounded-full dark:border-[#1E2D45] border-slate-200 border dark:bg-[#111927]/80 bg-white/80 w-fit">
+            <span
+              class="flex h-1.5 w-1.5 rounded-full bg-emerald-400 shadow-[0_0_6px_rgba(52,211,153,0.8)] animate-pulse"></span>
+            <span
+              class="text-[11px] font-semibold dark:text-slate-300 text-slate-500 uppercase tracking-widest">Available
+              for new projects</span>
+          </div>
+
+          <div class="flex flex-col gap-2">
+            <h1
+              class="font-display text-[2.6rem] lg:text-[3.6rem] xl:text-[4.2rem] font-extrabold leading-[1.05] tracking-[-0.03em] dark:text-white text-slate-900 anim-fade-up delay-200">
+              Engineering</h1>
+            <h1
+              class="font-display text-[2.6rem] lg:text-[3.6rem] xl:text-[4.2rem] font-extrabold leading-[1.05] tracking-[-0.03em] anim-fade-up delay-300">
+              <span
+                class="text-transparent bg-clip-text bg-gradient-to-r from-blue-500 via-blue-400 to-slate-500">Digital
+                Excellence</span>
+            </h1>
+            <h1
+              class="font-display text-[2.6rem] lg:text-[3.6rem] xl:text-[4.2rem] font-extrabold leading-[1.05] tracking-[-0.03em] dark:text-white text-slate-900 anim-fade-up delay-400">
+              for the Enterprise.</h1>
+          </div>
+
+          <p class="text-[1rem] dark:text-slate-400 text-slate-500 max-w-lg leading-relaxed anim-fade-up delay-500">
+            We build scalable, high-performance web solutions using WordPress, Drupal, and modern JavaScript frameworks.
+            Tailored for startups and industry leaders who demand precision.
+          </p>
+
+          <div class="flex flex-wrap gap-3 anim-fade-up delay-600">
+            <button
+              class="flex h-12 items-center gap-2 rounded-lg px-6 bg-primary hover:bg-primary-hover text-white font-semibold btn-glow group text-[0.95rem]">
+              Start Your Project
+              <span
+                class="material-symbols-outlined text-lg group-hover:translate-x-1 transition-transform">arrow_forward</span>
+            </button>
+            <button
+              class="flex h-12 items-center gap-2 rounded-lg px-6 dark:border-[#1E2D45] border-slate-200 border dark:hover:border-[#2563EB]/40 hover:border-primary/40 dark:hover:bg-[#1A2437] hover:bg-slate-50 dark:text-white text-slate-700 font-semibold group text-[0.95rem]">
+              View Portfolio
+              <span
+                class="material-symbols-outlined text-lg dark:text-slate-500 text-slate-400 group-hover:text-primary group-hover:translate-x-1 transition-all">arrow_forward</span>
+            </button>
+          </div>
+
+          <div class="flex items-center gap-6 pt-2 anim-fade-up delay-700">
+            <div class="flex flex-col">
+              <span class="font-display text-2xl font-bold dark:text-white text-slate-900">120+</span>
+              <span class="text-xs dark:text-slate-500 text-slate-400 mt-0.5">Projects Delivered</span>
+            </div>
+            <div class="w-px h-10 dark:bg-[#1E2D45] bg-slate-200"></div>
+            <div class="flex flex-col">
+              <span class="font-display text-2xl font-bold dark:text-white text-slate-900">8 yrs</span>
+              <span class="text-xs dark:text-slate-500 text-slate-400 mt-0.5">Industry Experience</span>
+            </div>
+            <div class="w-px h-10 dark:bg-[#1E2D45] bg-slate-200"></div>
+            <div class="flex flex-col">
+              <span class="font-display text-2xl font-bold dark:text-white text-slate-900">99%</span>
+              <span class="text-xs dark:text-slate-500 text-slate-400 mt-0.5">Client Satisfaction</span>
+            </div>
+          </div>
+
+          <!--           <div class="pt-4 dark:border-[#1E2D45]/60 border-slate-200 border-t anim-fade-up delay-800">
+            <p class="text-[10px] dark:text-slate-600 text-slate-400 uppercase tracking-[0.15em] mb-4 font-semibold">Trusted by technical teams at</p>
+            <div class="flex flex-wrap gap-6 opacity-50 hover:opacity-80 transition-opacity duration-500">
+              <div class="flex items-center dark:text-white text-slate-700 font-semibold text-sm"><span class="material-symbols-outlined text-base mr-1.5 dark:text-slate-500 text-slate-400">token</span> Acme Corp</div>
+              <div class="flex items-center dark:text-white text-slate-700 font-semibold text-sm"><span class="material-symbols-outlined text-base mr-1.5 dark:text-slate-500 text-slate-400">layers</span> StackLayer</div>
+              <div class="flex items-center dark:text-white text-slate-700 font-semibold text-sm"><span class="material-symbols-outlined text-base mr-1.5 dark:text-slate-500 text-slate-400">cloud_queue</span> Cloudify</div>
+              <div class="flex items-center dark:text-white text-slate-700 font-semibold text-sm"><span class="material-symbols-outlined text-base mr-1.5 dark:text-slate-500 text-slate-400">security</span> SecureNet</div>
+            </div>
+          </div> -->
+        </div>
+
+        <!-- RIGHT — Code window -->
+        <div class="relative flex items-center justify-center anim-scale-in delay-300">
+
+          <div
+            class="relative w-full max-w-[520px] rounded-xl overflow-hidden shadow-[0_30px_80px_rgba(0,0,0,0.35)] dark:shadow-[0_30px_80px_rgba(0,0,0,0.6)] border dark:border-[#1E2D45]/80 border-slate-200 hover:border-primary/20 transition-colors duration-500">
+            <div class="flex items-center gap-2 px-4 py-3 bg-[#0C1220] border-b border-[#1E2D45]/60">
+              <div class="flex gap-1.5">
+                <div class="w-3 h-3 rounded-full bg-[#FF5F57]"></div>
+                <div class="w-3 h-3 rounded-full bg-[#FFBD2E]"></div>
+                <div class="w-3 h-3 rounded-full bg-[#28CA41]"></div>
+              </div>
+              <div class="flex ml-3 gap-1">
+                <button onclick="switchTab('wp')" id="tab-wp"
+                  class="code-tab active-tab px-3 py-1 text-[11px] font-mono rounded-md">functions.php</button>
+                <button onclick="switchTab('drupal')" id="tab-drupal"
+                  class="code-tab px-3 py-1 text-[11px] font-mono rounded-md hover:text-slate-400">node.module</button>
+                <button onclick="switchTab('react')" id="tab-react"
+                  class="code-tab px-3 py-1 text-[11px] font-mono rounded-md hover:text-slate-400">App.tsx</button>
+              </div>
+              <div class="ml-auto flex items-center gap-1.5">
+                <span class="h-1.5 w-1.5 rounded-full bg-emerald-500"></span>
+                <span id="lang-label" class="text-[10px] text-slate-600 font-mono">PHP</span>
+              </div>
+            </div>
+
+            <div class="bg-[#080E18] min-h-[290px] p-5 font-mono text-[11.5px] leading-[1.7]">
+              <div id="code-wp" class="code-panel flex">
+                <div
+                  class="flex flex-col text-[#2A3A52] text-right pr-4 select-none border-r border-[#131E2E] mr-4 leading-[1.7] min-w-[1.5rem]">
+                  <span>1</span><span>2</span><span>3</span><span>4</span><span>5</span><span>6</span><span>7</span><span>8</span><span>9</span><span>10</span><span>11</span><span>12</span><span>13</span><span>14</span><span>15</span>
+                </div>
+                <div class="flex-1 text-slate-300 overflow-x-auto">
+                  <p><span class="sy-cmt">// Register custom Gutenberg block</span></p>
+                  <p><span class="sy-kw">function</span> <span class="sy-fn">originlabs_register_blocks</span><span
+                      class="sy-op">()</span> {</p>
+                  <p class="pl-4"><span class="sy-fn">register_block_type</span>(</p>
+                  <p class="pl-8"><span class="sy-str">'originlabs/hero-section'</span>,</p>
+                  <p class="pl-8">[</p>
+                  <p class="pl-12"><span class="sy-prop">'render_callback'</span> <span class="sy-op">=></span> <span
+                      class="sy-str">'ol_render_hero'</span>,</p>
+                  <p class="pl-12"><span class="sy-prop">'attributes'</span> <span class="sy-op">=></span> [</p>
+                  <p class="pl-16"><span class="sy-prop">'headline'</span> <span class="sy-op">=></span> [<span
+                      class="sy-prop">'type'</span> <span class="sy-op">=></span> <span class="sy-str">'string'</span>],
+                  </p>
+                  <p class="pl-16"><span class="sy-prop">'ctaLabel'</span> <span class="sy-op">=></span> [<span
+                      class="sy-prop">'type'</span> <span class="sy-op">=></span> <span class="sy-str">'string'</span>],
+                  </p>
+                  <p class="pl-12">],</p>
+                  <p class="pl-8">]</p>
+                  <p class="pl-4">);</p>
+                  <p>}</p>
+                  <p><span class="sy-fn">add_action</span>( <span class="sy-str">'init'</span>, <span
+                      class="sy-str">'originlabs_register_blocks'</span> );<span class="cursor"></span></p>
+                </div>
+              </div>
+
+              <div id="code-drupal" class="code-panel hidden">
+                <div class="flex">
+                  <div
+                    class="flex flex-col text-[#2A3A52] text-right pr-4 select-none border-r border-[#131E2E] mr-4 leading-[1.7] min-w-[1.5rem]">
+                    <span>1</span><span>2</span><span>3</span><span>4</span><span>5</span><span>6</span><span>7</span><span>8</span><span>9</span><span>10</span><span>11</span><span>12</span><span>13</span><span>14</span><span>15</span>
+                  </div>
+                  <div class="flex-1 text-slate-300 overflow-x-auto">
+                    <p><span class="sy-cmt">// Drupal 10: Custom Block Plugin</span></p>
+                    <p><span class="sy-tag">#[Block(</span></p>
+                    <p class="pl-4"><span class="sy-prop">id:</span> <span class="sy-str">"originlabs_hero"</span>,</p>
+                    <p class="pl-4"><span class="sy-prop">admin_label:</span> <span class="sy-str">"OriginLabs
+                        Hero"</span>,</p>
+                    <p>)]</p>
+                    <p><span class="sy-kw">class</span> <span class="sy-fn">HeroBlock</span> <span
+                        class="sy-kw">extends</span> <span class="sy-var">BlockBase</span> {</p>
+                    <p class="pl-4"><span class="sy-kw">public function</span> <span class="sy-fn">build</span>(): <span
+                        class="sy-var">array</span> {</p>
+                    <p class="pl-8"><span class="sy-kw">return</span> [</p>
+                    <p class="pl-12"><span class="sy-prop">'#theme'</span> <span class="sy-op">=></span> <span
+                        class="sy-str">'ol_hero'</span>,</p>
+                    <p class="pl-12"><span class="sy-prop">'#title'</span> <span class="sy-op">=></span> <span
+                        class="sy-fn">$this</span>-><span class="sy-fn">t</span>(<span class="sy-str">'Enterprise
+                        Web'</span>),</p>
+                    <p class="pl-12"><span class="sy-prop">'#cache'</span> <span class="sy-op">=></span> [<span
+                        class="sy-prop">'max-age'</span> <span class="sy-op">=></span> <span class="sy-num">0</span>],
+                    </p>
+                    <p class="pl-8">];</p>
+                    <p class="pl-4">}</p>
+                    <p>}<span class="cursor"></span></p>
+                  </div>
+                </div>
+              </div>
+
+              <div id="code-react" class="code-panel hidden">
+                <div class="flex">
+                  <div
+                    class="flex flex-col text-[#2A3A52] text-right pr-4 select-none border-r border-[#131E2E] mr-4 leading-[1.7] min-w-[1.5rem]">
+                    <span>1</span><span>2</span><span>3</span><span>4</span><span>5</span><span>6</span><span>7</span><span>8</span><span>9</span><span>10</span><span>11</span><span>12</span><span>13</span><span>14</span><span>15</span>
+                  </div>
+                  <div class="flex-1 text-slate-300 overflow-x-auto">
+                    <p><span class="sy-kw">import</span> { <span class="sy-var">FC</span>, <span
+                        class="sy-var">useState</span> } <span class="sy-kw">from</span> <span
+                        class="sy-str">'react'</span>;</p>
+                    <p>&nbsp;</p>
+                    <p><span class="sy-kw">interface</span> <span class="sy-var">HeroProps</span> {</p>
+                    <p class="pl-4"><span class="sy-prop">headline</span>: <span class="sy-var">string</span>;</p>
+                    <p class="pl-4"><span class="sy-prop">ctaLabel</span>: <span class="sy-var">string</span>;</p>
+                    <p>}</p>
+                    <p>&nbsp;</p>
+                    <p><span class="sy-kw">const</span> <span class="sy-fn">HeroSection</span>: <span
+                        class="sy-var">FC</span>&lt;<span class="sy-var">HeroProps</span>&gt; = ({ headline, ctaLabel })
+                      =&gt; {</p>
+                    <p class="pl-4"><span class="sy-kw">const</span> [active, setActive] = <span
+                        class="sy-fn">useState</span>(<span class="sy-kw">false</span>);</p>
+                    <p class="pl-4"><span class="sy-kw">return</span> (</p>
+                    <p class="pl-8">&lt;<span class="sy-tag">section</span> <span class="sy-prop">className</span>=<span
+                        class="sy-str">"hero"</span>&gt;</p>
+                    <p class="pl-12">&lt;<span class="sy-tag">h1</span>&gt;{ headline }&lt;/<span
+                        class="sy-tag">h1</span>&gt;</p>
+                    <p class="pl-12">&lt;<span class="sy-tag">button</span> <span class="sy-prop">onClick</span>={()
+                      =&gt; <span class="sy-fn">setActive</span>(!active)}&gt;</p>
+                    <p class="pl-16">{ ctaLabel }<span class="cursor"></span></p>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div class="flex items-center justify-between px-5 py-2 bg-[#080E18] border-t border-[#131E2E]">
+              <div class="flex items-center gap-2">
+                <span class="h-1.5 w-1.5 rounded-full bg-emerald-500"></span>
+                <span class="text-[10px] text-slate-600 font-mono">No errors detected</span>
+              </div>
+              <span class="text-[10px] text-slate-700 font-mono">WordPress 6.5 · Drupal 10 · React 18</span>
+            </div>
+          </div>
+
+          <!-- Floating badges -->
+          <div
+            class="float-1 absolute -bottom-5 -left-5 lg:bottom-8 lg:-left-10 glass rounded-xl dark:border-[#1E2D45]/80 border-slate-200 border shadow-xl p-3.5 anim-fade-up delay-700">
+            <div class="flex items-center gap-3">
+              <div class="w-9 h-9 rounded-lg bg-blue-500/15 flex items-center justify-center">
+                <span class="material-symbols-outlined text-blue-400 text-lg">rocket_launch</span>
+              </div>
+              <div>
+                <div class="text-[10px] dark:text-slate-500 text-slate-400 leading-none mb-1">Performance</div>
+                <div class="text-sm font-display font-bold dark:text-white text-slate-800">99 / 100</div>
+              </div>
+            </div>
+          </div>
+
+          <div
+            class="float-2 absolute -top-5 -right-5 lg:top-10 lg:-right-8 glass rounded-xl dark:border-[#1E2D45]/80 border-slate-200 border shadow-xl p-3.5 anim-fade-up delay-800">
+            <div class="flex items-center gap-3">
+              <div class="w-9 h-9 rounded-lg bg-emerald-500/15 flex items-center justify-center">
+                <span class="material-symbols-outlined text-emerald-400 text-lg">verified_user</span>
+              </div>
+              <div>
+                <div class="text-[10px] dark:text-slate-500 text-slate-400 leading-none mb-1">Security</div>
+                <div class="text-sm font-display font-bold dark:text-white text-slate-800">Audited</div>
+              </div>
+            </div>
+          </div>
+
+          <div
+            class="float-1 absolute top-1/2 -right-3 lg:-right-10 glass rounded-xl dark:border-[#1E2D45]/80 border-slate-200 border shadow-xl p-3 anim-fade-up"
+            style="animation-delay:0.6s">
+            <div class="flex flex-col gap-1.5">
+              <div class="text-[10px] dark:text-slate-500 text-slate-400 font-semibold uppercase tracking-wider">Stack
+              </div>
+              <div class="flex flex-col gap-1">
+                <div class="flex items-center gap-1.5"><span class="h-1.5 w-1.5 rounded-full bg-blue-400"></span><span
+                    class="text-[11px] dark:text-slate-300 text-slate-600 font-mono">WordPress</span></div>
+                <div class="flex items-center gap-1.5"><span class="h-1.5 w-1.5 rounded-full bg-indigo-400"></span><span
+                    class="text-[11px] dark:text-slate-300 text-slate-600 font-mono">Drupal</span></div>
+                <div class="flex items-center gap-1.5"><span class="h-1.5 w-1.5 rounded-full bg-cyan-400"></span><span
+                    class="text-[11px] dark:text-slate-300 text-slate-600 font-mono">React</span></div>
+              </div>
+            </div>
+          </div>
+
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ═══════════════════════════════════════════
+       SERVICES — THE DEVELOPMENT LABORATORY
+  ════════════════════════════════════════════ -->
+  <section class="relative z-10 w-full py-24 px-6 lg:px-12 overflow-hidden">
+
+    <!-- Section-specific dot grid overlay -->
+    <div class="absolute inset-0 dot-grid pointer-events-none opacity-40"></div>
+    <div
+      class="absolute top-0 left-1/2 -translate-x-1/2 w-full h-64 bg-gradient-to-b dark:from-primary/5 from-primary/[0.03] via-transparent to-transparent pointer-events-none">
+    </div>
+
+    <div class="relative max-w-7xl mx-auto">
+
+      <!-- Section header -->
+      <div class="text-center mb-16">
+        <div
+          class="inline-flex items-center gap-2 px-3 py-1 rounded-full dark:bg-primary/10 bg-primary/5 border dark:border-primary/20 border-primary/15 text-primary text-xs font-bold tracking-widest uppercase mb-5">
+          <span class="relative flex h-2 w-2">
+            <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-primary opacity-75"></span>
+            <span class="relative inline-flex rounded-full h-2 w-2 bg-primary"></span>
+          </span>
+          Systems Online
+        </div>
+        <h2
+          class="font-display text-4xl md:text-5xl lg:text-6xl font-bold tracking-tight dark:text-white text-slate-900 mb-5">
+          The Development <span class="text-primary italic">Laboratory</span>
+        </h2>
+        <p class="text-lg dark:text-slate-400 text-slate-500 max-w-2xl mx-auto leading-relaxed">
+          Precision-engineered digital solutions for the modern web. Select an architectural experiment to begin the
+          synthesis process.
+        </p>
+      </div>
+
+      <!-- Service cards -->
+      <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+
+        <!-- WordPress -->
+        <div
+          class="service-card flex flex-col dark:bg-[#111927] bg-white border dark:border-slate-800 border-slate-200 rounded-xl p-6 transition-all duration-300 group">
+          <div class="flex justify-between items-start mb-6">
+            <span
+              class="font-mono text-[10px] px-2 py-1 rounded dark:bg-slate-900 bg-slate-100 border dark:border-slate-700 border-slate-200 dark:text-primary text-slate-500 font-bold">WP
+              + PHP + SQL</span>
+            <span
+              class="material-symbols-outlined dark:text-slate-500 text-slate-400 group-hover:text-primary transition-colors">science</span>
+          </div>
+          <h3 class="text-xl font-bold mb-2 dark:text-white text-slate-900">WordPress Engineering</h3>
+          <p class="text-sm dark:text-slate-400 text-slate-500 mb-8 leading-relaxed flex-1">
+            From custom theme development to enterprise multi-site setups — we build WordPress that performs under
+            pressure and adapts as you grow.
+          </p>
+          <div class="mt-auto">
+            <div class="mb-5">
+              <div
+                class="inline-flex items-center gap-2 px-3 py-1.5 rounded-full dark:bg-slate-900 bg-slate-100 border dark:border-slate-700 border-slate-200">
+                <span class="text-emerald-500 animate-pulse-status text-[10px]">●</span>
+                <span class="text-[9px] font-bold tracking-tighter uppercase dark:text-slate-400 text-slate-500">STABLE
+                  — PRODUCTION READY</span>
+              </div>
+            </div>
+            <button
+              class="w-full py-3 rounded-lg bg-primary hover:bg-primary-hover text-white text-sm font-bold transition-all flex items-center justify-center gap-2 group-active:scale-95">
+              Initialize Build
+              <span class="material-symbols-outlined text-sm">terminal</span>
+            </button>
+          </div>
+        </div>
+
+        <!-- Drupal -->
+        <div
+          class="service-card flex flex-col dark:bg-[#111927] bg-white border dark:border-slate-800 border-slate-200 rounded-xl p-6 transition-all duration-300 group">
+          <div class="flex justify-between items-start mb-6">
+            <span
+              class="font-mono text-[10px] px-2 py-1 rounded dark:bg-slate-900 bg-slate-100 border dark:border-slate-700 border-slate-200 dark:text-primary text-slate-500 font-bold">DRUPAL
+              + API + TWIG + M</span>
+            <span
+              class="material-symbols-outlined dark:text-slate-500 text-slate-400 group-hover:text-primary transition-colors">database</span>
+          </div>
+          <h3 class="text-xl font-bold mb-2 dark:text-white text-slate-900">Enterprise Drupal</h3>
+          <p class="text-sm dark:text-slate-400 text-slate-500 mb-8 leading-relaxed flex-1">
+            End-to-end Drupal solutions — from content architecture and custom modules to headless/decoupled builds and
+            large-scale migration projects.
+          </p>
+          <div class="mt-auto">
+            <div class="mb-5">
+              <div
+                class="inline-flex items-center gap-2 px-3 py-1.5 rounded-full dark:bg-slate-900 bg-slate-100 border dark:border-slate-700 border-slate-200">
+                <span class="text-primary animate-pulse-status text-[10px]">●</span>
+                <span class="text-[9px] font-bold tracking-tighter uppercase dark:text-slate-400 text-slate-500">STABLE
+                  — ENTERPRISE GRADE</span>
+              </div>
+            </div>
+            <button
+              class="w-full py-3 rounded-lg bg-primary hover:bg-primary-hover text-white text-sm font-bold transition-all flex items-center justify-center gap-2 group-active:scale-95">
+              Start Integration
+              <span class="material-symbols-outlined text-sm">hub</span>
+            </button>
+          </div>
+        </div>
+
+        <!-- MERN -->
+        <div
+          class="service-card flex flex-col dark:bg-[#111927] bg-white border dark:border-slate-800 border-slate-200 rounded-xl p-6 transition-all duration-300 group">
+          <div class="flex justify-between items-start mb-6">
+            <span
+              class="font-mono text-[10px] px-2 py-1 rounded dark:bg-slate-900 bg-slate-100 border dark:border-slate-700 border-slate-200 dark:text-primary text-slate-500 font-bold">M
+              + E + R + N</span>
+            <span
+              class="material-symbols-outlined dark:text-slate-500 text-slate-400 group-hover:text-primary transition-colors">memory</span>
+          </div>
+          <h3 class="text-xl font-bold mb-2 dark:text-white text-slate-900">MERN Synthesis</h3>
+          <p class="text-sm dark:text-slate-400 text-slate-500 mb-8 leading-relaxed flex-1">
+            Full-stack reactive applications using MongoDB, Express, React, and Node.js for real-time scale.
+          </p>
+          <div class="mt-auto">
+            <div class="mb-5">
+              <div
+                class="inline-flex items-center gap-2 px-3 py-1.5 rounded-full dark:bg-slate-900 bg-slate-100 border dark:border-slate-700 border-slate-200">
+                <span class="text-amber-500 animate-pulse-status text-[10px]">●</span>
+                <span class="text-[9px] font-bold tracking-tighter uppercase dark:text-slate-400 text-slate-500">ACTIVE
+                  — RAPID DEPLOYMENT</span>
+              </div>
+            </div>
+            <button
+              class="w-full py-3 rounded-lg bg-primary hover:bg-primary-hover text-white text-sm font-bold transition-all flex items-center justify-center gap-2 group-active:scale-95">
+              Launch Prototype
+              <span class="material-symbols-outlined text-sm">rocket_launch</span>
+            </button>
+          </div>
+        </div>
+
+        <!-- Security & Ops -->
+        <div
+          class="service-card flex flex-col dark:bg-[#111927] bg-white border dark:border-slate-800 border-slate-200 rounded-xl p-6 transition-all duration-300 group">
+          <div class="flex justify-between items-start mb-6">
+            <span
+              class="font-mono text-[10px] px-2 py-1 rounded dark:bg-slate-900 bg-slate-100 border dark:border-slate-700 border-slate-200 dark:text-primary text-slate-500 font-bold">S
+              + U + O</span>
+            <span
+              class="material-symbols-outlined dark:text-slate-500 text-slate-400 group-hover:text-primary transition-colors">security</span>
+          </div>
+          <h3 class="text-xl font-bold mb-2 dark:text-white text-slate-900">Security &amp; Ops</h3>
+          <p class="text-sm dark:text-slate-400 text-slate-500 mb-8 leading-relaxed flex-1">
+            Continuous monitoring, vulnerability patching, and uptime optimization for existing infrastructures.
+          </p>
+          <div class="mt-auto">
+            <div class="mb-5">
+              <div
+                class="inline-flex items-center gap-2 px-3 py-1.5 rounded-full dark:bg-slate-900 bg-slate-100 border dark:border-slate-700 border-slate-200">
+                <span class="text-primary animate-pulse-status text-[10px]">●</span>
+                <span
+                  class="text-[9px] font-bold tracking-tighter uppercase dark:text-slate-400 text-slate-500">MONITORING
+                  — 24/7 ACTIVE</span>
+              </div>
+            </div>
+            <button
+              class="w-full py-3 rounded-lg bg-primary hover:bg-primary-hover text-white text-sm font-bold transition-all flex items-center justify-center gap-2 group-active:scale-95">
+              Begin Monitoring
+              <span class="material-symbols-outlined text-sm">shield</span>
+            </button>
+          </div>
+        </div>
+
+      </div>
+
+      <!-- Section footer line -->
+      <div class="flex flex-col items-center mt-16">
+        <div class="w-px h-12 bg-gradient-to-b dark:from-primary/50 from-primary/30 to-transparent"></div>
+        <p class="mt-4 text-[10px] font-mono dark:text-slate-600 text-slate-400 uppercase tracking-widest">End of
+          Laboratory Manifest // 2024</p>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- ═══════════════════════════════════════════
+       HOW WE WORK
+  ════════════════════════════════════════════ -->
+  <section class="relative z-10 w-full py-32 px-6 lg:px-12 overflow-hidden">
+
+    <!-- Ambient glows -->
+    <div class="absolute top-0 right-0 w-[500px] h-[500px] bg-primary/5 rounded-full blur-[120px] pointer-events-none">
+    </div>
+    <div
+      class="absolute bottom-0 left-0 w-[500px] h-[500px] bg-primary/5 rounded-full blur-[120px] pointer-events-none">
+    </div>
+
+    <div class="max-w-4xl mx-auto">
+
+      <!-- Section header -->
+      <div class="text-center mb-24">
+        <div
+          class="inline-flex items-center gap-2 px-3 py-1 rounded-full dark:bg-primary/10 bg-primary/5 border dark:border-primary/20 border-primary/15 text-primary text-xs font-bold tracking-[0.2em] uppercase mb-6">
+          <span class="relative flex h-2 w-2">
+            <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-primary opacity-75"></span>
+            <span class="relative inline-flex rounded-full h-2 w-2 bg-primary"></span>
+          </span>
+          How We Work
+        </div>
+        <h2
+          class="font-display text-4xl md:text-5xl lg:text-6xl font-bold tracking-tight dark:text-white text-slate-900">
+          A Process Built <span class="text-primary italic">for Clarity.</span>
+        </h2>
+      </div>
+
+      <!-- Timeline -->
+      <div class="relative ml-4 md:ml-12">
+        <div
+          class="absolute left-0 top-0 bottom-0 w-[2px] bg-gradient-to-b from-primary via-primary to-transparent opacity-50"
+          style="box-shadow: 0 0 20px rgba(37,99,235,0.4)"></div>
+        <div class="space-y-24 md:space-y-32">
+
+          <!-- Step 01 -->
+          <div class="group relative pl-12 md:pl-20">
+            <div
+              class="absolute left-[-5px] top-2 w-[12px] h-[12px] rounded-full bg-primary border-2 dark:border-[#0C1220] border-white z-10 transition-all duration-300 group-hover:scale-125"
+              style="box-shadow: 0 0 15px rgba(37,99,235,0.6)"></div>
+            <div class="space-y-4">
+              <span class="text-primary/60 text-sm font-bold tracking-[0.2em] block">STEP 01</span>
+              <h3
+                class="text-2xl md:text-3xl font-bold dark:text-slate-100 text-slate-900 group-hover:text-primary transition-colors duration-300">
+                Discovery</h3>
+              <p class="dark:text-slate-400 text-slate-500 text-lg leading-relaxed max-w-xl">
+                We dive deep into your vision to align on goals, technical requirements, and target outcomes.
+              </p>
+              <div
+                class="inline-flex items-center gap-2 px-3 py-1 rounded-full dark:bg-slate-800/50 bg-slate-100 border dark:border-slate-700/50 border-slate-200 dark:text-slate-300 text-slate-600 text-xs font-medium">
+                <span class="material-symbols-outlined text-sm text-primary">description</span>
+                Project Brief &amp; Timeline
+              </div>
+            </div>
+          </div>
+
+          <!-- Step 02 -->
+          <div class="group relative pl-12 md:pl-20">
+            <div
+              class="absolute left-[-5px] top-2 w-[12px] h-[12px] rounded-full bg-primary border-2 dark:border-[#0C1220] border-white z-10 transition-all duration-300 group-hover:scale-125"
+              style="box-shadow: 0 0 15px rgba(37,99,235,0.6)"></div>
+            <div class="space-y-4">
+              <span class="text-primary/60 text-sm font-bold tracking-[0.2em] block">STEP 02</span>
+              <h3
+                class="text-2xl md:text-3xl font-bold dark:text-slate-100 text-slate-900 group-hover:text-primary transition-colors duration-300">
+                Design</h3>
+              <p class="dark:text-slate-400 text-slate-500 text-lg leading-relaxed max-w-xl">
+                Visualizing the experience through high-fidelity prototypes that define the look and feel of your
+                product.
+              </p>
+              <div
+                class="inline-flex items-center gap-2 px-3 py-1 rounded-full dark:bg-slate-800/50 bg-slate-100 border dark:border-slate-700/50 border-slate-200 dark:text-slate-300 text-slate-600 text-xs font-medium">
+                <span class="material-symbols-outlined text-sm text-primary">layers</span>
+                Interactive Mockups
+              </div>
+            </div>
+          </div>
+
+          <!-- Step 03 -->
+          <div class="group relative pl-12 md:pl-20">
+            <div
+              class="absolute left-[-5px] top-2 w-[12px] h-[12px] rounded-full bg-primary border-2 dark:border-[#0C1220] border-white z-10 transition-all duration-300 group-hover:scale-125"
+              style="box-shadow: 0 0 15px rgba(37,99,235,0.6)"></div>
+            <div class="space-y-4">
+              <span class="text-primary/60 text-sm font-bold tracking-[0.2em] block">STEP 03</span>
+              <h3
+                class="text-2xl md:text-3xl font-bold dark:text-slate-100 text-slate-900 group-hover:text-primary transition-colors duration-300">
+                Build</h3>
+              <p class="dark:text-slate-400 text-slate-500 text-lg leading-relaxed max-w-xl">
+                Agile development cycles where code comes to life. You track progress in real-time.
+              </p>
+              <div
+                class="inline-flex items-center gap-2 px-3 py-1 rounded-full dark:bg-slate-800/50 bg-slate-100 border dark:border-slate-700/50 border-slate-200 dark:text-slate-300 text-slate-600 text-xs font-medium">
+                <span class="material-symbols-outlined text-sm text-primary">terminal</span>
+                Staging Environment
+              </div>
+            </div>
+          </div>
+
+          <!-- Step 04 -->
+          <div class="group relative pl-12 md:pl-20">
+            <div
+              class="absolute left-[-5px] top-2 w-[12px] h-[12px] rounded-full bg-primary border-2 dark:border-[#0C1220] border-white z-10 transition-all duration-300 group-hover:scale-125"
+              style="box-shadow: 0 0 15px rgba(37,99,235,0.6)"></div>
+            <div class="space-y-4">
+              <span class="text-primary/60 text-sm font-bold tracking-[0.2em] block">STEP 04</span>
+              <h3
+                class="text-2xl md:text-3xl font-bold dark:text-slate-100 text-slate-900 group-hover:text-primary transition-colors duration-300">
+                Launch</h3>
+              <p class="dark:text-slate-400 text-slate-500 text-lg leading-relaxed max-w-xl">
+                The final push to production followed by a comprehensive transfer of assets and knowledge.
+              </p>
+              <div
+                class="inline-flex items-center gap-2 px-3 py-1 rounded-full dark:bg-slate-800/50 bg-slate-100 border dark:border-slate-700/50 border-slate-200 dark:text-slate-300 text-slate-600 text-xs font-medium">
+                <span class="material-symbols-outlined text-sm text-primary">inventory_2</span>
+                Handover Documentation
+              </div>
+            </div>
+          </div>
+
+        </div>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- ═══════════════════════════════════════════
+       FOOTER
+  ════════════════════════════════════════════ -->
+  <footer class="relative z-10 w-full border-t dark:border-primary/10 border-slate-200">
+    <!-- CTA Section -->
+    <div class="max-w-7xl mx-auto px-6 py-20">
+      <div class="flex flex-col items-center text-center space-y-8">
+        <div class="space-y-4">
+          <h2 class="text-4xl md:text-6xl font-bold tracking-tight dark:text-white text-slate-900 max-w-3xl mx-auto">
+            Ready to Launch Your Project?
+          </h2>
+          <p class="dark:text-slate-400 text-slate-600 text-lg md:text-xl max-w-2xl mx-auto">
+            Partner with OriginLabs to build your next digital masterpiece. Our team is ready to bring your vision to
+            life.
+          </p>
+        </div>
+        <div class="flex flex-col sm:flex-row items-center justify-center gap-4 w-full max-w-md">
+          <button
+            class="w-full sm:w-auto min-w-[200px] px-8 py-4 bg-primary hover:bg-primary-hover text-white font-bold rounded-lg transition-all duration-200 flex items-center justify-center gap-2 group btn-glow">
+            <span>Start Your Project</span>
+            <span
+              class="material-symbols-outlined text-sm group-hover:translate-x-1 transition-transform">arrow_forward</span>
+          </button>
+          <button
+            class="w-full sm:w-auto min-w-[200px] px-8 py-4 border-2 dark:border-white border-slate-900 dark:text-white text-slate-900 font-bold rounded-lg dark:hover:bg-white dark:hover:text-[#0C1220] hover:bg-slate-900 hover:text-white transition-all duration-200">
+            View Services
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Divider -->
+    <div class="max-w-7xl mx-auto px-6">
+      <div class="h-px w-full bg-gradient-to-r from-transparent dark:via-primary/20 via-slate-200 to-transparent"></div>
+    </div>
+
+    <!-- Branding Bar -->
+    <div class="max-w-7xl mx-auto px-6 py-12">
+      <div class="flex flex-col md:flex-row items-center justify-between gap-8">
+
+        <!-- Logo -->
+        <a href="home.html" class="flex items-center">
+          <div class="light-logo-wrap">
+            <img src="OriginLabsLogo.png" alt="OriginLabs" class="h-8 w-auto object-contain">
+          </div>
+        </a>
+
+        <!-- Nav Links -->
+        <nav class="flex flex-wrap justify-center items-center gap-x-8 gap-y-4">
+          <a href="#"
+            class="text-sm font-medium dark:text-slate-400 text-slate-600 dark:hover:text-primary hover:text-primary transition-colors">Services</a>
+          <a href="#"
+            class="text-sm font-medium dark:text-slate-400 text-slate-600 dark:hover:text-primary hover:text-primary transition-colors">Case
+            Studies</a>
+          <a href="about.html"
+            class="text-sm font-medium dark:text-slate-400 text-slate-600 dark:hover:text-primary hover:text-primary transition-colors">About</a>
+          <a href="#"
+            class="text-sm font-medium dark:text-slate-400 text-slate-600 dark:hover:text-primary hover:text-primary transition-colors">Blog</a>
+          <a href="#"
+            class="text-sm font-medium dark:text-slate-400 text-slate-600 dark:hover:text-primary hover:text-primary transition-colors">Contact</a>
+        </nav>
+
+        <!-- Socials + Copyright -->
+        <div class="flex flex-col items-center md:items-end gap-4">
+          <div class="flex items-center gap-4">
+            <!-- LinkedIn -->
+            <a href="#"
+              class="w-8 h-8 flex items-center justify-center rounded-full dark:bg-primary/10 bg-slate-100 dark:text-slate-400 text-slate-600 hover:bg-primary hover:text-white transition-all">
+              <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 24 24">
+                <path
+                  d="M19 0h-14c-2.761 0-5 2.239-5 5v14c0 2.761 2.239 5 5 5h14c2.762 0 5-2.239 5-5v-14c0-2.761-2.238-5-5-5zm-11 19h-3v-11h3v11zm-1.5-12.268c-.966 0-1.75-.79-1.75-1.764s.784-1.764 1.75-1.764 1.75.79 1.75 1.764-.783 1.764-1.75 1.764zm13.5 12.268h-3v-5.604c0-3.368-4-3.113-4 0v5.604h-3v-11h3v1.765c1.396-2.586 7-2.777 7 2.476v6.759z" />
+              </svg>
+            </a>
+            <!-- Twitter / X -->
+            <a href="#"
+              class="w-8 h-8 flex items-center justify-center rounded-full dark:bg-primary/10 bg-slate-100 dark:text-slate-400 text-slate-600 hover:bg-primary hover:text-white transition-all">
+              <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 24 24">
+                <path
+                  d="M24 4.557c-.883.392-1.832.656-2.828.775 1.017-.609 1.798-1.574 2.165-2.724-.951.564-2.005.974-3.127 1.195-.897-.957-2.178-1.555-3.594-1.555-3.179 0-5.515 2.966-4.797 6.045-4.091-.205-7.719-2.165-10.148-5.144-1.29 2.213-.669 5.108 1.523 6.574-.806-.026-1.566-.247-2.229-.616-.054 2.281 1.581 4.415 3.949 4.89-.693.188-1.452.232-2.224.084.626 1.956 2.444 3.379 4.6 3.419-2.07 1.623-4.678 2.348-7.29 2.04 2.179 1.397 4.768 2.212 7.548 2.212 9.142 0 14.307-7.721 13.995-14.646.962-.695 1.797-1.562 2.457-2.549z" />
+              </svg>
+            </a>
+            <!-- GitHub -->
+            <a href="#"
+              class="w-8 h-8 flex items-center justify-center rounded-full dark:bg-primary/10 bg-slate-100 dark:text-slate-400 text-slate-600 hover:bg-primary hover:text-white transition-all">
+              <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 24 24">
+                <path
+                  d="M12 0c-6.626 0-12 5.373-12 12 0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.041-1.416-4.041-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23.957-.266 1.983-.399 3.003-.404 1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576 4.765-1.589 8.199-6.086 8.199-11.386 0-6.627-5.373-12-12-12z" />
+              </svg>
+            </a>
+          </div>
+          <p class="text-xs dark:text-slate-500 text-slate-500 uppercase tracking-widest font-bold">
+            © 2024 OriginLabs. All rights reserved.
+          </p>
+        </div>
+
+      </div>
+    </div>
+  </footer>
+
+  <!-- ═══════════════════════════════════════════
+       SCRIPTS
+  ════════════════════════════════════════════ -->
+  <script>
+    // ── Theme ────────────────────────────────────────────────────
+    function isDark() { return document.documentElement.classList.contains('dark'); }
+
+    function applyTheme(dark) {
+      const html = document.documentElement;
+      html.classList.remove('dark', 'light');
+      html.classList.add(dark ? 'dark' : 'light');
+      localStorage.setItem('ol-theme', dark ? 'dark' : 'light');
+      document.body.style.backgroundColor = dark ? '#0C1220' : '#ffffff';
+      document.body.style.color = dark ? '#ffffff' : '#0f172a';
+
+      const icon = document.getElementById('toggle-icon');
+      const iconM = document.getElementById('toggle-icon-mobile');
+      const labelM = document.getElementById('toggle-label-mobile');
+      if (icon) icon.textContent = dark ? 'dark_mode' : 'light_mode';
+      if (iconM) iconM.textContent = dark ? 'dark_mode' : 'light_mode';
+      if (labelM) labelM.textContent = dark ? 'Light mode' : 'Dark mode';
+
+      document.querySelectorAll('.dark-only').forEach(el => el.style.display = dark ? '' : 'none');
+      document.querySelectorAll('.light-only').forEach(el => el.style.display = !dark ? '' : 'none');
+    }
+
+    applyTheme(isDark());
+    document.getElementById('theme-toggle').addEventListener('click', () => applyTheme(!isDark()));
+    document.getElementById('theme-toggle-mobile').addEventListener('click', () => applyTheme(!isDark()));
+
+    // ── Mobile nav ───────────────────────────────────────────────
+    const toggle = document.getElementById('menu-toggle');
+    const mMenu = document.getElementById('mobile-menu');
+    const iOpen = document.getElementById('icon-open');
+    const iClose = document.getElementById('icon-close');
+
+    toggle.addEventListener('click', () => {
+      const open = mMenu.classList.toggle('open');
+      iOpen.classList.toggle('hidden', open);
+      iClose.classList.toggle('hidden', !open);
+    });
+    mMenu.querySelectorAll('a, button').forEach(el =>
+      el.addEventListener('click', () => {
+        mMenu.classList.remove('open');
+        iOpen.classList.remove('hidden');
+        iClose.classList.add('hidden');
+      })
+    );
+
+    // ── Desktop nav hover pill ───────────────────────────────────
+    const navLinks = document.querySelectorAll('[data-nav]');
+    const hoverBg = document.getElementById('nav-hover-bg');
+    navLinks.forEach(link => {
+      link.addEventListener('mouseenter', () => {
+        const r = link.getBoundingClientRect();
+        const pr = link.parentElement.getBoundingClientRect();
+        hoverBg.style.left = (r.left - pr.left) + 'px';
+        hoverBg.style.width = r.width + 'px';
+        hoverBg.style.opacity = '1';
+      });
+      link.addEventListener('mouseleave', () => hoverBg.style.opacity = '0');
+    });
+
+    // ── Code tab switcher ────────────────────────────────────────
+    const langMap = { wp: 'PHP', drupal: 'PHP', react: 'TSX' };
+    function switchTab(tab) {
+      document.querySelectorAll('.code-panel').forEach(p => p.classList.add('hidden'));
+      document.querySelectorAll('.code-tab').forEach(b => b.classList.remove('active-tab'));
+      document.getElementById('code-' + tab).classList.remove('hidden');
+      document.getElementById('tab-' + tab).classList.add('active-tab');
+      document.getElementById('lang-label').textContent = langMap[tab];
+    }
+  </script>
+
+  <!-- Custom cursor -->
+  <div id="custom-cursor" style="position:fixed;pointer-events:none;z-index:99999;top:0;left:0;">
+    <div id="cursor-ring"
+      style="width:36px;height:36px;border:1.5px solid rgba(37,99,235,0.8);border-radius:50%;position:absolute;transform:translate(-50%,-50%);transition:width 0.2s,height 0.2s,background 0.2s;">
+    </div>
+    <div id="cursor-dot"
+      style="width:4px;height:4px;background:#2563EB;border-radius:50%;position:absolute;transform:translate(-50%,-50%);">
+    </div>
+    <div id="cursor-crosshair-h"
+      style="width:12px;height:1px;background:rgba(37,99,235,0.5);position:absolute;transform:translate(-50%,-50%);">
+    </div>
+    <div id="cursor-crosshair-v"
+      style="width:1px;height:12px;background:rgba(37,99,235,0.5);position:absolute;transform:translate(-50%,-50%);">
+    </div>
+  </div>
+
+  <script>
+    (function () {
+      var dot = document.getElementById('cursor-dot');
+      var ring = document.getElementById('cursor-ring');
+      var crossH = document.getElementById('cursor-crosshair-h');
+      var crossV = document.getElementById('cursor-crosshair-v');
+      var mouseX = window.innerWidth / 2, mouseY = window.innerHeight / 2;
+      var ringX = mouseX, ringY = mouseY;
+
+      document.addEventListener('mousemove', function (e) {
+        mouseX = e.clientX; mouseY = e.clientY;
+        dot.style.left = mouseX + 'px'; dot.style.top = mouseY + 'px';
+        crossH.style.left = mouseX + 'px'; crossH.style.top = mouseY + 'px';
+        crossV.style.left = mouseX + 'px'; crossV.style.top = mouseY + 'px';
+      });
+
+      (function animateRing() {
+        ringX += (mouseX - ringX) * 0.25;
+        ringY += (mouseY - ringY) * 0.25;
+        ring.style.left = ringX + 'px';
+        ring.style.top = ringY + 'px';
+        requestAnimationFrame(animateRing);
+      })();
+
+      document.querySelectorAll('a, button').forEach(function (el) {
+        el.addEventListener('mouseenter', function () { document.body.classList.add('cursor-hover'); });
+        el.addEventListener('mouseleave', function () { document.body.classList.remove('cursor-hover'); });
+      });
+    })();
+  </script>
+
+</body>
+
+</html>
