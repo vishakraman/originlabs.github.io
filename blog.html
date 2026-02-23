@@ -1,0 +1,725 @@
+<!DOCTYPE html>
+<html class="dark" lang="en">
+
+<head>
+    <meta charset="utf-8" />
+    <meta content="width=device-width, initial-scale=1.0" name="viewport" />
+    <title>Insights — OriginLabs</title>
+    <link href="https://fonts.googleapis.com" rel="preconnect" />
+    <link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect" />
+    <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&display=swap"
+        rel="stylesheet" />
+    <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap"
+        rel="stylesheet" />
+    <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+    <script>
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        "primary": "#2563EB",
+                        "primary-hover": "#1D4ED8",
+                        "card-dark": "#111927",
+                        "recessed-dark": "#080E18",
+                    },
+                    fontFamily: { "display": ["Space Grotesk", "sans-serif"] },
+                },
+            },
+        }
+    </script>
+    <style>
+        body {
+            font-family: "Space Grotesk", sans-serif;
+            transition: background-color 0.3s ease, color 0.3s ease;
+        }
+
+        *,
+        *::before,
+        *::after {
+            transition: background-color 0.3s ease, border-color 0.3s ease, color 0.2s ease, box-shadow 0.3s ease;
+        }
+
+        .btn-glow,
+        #cursor-ring,
+        #cursor-dot,
+        #cursor-crosshair-h,
+        #cursor-crosshair-v {
+            transition: none !important;
+        }
+
+        #cursor-ring {
+            transition: width 0.2s, height 0.2s, background 0.2s !important;
+        }
+
+        * {
+            cursor: none !important;
+        }
+
+        body.cursor-hover #cursor-ring {
+            width: 52px;
+            height: 52px;
+            border-color: rgba(37, 99, 235, 0.4);
+            background: rgba(37, 99, 235, 0.08);
+        }
+
+        .dark .glass {
+            background: rgba(17, 25, 39, 0.75);
+            backdrop-filter: blur(14px);
+            -webkit-backdrop-filter: blur(14px);
+            border: 1px solid rgba(255, 255, 255, 0.06);
+        }
+
+        .light .glass {
+            background: rgba(255, 255, 255, 0.80);
+            backdrop-filter: blur(14px);
+            -webkit-backdrop-filter: blur(14px);
+            border: 1px solid rgba(0, 0, 0, 0.08);
+        }
+
+        .noise-overlay {
+            position: fixed;
+            inset: 0;
+            pointer-events: none;
+            z-index: 1;
+            background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.03'/%3E%3C/svg%3E");
+        }
+
+        .bg-grid {
+            background-image: linear-gradient(rgba(37, 99, 235, 0.04) 1px, transparent 1px), linear-gradient(90deg, rgba(37, 99, 235, 0.04) 1px, transparent 1px);
+            background-size: 48px 48px;
+        }
+
+        .light .bg-grid {
+            background-image: linear-gradient(rgba(37, 99, 235, 0.06) 1px, transparent 1px), linear-gradient(90deg, rgba(37, 99, 235, 0.06) 1px, transparent 1px);
+        }
+
+        .nav-link {
+            position: relative;
+            padding-bottom: 4px;
+            font-size: 0.875rem;
+            font-weight: 500;
+            letter-spacing: 0.01em;
+        }
+
+        .dark .nav-link {
+            color: #94A3B8;
+        }
+
+        .light .nav-link {
+            color: #475569;
+        }
+
+        .nav-link::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 50%;
+            width: 0;
+            height: 2px;
+            background: #2563EB;
+            border-radius: 999px;
+            transition: width 0.3s ease, left 0.3s ease;
+        }
+
+        .dark .nav-link:hover {
+            color: #fff;
+        }
+
+        .light .nav-link:hover {
+            color: #0f172a;
+        }
+
+        .nav-link:hover::after,
+        .nav-link.active::after {
+            width: 100%;
+            left: 0;
+        }
+
+        .nav-link.active {
+            color: #2563EB;
+        }
+
+        #mobile-menu {
+            max-height: 0;
+            overflow: hidden;
+            opacity: 0;
+            transition: max-height 0.4s ease, opacity 0.3s ease;
+        }
+
+        #mobile-menu.open {
+            max-height: 500px;
+            opacity: 1;
+        }
+
+        @keyframes glowPulse {
+
+            0%,
+            100% {
+                box-shadow: 0 0 20px rgba(37, 99, 235, 0.35);
+            }
+
+            50% {
+                box-shadow: 0 0 40px rgba(37, 99, 235, 0.65);
+            }
+        }
+
+        .btn-glow {
+            animation: glowPulse 2.5s ease-in-out infinite;
+        }
+
+        #theme-toggle {
+            position: relative;
+            width: 44px;
+            height: 24px;
+            border-radius: 999px;
+            border: none;
+            cursor: none !important;
+            flex-shrink: 0;
+            transition: background 0.3s ease;
+        }
+
+        .dark #theme-toggle {
+            background: #1E2D45;
+        }
+
+        .light #theme-toggle {
+            background: #CBD5E1;
+        }
+
+        #theme-toggle-thumb {
+            position: absolute;
+            top: 3px;
+            left: 3px;
+            width: 18px;
+            height: 18px;
+            border-radius: 50%;
+            background: #2563EB;
+            transition: transform 0.3s cubic-bezier(.4, 0, .2, 1);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .light #theme-toggle-thumb {
+            transform: translateX(20px);
+        }
+
+        .dark .light-logo-wrap {
+            background: transparent;
+            padding: 0;
+        }
+
+        .light .light-logo-wrap {
+            background: #0C1220;
+            border-radius: 8px;
+            padding: 4px 10px;
+        }
+
+        .dark ::-webkit-scrollbar-track {
+            background: #0C1220;
+        }
+
+        .dark ::-webkit-scrollbar-thumb {
+            background: #1E2D45;
+            border-radius: 3px;
+        }
+
+        .light ::-webkit-scrollbar-track {
+            background: #f1f5f9;
+        }
+
+        .light ::-webkit-scrollbar-thumb {
+            background: #CBD5E1;
+            border-radius: 3px;
+        }
+
+        ::-webkit-scrollbar {
+            width: 6px;
+        }
+
+        /* Article card glow */
+        .article-card {
+            transition: border-color 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        .article-card:hover {
+            box-shadow: 0 0 20px rgba(37, 99, 235, 0.15);
+            border-color: rgba(37, 99, 235, 0.4);
+        }
+
+        /* Featured card */
+        .featured-card:hover {
+            border-color: rgba(37, 99, 235, 0.35);
+        }
+
+        /* Light mode cards */
+        .dark .card-bg {
+            background: #111927;
+            border-color: rgba(255, 255, 255, 0.05);
+        }
+
+        .light .card-bg {
+            background: #ffffff;
+            border-color: rgba(0, 0, 0, 0.08);
+        }
+
+        .dark .recessed-bg {
+            background: #080E18;
+        }
+
+        .light .recessed-bg {
+            background: #f1f5f9;
+        }
+    </style>
+</head>
+
+<script>
+        (function () {
+            var saved = localStorage.getItem('ol-theme');
+            var isDark = saved ? saved === 'dark' : true;
+            document.documentElement.className = isDark ? 'dark' : 'light';
+        })();
+</script>
+
+<body class="overflow-x-hidden relative antialiased">
+    <div class="noise-overlay"></div>
+    <div class="dark-only fixed inset-0 pointer-events-none overflow-hidden z-0">
+        <div class="absolute -top-32 -left-32 w-[600px] h-[600px] rounded-full bg-blue-600/[0.08] blur-[130px]"></div>
+        <div class="absolute top-1/3 -right-32 w-[500px] h-[500px] rounded-full bg-indigo-500/[0.06] blur-[120px]">
+        </div>
+    </div>
+    <div class="light-only fixed inset-0 pointer-events-none overflow-hidden z-0">
+        <div class="absolute -top-32 -left-32 w-[600px] h-[600px] rounded-full bg-blue-400/[0.12] blur-[130px]"></div>
+        <div class="absolute top-1/3 -right-32 w-[500px] h-[500px] rounded-full bg-indigo-300/[0.10] blur-[120px]">
+        </div>
+    </div>
+    <div class="bg-grid fixed inset-0 pointer-events-none z-0"></div>
+
+    <!-- ═══════════════════════════════════════════
+       NAVIGATION
+  ════════════════════════════════════════════ -->
+    <header id="site-header" class="fixed top-0 left-0 right-0 z-50 glass">
+        <div class="max-w-[1440px] mx-auto px-6 lg:px-12 flex h-[68px] items-center justify-between">
+            <div class="flex items-center flex-shrink-0">
+                <a href="index.html" class="light-logo-wrap">
+                    <img src="OriginLabsLogo.png" alt="OriginLabs" class="h-8 w-auto object-contain">
+                </a>
+            </div>
+            <nav id="desktop-nav" class="hidden lg:flex items-center gap-1 relative">
+                <div id="nav-hover-bg"
+                    class="absolute inset-y-0 rounded-lg opacity-0 pointer-events-none transition-all duration-300 ease-out dark:bg-[#1A2437] bg-slate-100">
+                </div>
+                <a href="services.html" data-nav class="nav-link relative z-10 px-4 py-2 rounded-lg">Services</a>
+                <a href="#" data-nav class="nav-link relative z-10 px-4 py-2 rounded-lg">Work</a>
+                <a href="about.html" data-nav class="nav-link relative z-10 px-4 py-2 rounded-lg">About</a>
+                <a href="blog.html" data-nav class="nav-link active relative z-10 px-4 py-2 rounded-lg">Blog</a>
+            </nav>
+            <div class="hidden lg:flex items-center gap-3">
+                <button id="theme-toggle" aria-label="Toggle theme">
+                    <div id="theme-toggle-thumb">
+                        <span id="toggle-icon" class="material-symbols-outlined text-white"
+                            style="font-size:11px;">dark_mode</span>
+                    </div>
+                </button>
+                <a href="contact.html"
+                    class="flex h-9 items-center gap-2 rounded-lg px-5 bg-primary hover:bg-primary-hover text-white text-sm font-semibold btn-glow group">
+                    Get a Quote
+                    <span
+                        class="material-symbols-outlined text-base group-hover:translate-x-0.5 transition-transform">arrow_forward</span>
+                </a>
+            </div>
+            <button id="menu-toggle" class="lg:hidden p-1 dark:text-slate-300 text-slate-600 hover:text-primary">
+                <span id="icon-open" class="material-symbols-outlined">menu</span>
+                <span id="icon-close" class="material-symbols-outlined hidden">close</span>
+            </button>
+        </div>
+        <div id="mobile-menu" class="lg:hidden dark:border-[#1E2D45]/60 border-slate-200 border-t">
+            <nav class="flex flex-col px-6 py-4 gap-1">
+                <a href="services.html"
+                    class="text-sm font-medium dark:text-slate-300 text-slate-600 dark:hover:text-white hover:text-slate-900 dark:hover:bg-[#1A2437] hover:bg-slate-100 px-3 py-2.5 rounded-lg">Services</a>
+                <a href="#"
+                    class="text-sm font-medium dark:text-slate-300 text-slate-600 dark:hover:text-white hover:text-slate-900 dark:hover:bg-[#1A2437] hover:bg-slate-100 px-3 py-2.5 rounded-lg">Work</a>
+                <a href="about.html"
+                    class="text-sm font-medium dark:text-slate-300 text-slate-600 dark:hover:text-white hover:text-slate-900 dark:hover:bg-[#1A2437] hover:bg-slate-100 px-3 py-2.5 rounded-lg">About</a>
+                <a href="blog.html"
+                    class="text-sm font-medium text-primary px-3 py-2.5 rounded-lg dark:bg-[#1A2437] bg-slate-100">Blog</a>
+                <div class="pt-3 mt-1 dark:border-[#1E2D45]/60 border-slate-200 border-t flex items-center gap-3">
+                    <button id="theme-toggle-mobile" aria-label="Toggle theme"
+                        class="flex items-center gap-2 px-3 py-2 rounded-lg dark:bg-[#1A2437] bg-slate-100 dark:text-slate-300 text-slate-600 text-sm font-medium">
+                        <span id="toggle-icon-mobile" class="material-symbols-outlined text-base">dark_mode</span>
+                        <span id="toggle-label-mobile">Light mode</span>
+                    </button>
+                    <a href="contact.html"
+                        class="flex-1 h-10 flex items-center justify-center rounded-lg bg-primary hover:bg-primary-hover text-white text-sm font-semibold">Get
+                        a Quote</a>
+                </div>
+            </nav>
+        </div>
+    </header>
+
+    <!-- ═══════════════════════════════════════════
+       BLOG CONTENT
+  ════════════════════════════════════════════ -->
+    <main class="relative z-10 pt-[68px]">
+
+        <!-- Hero -->
+        <section class="relative pt-24 pb-20 px-6 text-center overflow-hidden">
+            <div class="absolute top-0 left-1/2 -translate-x-1/2 w-full h-full opacity-20 pointer-events-none">
+                <div class="absolute top-[-10%] left-[-10%] w-[40%] h-[40%] bg-primary/30 blur-[120px] rounded-full">
+                </div>
+            </div>
+            <div class="max-w-4xl mx-auto relative z-10">
+                <div
+                    class="inline-flex items-center px-4 py-1 rounded-full bg-primary/10 border border-primary/20 text-primary text-xs font-bold tracking-widest uppercase mb-8">
+                    Insights
+                </div>
+                <h1
+                    class="font-display text-5xl md:text-7xl font-bold tracking-tight mb-8 dark:text-white text-slate-900 leading-[1.1]">
+                    Engineering Thinking, <span class="text-primary">Shared.</span>
+                </h1>
+                <p class="text-lg dark:text-slate-400 text-slate-500 max-w-2xl mx-auto mb-10 leading-relaxed">
+                    Deep dives into modern architecture, performance optimization, and the philosophy of building
+                    resilient software at scale.
+                </p>
+                <a href="#articles"
+                    class="bg-primary hover:bg-primary-hover text-white px-8 py-4 rounded-lg text-base font-bold shadow-lg shadow-primary/20 inline-flex items-center gap-2 group">
+                    Explore Articles
+                    <span
+                        class="material-symbols-outlined group-hover:translate-x-1 transition-transform">arrow_forward</span>
+                </a>
+            </div>
+        </section>
+
+        <!-- Featured Article -->
+        <section class="max-w-7xl mx-auto px-6 mb-24">
+            <div
+                class="group featured-card relative card-bg border rounded-2xl overflow-hidden flex flex-col lg:flex-row min-h-[500px] transition-all duration-300">
+                <div class="lg:w-1/2 relative h-64 lg:h-auto overflow-hidden">
+                    <div
+                        class="absolute inset-0 bg-gradient-to-br from-primary/20 via-slate-900/80 to-slate-900 flex items-center justify-center">
+                        <span class="material-symbols-outlined text-primary/30"
+                            style="font-size:160px;">developer_board</span>
+                    </div>
+                    <div
+                        class="absolute inset-0 bg-gradient-to-t lg:bg-gradient-to-r from-[#111927] via-[#111927]/20 to-transparent">
+                    </div>
+                </div>
+                <div class="lg:w-1/2 p-8 lg:p-16 flex flex-col justify-center relative z-10 dark:bg-card-dark bg-white">
+                    <div class="flex items-center gap-4 mb-6">
+                        <span class="text-primary text-sm font-bold uppercase tracking-widest">Architecture</span>
+                        <span class="w-1 h-1 bg-slate-500 rounded-full"></span>
+                        <span class="dark:text-slate-400 text-slate-500 text-sm">March 12, 2024</span>
+                    </div>
+                    <h2
+                        class="text-3xl lg:text-5xl font-bold leading-tight mb-6 dark:text-white text-slate-900 group-hover:text-primary transition-colors">
+                        The Architecture of Scalable State Machines
+                    </h2>
+                    <p class="dark:text-slate-400 text-slate-500 text-lg mb-8 leading-relaxed line-clamp-3">
+                        Exploring how we redesigned our core engine using finite state machines to handle 10× the
+                        traffic with zero latency regression.
+                    </p>
+                    <div class="flex items-center justify-between mt-auto">
+                        <div class="flex items-center gap-3">
+                            <div
+                                class="w-10 h-10 rounded-full dark:bg-slate-800 bg-slate-100 flex items-center justify-center">
+                                <span class="material-symbols-outlined dark:text-slate-400 text-slate-500">person</span>
+                            </div>
+                            <div>
+                                <p class="text-sm font-bold dark:text-white text-slate-900">Alex Chen</p>
+                                <p class="text-xs dark:text-slate-500 text-slate-400">Lead Engineer</p>
+                            </div>
+                        </div>
+                        <span class="dark:text-slate-500 text-slate-400 text-sm font-mono tracking-tighter uppercase">9
+                            min read</span>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Latest Articles Grid -->
+        <section id="articles" class="max-w-7xl mx-auto px-6 mb-24">
+            <div class="flex items-end justify-between mb-12">
+                <div>
+                    <h3 class="text-3xl font-bold dark:text-white text-slate-900 mb-2">Latest Insights</h3>
+                    <div class="h-1 w-12 bg-primary rounded-full"></div>
+                </div>
+            </div>
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+
+                <!-- Card 1 -->
+                <article class="article-card card-bg border rounded-xl p-6 flex flex-col">
+                    <div
+                        class="mb-6 rounded-lg overflow-hidden h-48 dark:bg-slate-800 bg-slate-100 flex items-center justify-center">
+                        <span class="material-symbols-outlined text-primary/40" style="font-size:80px;">code</span>
+                    </div>
+                    <div class="flex items-center justify-between mb-4">
+                        <span
+                            class="px-3 py-1 bg-primary/10 text-primary text-[10px] font-bold tracking-widest uppercase rounded-full">Frontend</span>
+                        <span class="dark:text-slate-500 text-slate-400 text-xs font-mono">6 min read</span>
+                    </div>
+                    <h4
+                        class="text-xl font-bold mb-3 dark:text-white text-slate-900 leading-snug hover:text-primary transition-colors">
+                        Optimizing Next.js for Performance at Scale
+                    </h4>
+                    <p class="dark:text-slate-400 text-slate-500 text-sm leading-relaxed mb-6 line-clamp-3">
+                        Lessons learned from optimizing a high-traffic SaaS landing page to achieve 100 Lighthouse
+                        scores.
+                    </p>
+                    <div
+                        class="mt-auto flex items-center justify-between pt-4 border-t dark:border-white/5 border-slate-200">
+                        <span class="text-xs dark:text-slate-500 text-slate-400 italic">By Sarah Jenkins</span>
+                        <span
+                            class="material-symbols-outlined dark:text-slate-500 text-slate-400 hover:text-primary text-xl">bookmark</span>
+                    </div>
+                </article>
+
+                <!-- Card 2 -->
+                <article class="article-card card-bg border rounded-xl p-6 flex flex-col">
+                    <div
+                        class="mb-6 rounded-lg overflow-hidden h-48 dark:bg-slate-800 bg-slate-100 flex items-center justify-center">
+                        <span class="material-symbols-outlined text-primary/40" style="font-size:80px;">cloud</span>
+                    </div>
+                    <div class="flex items-center justify-between mb-4">
+                        <span
+                            class="px-3 py-1 bg-primary/10 text-primary text-[10px] font-bold tracking-widest uppercase rounded-full">DevOps</span>
+                        <span class="dark:text-slate-500 text-slate-400 text-xs font-mono">12 min read</span>
+                    </div>
+                    <h4
+                        class="text-xl font-bold mb-3 dark:text-white text-slate-900 leading-snug hover:text-primary transition-colors">
+                        The Future of Serverless: Beyond the Hype
+                    </h4>
+                    <p class="dark:text-slate-400 text-slate-500 text-sm leading-relaxed mb-6 line-clamp-3">
+                        A critical look at the current state of serverless computing and when it actually makes sense
+                        for enterprise.
+                    </p>
+                    <div
+                        class="mt-auto flex items-center justify-between pt-4 border-t dark:border-white/5 border-slate-200">
+                        <span class="text-xs dark:text-slate-500 text-slate-400 italic">By Marcus Aurelius</span>
+                        <span
+                            class="material-symbols-outlined dark:text-slate-500 text-slate-400 hover:text-primary text-xl">bookmark</span>
+                    </div>
+                </article>
+
+                <!-- Card 3 -->
+                <article class="article-card card-bg border rounded-xl p-6 flex flex-col">
+                    <div
+                        class="mb-6 rounded-lg overflow-hidden h-48 dark:bg-slate-800 bg-slate-100 flex items-center justify-center">
+                        <span class="material-symbols-outlined text-primary/40" style="font-size:80px;">security</span>
+                    </div>
+                    <div class="flex items-center justify-between mb-4">
+                        <span
+                            class="px-3 py-1 bg-primary/10 text-primary text-[10px] font-bold tracking-widest uppercase rounded-full">Security</span>
+                        <span class="dark:text-slate-500 text-slate-400 text-xs font-mono">8 min read</span>
+                    </div>
+                    <h4
+                        class="text-xl font-bold mb-3 dark:text-white text-slate-900 leading-snug hover:text-primary transition-colors">
+                        Securing Distributed Systems with Zero Trust
+                    </h4>
+                    <p class="dark:text-slate-400 text-slate-500 text-sm leading-relaxed mb-6 line-clamp-3">
+                        Implementing identity-based security in microservices without killing developer velocity.
+                    </p>
+                    <div
+                        class="mt-auto flex items-center justify-between pt-4 border-t dark:border-white/5 border-slate-200">
+                        <span class="text-xs dark:text-slate-500 text-slate-400 italic">By Jordan Smith</span>
+                        <span
+                            class="material-symbols-outlined dark:text-slate-500 text-slate-400 hover:text-primary text-xl">bookmark</span>
+                    </div>
+                </article>
+
+            </div>
+        </section>
+
+        <!-- Newsletter -->
+        <section class="recessed-bg py-24 px-6 border-y dark:border-white/5 border-slate-200">
+            <div class="max-w-3xl mx-auto text-center">
+                <span class="material-symbols-outlined text-primary text-4xl mb-6 block">mail</span>
+                <h3 class="text-3xl font-bold dark:text-white text-slate-900 mb-4">Join the Lab</h3>
+                <p class="dark:text-slate-400 text-slate-500 mb-10">Get our latest technical deep dives and engineering
+                    news delivered to your inbox every two weeks.</p>
+                <form class="flex flex-col sm:flex-row gap-4">
+                    <input
+                        class="flex-1 dark:bg-white/5 bg-white border dark:border-white/10 border-slate-200 rounded-lg px-6 py-4 dark:text-white text-slate-900 focus:ring-2 focus:ring-primary focus:border-transparent outline-none dark:placeholder:text-slate-600 placeholder:text-slate-400"
+                        placeholder="engineering@company.com" type="email" />
+                    <button
+                        class="bg-primary hover:bg-primary-hover text-white px-8 py-4 rounded-lg font-bold transition-all shadow-lg shadow-primary/10 whitespace-nowrap"
+                        type="submit">
+                        Subscribe Now
+                    </button>
+                </form>
+                <p class="text-[10px] dark:text-slate-600 text-slate-400 mt-6 uppercase tracking-widest font-bold">No
+                    spam. Only high-signal technical content.</p>
+            </div>
+        </section>
+
+        <!-- Bottom CTA banner -->
+        <section class="bg-primary py-16 px-6 text-white overflow-hidden relative">
+            <div class="absolute inset-0 opacity-10 pointer-events-none">
+                <div
+                    class="absolute inset-0 bg-[radial-gradient(circle_at_2px_2px,_white_1px,_transparent_0)] bg-[size:32px_32px]">
+                </div>
+            </div>
+            <div class="max-w-7xl mx-auto flex flex-col md:flex-row items-center justify-between gap-10 relative z-10">
+                <div class="text-center md:text-left">
+                    <h2 class="text-3xl md:text-4xl font-bold mb-4">Have a complex project in mind?</h2>
+                    <p class="text-white/80 text-lg">Let's build something technically superior together.</p>
+                </div>
+                <a href="contact.html"
+                    class="bg-white text-primary hover:bg-slate-50 px-10 py-5 rounded-lg text-lg font-bold shadow-xl transition-all hover:scale-105 active:scale-95">
+                    Start a Conversation
+                </a>
+            </div>
+        </section>
+
+    </main>
+
+    <!-- ═══════════════════════════════════════════
+       FOOTER
+  ════════════════════════════════════════════ -->
+    <footer class="relative z-10 w-full border-t dark:border-primary/10 border-slate-200">
+        <div class="max-w-7xl mx-auto px-6 py-12">
+            <div class="flex flex-col md:flex-row items-center justify-between gap-8">
+                <a href="index.html" class="flex items-center">
+                    <div class="light-logo-wrap">
+                        <img src="OriginLabsLogo.png" alt="OriginLabs" class="h-8 w-auto object-contain">
+                    </div>
+                </a>
+                <nav class="flex flex-wrap justify-center items-center gap-x-8 gap-y-4">
+                    <a href="services.html"
+                        class="text-sm font-medium dark:text-slate-400 text-slate-600 dark:hover:text-primary hover:text-primary transition-colors">Services</a>
+                    <a href="#"
+                        class="text-sm font-medium dark:text-slate-400 text-slate-600 dark:hover:text-primary hover:text-primary transition-colors">Case
+                        Studies</a>
+                    <a href="about.html"
+                        class="text-sm font-medium dark:text-slate-400 text-slate-600 dark:hover:text-primary hover:text-primary transition-colors">About</a>
+                    <a href="blog.html" class="text-sm font-medium text-primary transition-colors">Blog</a>
+                    <a href="contact.html"
+                        class="text-sm font-medium dark:text-slate-400 text-slate-600 dark:hover:text-primary hover:text-primary transition-colors">Contact</a>
+                </nav>
+                <div class="flex flex-col items-center md:items-end gap-4">
+                    <div class="flex items-center gap-4">
+                        <a href="#"
+                            class="w-8 h-8 flex items-center justify-center rounded-full dark:bg-primary/10 bg-slate-100 dark:text-slate-400 text-slate-600 hover:bg-primary hover:text-white transition-all">
+                            <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 24 24">
+                                <path
+                                    d="M19 0h-14c-2.761 0-5 2.239-5 5v14c0 2.761 2.239 5 5 5h14c2.762 0 5-2.239 5-5v-14c0-2.761-2.238-5-5-5zm-11 19h-3v-11h3v11zm-1.5-12.268c-.966 0-1.75-.79-1.75-1.764s.784-1.764 1.75-1.764 1.75.79 1.75 1.764-.783 1.764-1.75 1.764zm13.5 12.268h-3v-5.604c0-3.368-4-3.113-4 0v5.604h-3v-11h3v1.765c1.396-2.586 7-2.777 7 2.476v6.759z" />
+                            </svg>
+                        </a>
+                        <a href="#"
+                            class="w-8 h-8 flex items-center justify-center rounded-full dark:bg-primary/10 bg-slate-100 dark:text-slate-400 text-slate-600 hover:bg-primary hover:text-white transition-all">
+                            <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 24 24">
+                                <path
+                                    d="M24 4.557c-.883.392-1.832.656-2.828.775 1.017-.609 1.798-1.574 2.165-2.724-.951.564-2.005.974-3.127 1.195-.897-.957-2.178-1.555-3.594-1.555-3.179 0-5.515 2.966-4.797 6.045-4.091-.205-7.719-2.165-10.148-5.144-1.29 2.213-.669 5.108 1.523 6.574-.806-.026-1.566-.247-2.229-.616-.054 2.281 1.581 4.415 3.949 4.89-.693.188-1.452.232-2.224.084.626 1.956 2.444 3.379 4.6 3.419-2.07 1.623-4.678 2.348-7.29 2.04 2.179 1.397 4.768 2.212 7.548 2.212 9.142 0 14.307-7.721 13.995-14.646.962-.695 1.797-1.562 2.457-2.549z" />
+                            </svg>
+                        </a>
+                        <a href="#"
+                            class="w-8 h-8 flex items-center justify-center rounded-full dark:bg-primary/10 bg-slate-100 dark:text-slate-400 text-slate-600 hover:bg-primary hover:text-white transition-all">
+                            <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 24 24">
+                                <path
+                                    d="M12 0c-6.626 0-12 5.373-12 12 0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.041-1.416-4.041-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23.957-.266 1.983-.399 3.003-.404 1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576 4.765-1.589 8.199-6.086 8.199-11.386 0-6.627-5.373-12-12-12z" />
+                            </svg>
+                        </a>
+                    </div>
+                    <p class="text-xs dark:text-slate-500 text-slate-500 uppercase tracking-widest font-bold">
+                        © 2024 OriginLabs. All rights reserved.
+                    </p>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <!-- ═══════════════════════════════════════════
+       SCRIPTS
+  ════════════════════════════════════════════ -->
+    <script>
+        function isDark() { return document.documentElement.classList.contains('dark'); }
+        function applyTheme(dark) {
+            const html = document.documentElement;
+            html.classList.remove('dark', 'light');
+            html.classList.add(dark ? 'dark' : 'light');
+            localStorage.setItem('ol-theme', dark ? 'dark' : 'light');
+            document.body.style.backgroundColor = dark ? '#0C1220' : '#ffffff';
+            document.body.style.color = dark ? '#ffffff' : '#0f172a';
+            const icon = document.getElementById('toggle-icon');
+            const iconM = document.getElementById('toggle-icon-mobile');
+            const labelM = document.getElementById('toggle-label-mobile');
+            if (icon) icon.textContent = dark ? 'dark_mode' : 'light_mode';
+            if (iconM) iconM.textContent = dark ? 'dark_mode' : 'light_mode';
+            if (labelM) labelM.textContent = dark ? 'Light mode' : 'Dark mode';
+            document.querySelectorAll('.dark-only').forEach(el => el.style.display = dark ? '' : 'none');
+            document.querySelectorAll('.light-only').forEach(el => el.style.display = !dark ? '' : 'none');
+        }
+        applyTheme(isDark());
+        document.getElementById('theme-toggle').addEventListener('click', () => applyTheme(!isDark()));
+        document.getElementById('theme-toggle-mobile').addEventListener('click', () => applyTheme(!isDark()));
+
+        const toggle = document.getElementById('menu-toggle');
+        const mMenu = document.getElementById('mobile-menu');
+        const iOpen = document.getElementById('icon-open');
+        const iClose = document.getElementById('icon-close');
+        toggle.addEventListener('click', () => {
+            const open = mMenu.classList.toggle('open');
+            iOpen.classList.toggle('hidden', open);
+            iClose.classList.toggle('hidden', !open);
+        });
+        mMenu.querySelectorAll('a, button').forEach(el => el.addEventListener('click', () => {
+            mMenu.classList.remove('open');
+            iOpen.classList.remove('hidden');
+            iClose.classList.add('hidden');
+        }));
+
+        const navLinks = document.querySelectorAll('[data-nav]');
+        const hoverBg = document.getElementById('nav-hover-bg');
+        navLinks.forEach(link => {
+            link.addEventListener('mouseenter', () => {
+                const r = link.getBoundingClientRect();
+                const pr = link.parentElement.getBoundingClientRect();
+                hoverBg.style.left = (r.left - pr.left) + 'px';
+                hoverBg.style.width = r.width + 'px';
+                hoverBg.style.opacity = '1';
+            });
+            link.addEventListener('mouseleave', () => hoverBg.style.opacity = '0');
+        });
+    </script>
+
+    <!-- Custom cursor -->
+    <div id="custom-cursor" style="position:fixed;pointer-events:none;z-index:99999;top:0;left:0;">
+        <div id="cursor-ring"
+            style="width:36px;height:36px;border:1.5px solid rgba(37,99,235,0.8);border-radius:50%;position:absolute;transform:translate(-50%,-50%);transition:width 0.2s,height 0.2s,background 0.2s;">
+        </div>
+        <div id="cursor-dot"
+            style="width:4px;height:4px;background:#2563EB;border-radius:50%;position:absolute;transform:translate(-50%,-50%);">
+        </div>
+        <div id="cursor-crosshair-h"
+            style="width:12px;height:1px;background:rgba(37,99,235,0.5);position:absolute;transform:translate(-50%,-50%);">
+        </div>
+        <div id="cursor-crosshair-v"
+            style="width:1px;height:12px;background:rgba(37,99,235,0.5);position:absolute;transform:translate(-50%,-50%);">
+        </div>
+    </div>
+    <script>
+        (function () {
+            var dot = document.getElementById('cursor-dot'), ring = document.getElementById('cursor-ring');
+            var crossH = document.getElementById('cursor-crosshair-h'), crossV = document.getElementById('cursor-crosshair-v');
+            var mouseX = window.innerWidth / 2, mouseY = window.innerHeight / 2, ringX = mouseX, ringY = mouseY;
+            document.addEventListener('mousemove', function (e) {
+                mouseX = e.clientX; mouseY = e.clientY;
+                dot.style.left = mouseX + 'px'; dot.style.top = mouseY + 'px';
+                crossH.style.left = mouseX + 'px'; crossH.style.top = mouseY + 'px';
+                crossV.style.left = mouseX + 'px'; crossV.style.top = mouseY + 'px';
+            });
+            (function animateRing() {
+                ringX += (mouseX - ringX) * 0.25; ringY += (mouseY - ringY) * 0.25;
+                ring.style.left = ringX + 'px'; ring.style.top = ringY + 'px';
+                requestAnimationFrame(animateRing);
+            })();
+            document.querySelectorAll('a, button').forEach(function (el) {
+                el.addEventListener('mouseenter', function () { document.body.classList.add('cursor-hover'); });
+                el.addEventListener('mouseleave', function () { document.body.classList.remove('cursor-hover'); });
+            });
+        })();
+    </script>
+
+</body>
+
+</html>
