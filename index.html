@@ -482,8 +482,108 @@
       border-radius: 3px;
     }
 
+
     ::-webkit-scrollbar {
       width: 6px;
+    }
+
+    /* ── Who We Are / What We Do marquee ── */
+    @keyframes ol-scroll-left {
+      from {
+        transform: translateX(0);
+      }
+
+      to {
+        transform: translateX(-50%);
+      }
+    }
+
+    @keyframes ol-scroll-right {
+      from {
+        transform: translateX(-50%);
+      }
+
+      to {
+        transform: translateX(0);
+      }
+    }
+
+    .ol-marquee-left {
+      animation: ol-scroll-left 35s linear infinite;
+    }
+
+    .ol-marquee-right {
+      animation: ol-scroll-right 35s linear infinite;
+    }
+
+    .ol-marquee-track:hover .ol-marquee-left,
+    .ol-marquee-track:hover .ol-marquee-right {
+      animation-play-state: paused;
+    }
+
+    .ol-marquee-fade {
+      -webkit-mask-image: linear-gradient(to right, transparent 0%, black 8%, black 92%, transparent 100%);
+      mask-image: linear-gradient(to right, transparent 0%, black 8%, black 92%, transparent 100%);
+    }
+
+    .ol-service-pill {
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+      padding: 10px 22px;
+      border-radius: 999px;
+      border: 1px solid #1E2D45;
+      color: #CBD5E1;
+      font-size: 14px;
+      font-weight: 500;
+      white-space: nowrap;
+      flex-shrink: 0;
+      transition: border-color 0.25s, background 0.25s, color 0.25s;
+    }
+
+    .light .ol-service-pill {
+      border-color: #e2e8f0;
+      color: #475569;
+    }
+
+    .ol-service-pill:hover {
+      border-color: #2563EB;
+      background: rgba(37, 99, 235, 0.08);
+      color: #fff;
+    }
+
+    .light .ol-service-pill:hover {
+      color: #1e293b;
+    }
+
+    .ol-service-pill .material-symbols-outlined {
+      font-size: 17px;
+      color: #2563EB;
+      flex-shrink: 0;
+    }
+
+    .ol-cta-outline {
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+      padding: 14px 36px;
+      border-radius: 8px;
+      border: 1px solid #1E2D45;
+      font-size: 14px;
+      font-weight: 600;
+      color: #fff;
+      transition: border-color 0.25s, background 0.25s;
+    }
+
+    .light .ol-cta-outline {
+      border-color: #e2e8f0;
+      color: #0f172a;
+    }
+
+    .ol-cta-outline:hover {
+      border-color: #2563EB;
+      background: #1A2437;
+      color: #fff;
     }
   </style>
 </head>
@@ -841,6 +941,205 @@
           </div>
 
         </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ═══════════════════════════════════════════
+       WHO WE ARE
+  ════════════════════════════════════════════ -->
+  <section class="relative z-10 w-full py-24 px-6 lg:px-12">
+    <div class="max-w-7xl mx-auto">
+
+      <div class="grid grid-cols-1 lg:grid-cols-2 gap-16 lg:gap-24 items-start mb-20">
+
+        <!-- Left — text -->
+        <div class="space-y-8">
+          <div
+            class="inline-flex items-center gap-2 px-3 py-1.5 rounded-full dark:bg-blue-500/10 bg-blue-500/5 border dark:border-blue-500/20 border-blue-500/15 text-blue-500 text-[10px] font-bold tracking-[0.2em] uppercase">
+            <span class="relative flex h-1.5 w-1.5">
+              <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-primary opacity-75"></span>
+              <span class="relative inline-flex rounded-full h-1.5 w-1.5 bg-primary"></span>
+            </span>
+            Who We Are
+          </div>
+
+          <h2
+            class="font-display text-4xl md:text-5xl xl:text-[52px] leading-[1.1] font-extrabold tracking-[-0.03em] dark:text-white text-slate-900">
+            We Are a Full-Service<br />
+            <span class="text-primary">Digital Engineering Studio</span>
+          </h2>
+
+          <div class="space-y-5 max-w-xl">
+            <p class="dark:text-slate-400 text-slate-500 text-lg leading-relaxed">
+              At OriginLabs, we bridge the gap between visionary ideas and robust engineering. We don't just build
+              websites — we architect digital ecosystems that drive growth and define categories.
+            </p>
+            <p class="dark:text-slate-400 text-slate-500 text-lg leading-relaxed">
+              Our multidisciplinary team combines technical excellence with strategic product thinking, ensuring every
+              line of code serves a measurable business purpose.
+            </p>
+          </div>
+        </div>
+
+        <!-- Right — 2×2 feature cards -->
+        <div class="grid grid-cols-2 gap-4">
+
+          <div
+            class="who-card p-7 rounded-xl dark:bg-[#111927] bg-white border dark:border-[#1E2D45] border-slate-200 transition-all duration-300 hover:border-primary/50 dark:hover:shadow-[0_0_24px_rgba(37,99,235,0.12)] hover:shadow-[0_0_24px_rgba(37,99,235,0.08)] hover:-translate-y-0.5">
+            <div class="w-10 h-10 rounded-lg bg-blue-500/10 flex items-center justify-center mb-5">
+              <span class="material-symbols-outlined text-primary" style="font-size:20px;">layers</span>
+            </div>
+            <h3 class="text-base font-bold mb-2 dark:text-white text-slate-900">Built to Last</h3>
+            <p class="dark:text-slate-400 text-slate-500 text-sm leading-relaxed">Future-proof architecture designed to
+              scale with your evolving needs.</p>
+          </div>
+
+          <div
+            class="who-card p-7 rounded-xl dark:bg-[#111927] bg-white border dark:border-[#1E2D45] border-slate-200 transition-all duration-300 hover:border-primary/50 dark:hover:shadow-[0_0_24px_rgba(37,99,235,0.12)] hover:shadow-[0_0_24px_rgba(37,99,235,0.08)] hover:-translate-y-0.5">
+            <div class="w-10 h-10 rounded-lg bg-blue-500/10 flex items-center justify-center mb-5">
+              <span class="material-symbols-outlined text-primary" style="font-size:20px;">speed</span>
+            </div>
+            <h3 class="text-base font-bold mb-2 dark:text-white text-slate-900">Performance Obsessed</h3>
+            <p class="dark:text-slate-400 text-slate-500 text-sm leading-relaxed">90+ Core Web Vitals on every build.
+              Fast is the baseline, not a bonus.</p>
+          </div>
+
+          <div
+            class="who-card p-7 rounded-xl dark:bg-[#111927] bg-white border dark:border-[#1E2D45] border-slate-200 transition-all duration-300 hover:border-primary/50 dark:hover:shadow-[0_0_24px_rgba(37,99,235,0.12)] hover:shadow-[0_0_24px_rgba(37,99,235,0.08)] hover:-translate-y-0.5">
+            <div class="w-10 h-10 rounded-lg bg-blue-500/10 flex items-center justify-center mb-5">
+              <span class="material-symbols-outlined text-primary" style="font-size:20px;">shield</span>
+            </div>
+            <h3 class="text-base font-bold mb-2 dark:text-white text-slate-900">Security by Default</h3>
+            <p class="dark:text-slate-400 text-slate-500 text-sm leading-relaxed">Enterprise-grade security protocols
+              built into the foundation of every project.</p>
+          </div>
+
+          <div
+            class="who-card p-7 rounded-xl dark:bg-[#111927] bg-white border dark:border-[#1E2D45] border-slate-200 transition-all duration-300 hover:border-primary/50 dark:hover:shadow-[0_0_24px_rgba(37,99,235,0.12)] hover:shadow-[0_0_24px_rgba(37,99,235,0.08)] hover:-translate-y-0.5">
+            <div class="w-10 h-10 rounded-lg bg-blue-500/10 flex items-center justify-center mb-5">
+              <span class="material-symbols-outlined text-primary" style="font-size:20px;">support_agent</span>
+            </div>
+            <h3 class="text-base font-bold mb-2 dark:text-white text-slate-900">Always Supported</h3>
+            <p class="dark:text-slate-400 text-slate-500 text-sm leading-relaxed">We stay long after launch — continuous
+              monitoring and proactive care.</p>
+          </div>
+
+        </div>
+      </div>
+
+      <!-- Divider -->
+      <div class="w-full h-px dark:bg-[#1E2D45] bg-slate-200 mb-20"></div>
+
+      <!-- ── WHAT WE DO ── -->
+      <div class="space-y-14">
+        <div class="text-center space-y-5">
+          <div
+            class="inline-flex items-center gap-2 px-3 py-1.5 rounded-full dark:bg-blue-500/10 bg-blue-500/5 border dark:border-blue-500/20 border-blue-500/15 text-blue-500 text-[10px] font-bold tracking-[0.2em] uppercase">
+            <span class="relative flex h-1.5 w-1.5">
+              <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-primary opacity-75"></span>
+              <span class="relative inline-flex rounded-full h-1.5 w-1.5 bg-primary"></span>
+            </span>
+            What We Do
+          </div>
+          <h2
+            class="font-display text-4xl md:text-5xl font-extrabold tracking-[-0.03em] dark:text-white text-slate-900">
+            Everything You Need.<br class="hidden sm:block" /> Nothing You Don't.
+          </h2>
+          <p class="dark:text-slate-400 text-slate-500 text-lg max-w-xl mx-auto">From discovery to deployment — and
+            everything in between.</p>
+        </div>
+
+        <!-- Marquee rows -->
+        <div class="space-y-4 overflow-hidden">
+
+          <!-- Row 1 — scrolls LEFT -->
+          <div class="ol-marquee-track ol-marquee-fade overflow-hidden">
+            <div class="flex ol-marquee-left">
+              <div class="flex items-center gap-4 pr-4">
+                <div class="ol-service-pill"><span class="material-symbols-outlined">language</span>Website Development
+                </div>
+                <div class="ol-service-pill"><span class="material-symbols-outlined">account_tree</span>CMS
+                  Implementation</div>
+                <div class="ol-service-pill"><span class="material-symbols-outlined">view_quilt</span>Custom WordPress
+                </div>
+                <div class="ol-service-pill"><span class="material-symbols-outlined">apartment</span>Enterprise Drupal
+                </div>
+                <div class="ol-service-pill"><span class="material-symbols-outlined">terminal</span>MERN Stack Apps
+                </div>
+                <div class="ol-service-pill"><span class="material-symbols-outlined">shopping_bag</span>WooCommerce
+                </div>
+                <div class="ol-service-pill"><span class="material-symbols-outlined">hub</span>API Integrations</div>
+                <div class="ol-service-pill"><span class="material-symbols-outlined">smartphone</span>Mobile-First
+                  Design</div>
+              </div>
+              <div class="flex items-center gap-4 pr-4" aria-hidden="true">
+                <div class="ol-service-pill"><span class="material-symbols-outlined">language</span>Website Development
+                </div>
+                <div class="ol-service-pill"><span class="material-symbols-outlined">account_tree</span>CMS
+                  Implementation</div>
+                <div class="ol-service-pill"><span class="material-symbols-outlined">view_quilt</span>Custom WordPress
+                </div>
+                <div class="ol-service-pill"><span class="material-symbols-outlined">apartment</span>Enterprise Drupal
+                </div>
+                <div class="ol-service-pill"><span class="material-symbols-outlined">terminal</span>MERN Stack Apps
+                </div>
+                <div class="ol-service-pill"><span class="material-symbols-outlined">shopping_bag</span>WooCommerce
+                </div>
+                <div class="ol-service-pill"><span class="material-symbols-outlined">hub</span>API Integrations</div>
+                <div class="ol-service-pill"><span class="material-symbols-outlined">smartphone</span>Mobile-First
+                  Design</div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Row 2 — scrolls RIGHT -->
+          <div class="ol-marquee-track ol-marquee-fade overflow-hidden">
+            <div class="flex ol-marquee-right">
+              <div class="flex items-center gap-4 pr-4">
+                <div class="ol-service-pill"><span class="material-symbols-outlined">verified_user</span>Security Audits
+                </div>
+                <div class="ol-service-pill"><span class="material-symbols-outlined">bolt</span>Performance Optimisation
+                </div>
+                <div class="ol-service-pill"><span class="material-symbols-outlined">move_up</span>CMS Migrations</div>
+                <div class="ol-service-pill"><span class="material-symbols-outlined">settings_suggest</span>Maintenance
+                  &amp; Support</div>
+                <div class="ol-service-pill"><span class="material-symbols-outlined">cloud_upload</span>Cloud Deployment
+                </div>
+                <div class="ol-service-pill"><span class="material-symbols-outlined">bar_chart</span>Analytics Setup
+                </div>
+                <div class="ol-service-pill"><span class="material-symbols-outlined">search</span>Technical SEO</div>
+                <div class="ol-service-pill"><span class="material-symbols-outlined">lock</span>Security Hardening</div>
+              </div>
+              <div class="flex items-center gap-4 pr-4" aria-hidden="true">
+                <div class="ol-service-pill"><span class="material-symbols-outlined">verified_user</span>Security Audits
+                </div>
+                <div class="ol-service-pill"><span class="material-symbols-outlined">bolt</span>Performance Optimisation
+                </div>
+                <div class="ol-service-pill"><span class="material-symbols-outlined">move_up</span>CMS Migrations</div>
+                <div class="ol-service-pill"><span class="material-symbols-outlined">settings_suggest</span>Maintenance
+                  &amp; Support</div>
+                <div class="ol-service-pill"><span class="material-symbols-outlined">cloud_upload</span>Cloud Deployment
+                </div>
+                <div class="ol-service-pill"><span class="material-symbols-outlined">bar_chart</span>Analytics Setup
+                </div>
+                <div class="ol-service-pill"><span class="material-symbols-outlined">search</span>Technical SEO</div>
+                <div class="ol-service-pill"><span class="material-symbols-outlined">lock</span>Security Hardening</div>
+              </div>
+            </div>
+          </div>
+
+        </div>
+
+        <!-- CTA -->
+        <div class="flex justify-center pt-2">
+          <a href="services.html" class="ol-cta-outline group">
+            See Our Full Services
+            <span
+              class="material-symbols-outlined text-lg group-hover:translate-x-1 transition-transform">arrow_forward</span>
+          </a>
+        </div>
+
       </div>
     </div>
   </section>
