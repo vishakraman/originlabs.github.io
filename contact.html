@@ -2,6 +2,14 @@
 <html class="dark" lang="en">
 
 <head>
+    <meta http-equiv="Content-Security-Policy" content="
+  default-src 'self';
+  script-src 'self' 'unsafe-inline' https://cdn.tailwindcss.com;
+  style-src 'self' 'unsafe-inline' https://fonts.googleapis.com;
+  font-src 'self' https://fonts.gstatic.com;
+  img-src 'self' data: blob:;
+  connect-src 'self';
+">
     <meta charset="utf-8" />
     <meta content="width=device-width, initial-scale=1.0" name="viewport" />
     <title>Contact — OriginLabs</title>
@@ -305,7 +313,7 @@
     <!-- ═══════════════════════════════════════════
        NAVIGATION
   ════════════════════════════════════════════ -->
-    <div data-include="_includes/header.html"></div>
+    <div data-include="includes/header.html"></div>
 
     <!-- ═══════════════════════════════════════════
        CONTACT CONTENT
@@ -516,8 +524,8 @@
        FOOTER
   ════════════════════════════════════════════ -->
     <footer class="relative z-10 w-full border-t dark:border-primary/10 border-slate-200 mt-8">
-        <div data-include="_includes/cta.html"></div>
-        <div data-include="_includes/footer.html"></div>
+        <div data-include="includes/cta.html"></div>
+        <div data-include="includes/footer.html"></div>
     </footer>
 
     <!-- ═══════════════════════════════════════════

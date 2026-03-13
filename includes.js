@@ -2,9 +2,9 @@
  * includes.js — OriginLabs shared partial loader
  *
  * Usage in any HTML page:
- *   <div data-include="_includes/header.html"></div>
- *   <div data-include="_includes/cta.html"></div>    <!-- optional -->
- *   <div data-include="_includes/footer.html"></div>
+ *   <div data-include="includes/header.html"></div>
+ *   <div data-include="includes/cta.html"></div>    <!-- optional -->
+ *   <div data-include="includes/footer.html"></div>
  *   <script src="includes.js"></script>
  *
  * The script resolves each data-include, fetches the partial,
