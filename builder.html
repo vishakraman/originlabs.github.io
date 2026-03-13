@@ -26,6 +26,22 @@
       --faint: #475569;
     }
 
+    /* ── Light mode token overrides ── */
+    .light {
+      --bg: #ffffff;
+      --surface: #f8fafc;
+      --surface2: #f1f5f9;
+      --border: #e2e8f0;
+      --text: #0f172a;
+      --muted: #475569;
+      --faint: #94A3B8;
+    }
+
+    .light body {
+      background: var(--bg);
+      color: var(--text);
+    }
+
     *,
     *::before,
     *::after {
@@ -1296,93 +1312,154 @@
       cursor: pointer;
     }
 
-    /* ── Nav glass ── */
-    .dark .ol-glass {
-      background: rgba(17, 25, 39, 0.80);
+    /* ── Shared site styles ── */
+    .noise-overlay {
+      position: fixed;
+      inset: 0;
+      pointer-events: none;
+      z-index: 1;
+      background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.03'/%3E%3C/svg%3E");
+    }
+
+    .dark-only {
+      display: block;
+    }
+
+    .light-only {
+      display: none;
+    }
+
+    .dark .glass {
+      background: rgba(17, 25, 39, 0.75);
       backdrop-filter: blur(14px);
       -webkit-backdrop-filter: blur(14px);
-      border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+      border: 1px solid rgba(255, 255, 255, 0.06);
     }
 
-    .ol-nav-link {
+    .light .glass {
+      background: rgba(255, 255, 255, 0.80);
+      backdrop-filter: blur(14px);
+      -webkit-backdrop-filter: blur(14px);
+      border: 1px solid rgba(0, 0, 0, 0.08);
+    }
+
+    .nav-link {
       position: relative;
-      padding: 6px 16px;
+      padding-bottom: 4px;
       font-size: 0.875rem;
       font-weight: 500;
-      color: #94A3B8;
-      border-radius: 8px;
-      text-decoration: none;
-      transition: color 0.2s;
+      letter-spacing: 0.01em;
     }
 
-    .ol-nav-link:hover {
+    .dark .nav-link {
+      color: #94A3B8;
+    }
+
+    .light .nav-link {
+      color: #475569;
+    }
+
+    .nav-link::after {
+      content: '';
+      position: absolute;
+      bottom: 0;
+      left: 50%;
+      width: 0;
+      height: 2px;
+      background: #2563EB;
+      border-radius: 999px;
+      transition: width 0.3s ease, left 0.3s ease;
+    }
+
+    .dark .nav-link:hover {
       color: #fff;
     }
 
-    .ol-nav-link.active {
-      color: var(--primary);
+    .light .nav-link:hover {
+      color: #0f172a;
     }
 
-    #ol-mobile-menu {
+    .nav-link:hover::after,
+    .nav-link.active::after {
+      width: 100%;
+      left: 0;
+    }
+
+    .nav-link.active {
+      color: #2563EB;
+    }
+
+    #mobile-menu {
       max-height: 0;
       overflow: hidden;
       opacity: 0;
       transition: max-height 0.4s ease, opacity 0.3s ease;
     }
 
-    #ol-mobile-menu.open {
-      max-height: 400px;
+    #mobile-menu.open {
+      max-height: 500px;
       opacity: 1;
     }
 
-    #ol-theme-toggle {
+    @keyframes glowPulse {
+
+      0%,
+      100% {
+        box-shadow: 0 0 20px rgba(37, 99, 235, 0.35);
+      }
+
+      50% {
+        box-shadow: 0 0 40px rgba(37, 99, 235, 0.65);
+      }
+    }
+
+    .btn-glow {
+      animation: glowPulse 2.5s ease-in-out infinite;
+    }
+
+    #theme-toggle {
       position: relative;
       width: 44px;
       height: 24px;
       border-radius: 999px;
       border: none;
-      background: #1E2D45;
-      cursor: pointer;
+      cursor: none !important;
       flex-shrink: 0;
-      transition: background 0.3s;
+      transition: background 0.3s ease;
     }
 
-    #ol-theme-toggle-thumb {
+    .dark #theme-toggle {
+      background: #1E2D45;
+    }
+
+    .light #theme-toggle {
+      background: #CBD5E1;
+    }
+
+    #theme-toggle-thumb {
       position: absolute;
       top: 3px;
       left: 3px;
       width: 18px;
       height: 18px;
       border-radius: 50%;
-      background: var(--primary);
-      transition: transform 0.3s;
+      background: #2563EB;
+      transition: transform 0.3s cubic-bezier(.4, 0, .2, 1);
       display: flex;
       align-items: center;
       justify-content: center;
     }
 
-    @keyframes olGlowPulse {
-
-      0%,
-      100% {
-        box-shadow: 0 0 20px rgba(37, 99, 235, 0.35)
-      }
-
-      50% {
-        box-shadow: 0 0 40px rgba(37, 99, 235, 0.65)
-      }
+    .light #theme-toggle-thumb {
+      transform: translateX(20px);
     }
 
-    .ol-btn-glow {
-      animation: olGlowPulse 2.5s ease-in-out infinite;
-    }
-
-    .dark .ol-logo-wrap {
+    .dark .light-logo-wrap {
       background: transparent;
       padding: 0;
     }
 
-    .light .ol-logo-wrap {
+    .light .light-logo-wrap {
       background: #0C1220;
       border-radius: 8px;
       padding: 4px 10px;
@@ -1390,56 +1467,27 @@
   </style>
 </head>
 
-<body>
+<body class="overflow-x-hidden relative antialiased">
+
+  <div class="noise-overlay"></div>
+
+  <div class="dark-only fixed inset-0 pointer-events-none overflow-hidden z-0">
+    <div class="absolute -top-32 -left-32 w-[600px] h-[600px] rounded-full bg-blue-600/[0.08] blur-[130px]"></div>
+    <div class="absolute top-1/3 -right-32 w-[500px] h-[500px] rounded-full bg-indigo-500/[0.06] blur-[120px]"></div>
+  </div>
+  <div class="light-only fixed inset-0 pointer-events-none overflow-hidden z-0">
+    <div class="absolute -top-32 -left-32 w-[600px] h-[600px] rounded-full bg-blue-400/[0.12] blur-[130px]"></div>
+    <div class="absolute top-1/3 -right-32 w-[500px] h-[500px] rounded-full bg-indigo-300/[0.10] blur-[120px]"></div>
+  </div>
 
   <div class="orb orb-1"></div>
   <div class="orb orb-2"></div>
   <div class="orb orb-3"></div>
 
-  <!-- ═══ NAVIGATION ═══ -->
-  <header class="ol-glass fixed top-0 left-0 right-0 z-50">
-    <div class="max-w-[1440px] mx-auto px-6 lg:px-12 flex h-[68px] items-center justify-between">
-      <a href="index.html" class="ol-logo-wrap flex items-center">
-        <img src="OriginLabsLogo.png" alt="OriginLabs" style="height:32px;width:auto;object-fit:contain;">
-      </a>
-      <nav class="hidden lg:flex items-center gap-1">
-        <a href="services.html" class="ol-nav-link">Services</a>
-        <a href="builder.html" class="ol-nav-link active">Start Building</a>
-        <a href="about.html" class="ol-nav-link">About</a>
-      </nav>
-      <div class="hidden lg:flex items-center gap-3">
-        <button id="ol-theme-toggle" aria-label="Toggle theme">
-          <div id="ol-theme-toggle-thumb">
-            <span id="ol-toggle-icon" class="material-symbols-outlined text-white"
-              style="font-size:11px;">dark_mode</span>
-          </div>
-        </button>
-        <a href="contact.html"
-          class="ol-btn-glow flex h-9 items-center gap-2 rounded-lg px-5 text-white text-sm font-semibold"
-          style="background:var(--primary);text-decoration:none;">
-          Get a Quote
-          <span class="material-symbols-outlined" style="font-size:16px;">arrow_forward</span>
-        </a>
-      </div>
-      <button id="ol-menu-toggle" class="lg:hidden p-1" style="color:#94A3B8;background:none;border:none;">
-        <span id="ol-icon-open" class="material-symbols-outlined">menu</span>
-        <span id="ol-icon-close" class="material-symbols-outlined" style="display:none;">close</span>
-      </button>
-    </div>
-    <div id="ol-mobile-menu" style="border-top:1px solid rgba(30,45,69,0.6);">
-      <nav class="flex flex-col px-6 py-4 gap-1">
-        <a href="services.html"
-          style="display:block;padding:10px 12px;font-size:14px;color:#94A3B8;text-decoration:none;border-radius:8px;">Services</a>
-        <a href="builder.html"
-          style="display:block;padding:10px 12px;font-size:14px;color:var(--primary);text-decoration:none;border-radius:8px;background:rgba(37,99,235,0.1);">Start
-          Building</a>
-        <a href="about.html"
-          style="display:block;padding:10px 12px;font-size:14px;color:#94A3B8;text-decoration:none;border-radius:8px;">About</a>
-        <a href="contact.html"
-          style="display:block;padding:10px 12px;font-size:14px;color:#94A3B8;text-decoration:none;border-radius:8px;">Contact</a>
-      </nav>
-    </div>
-  </header>
+  <!-- ═══════════════════════════════════════════
+       NAVIGATION
+  ════════════════════════════════════════════ -->
+  <div data-include="_includes/header.html"></div>
 
   <div class="page">
 
@@ -1673,25 +1721,29 @@
             <div class="form-row">
               <div class="form-group">
                 <label class="form-label">Your Name *</label>
-                <input class="form-input" id="input-name" type="text" placeholder="Vishak Kumar" />
+                <input class="form-input dark:text-white text-slate-900" id="input-name" type="text"
+                  placeholder="Vishak Kumar" />
               </div>
               <div class="form-group">
                 <label class="form-label">Company</label>
-                <input class="form-input" id="input-company" type="text" placeholder="Organisation" />
+                <input class="form-input dark:text-white text-slate-900" id="input-company" type="text"
+                  placeholder="Organisation" />
               </div>
             </div>
             <div class="form-group">
               <label class="form-label">Email Address *</label>
-              <input class="form-input" id="input-email" type="email" placeholder="you@company.com" />
+              <input class="form-input dark:text-white text-slate-900" id="input-email" type="email"
+                placeholder="you@company.com" />
             </div>
             <div class="form-group">
               <label class="form-label">Phone / WhatsApp *</label>
-              <input class="form-input" id="input-phone" type="tel" placeholder="+91 98765 43210" />
+              <input class="form-input dark:text-white text-slate-900" id="input-phone" type="tel"
+                placeholder="+91 98765 43210" />
             </div>
             <div class="form-group">
               <label class="form-label">Tell us more (optional)</label>
-              <textarea class="form-input" id="input-note" rows="2" placeholder="Timeline, budget, specific goals..."
-                style="resize:vertical;min-height:56px;"></textarea>
+              <textarea class="form-input dark:text-white text-slate-900" id="input-note" rows="2"
+                placeholder="Timeline, budget, specific goals..." style="resize:vertical;min-height:56px;"></textarea>
             </div>
 
             <button class="btn-primary" id="submit-btn" disabled>
@@ -1707,25 +1759,12 @@
     </div>
   </div>
 
-  <!-- ═══ FOOTER ═══ -->
-  <footer style="position:relative;z-index:10;border-top:1px solid rgba(37,99,235,0.1);">
-    <div style="max-width:1340px;margin:0 auto;padding:40px 24px;">
-      <div style="display:flex;flex-wrap:wrap;align-items:center;justify-content:space-between;gap:24px;">
-        <a href="index.html" class="ol-logo-wrap" style="display:flex;align-items:center;">
-          <img src="OriginLabsLogo.png" alt="OriginLabs" style="height:32px;width:auto;object-fit:contain;">
-        </a>
-        <nav style="display:flex;flex-wrap:wrap;gap:24px;align-items:center;">
-          <a href="services.html"
-            style="font-size:13px;font-weight:500;color:#94A3B8;text-decoration:none;">Services</a>
-          <a href="builder.html" style="font-size:13px;font-weight:500;color:var(--primary);text-decoration:none;">Start
-            Building</a>
-          <a href="about.html" style="font-size:13px;font-weight:500;color:#94A3B8;text-decoration:none;">About</a>
-          <a href="contact.html" style="font-size:13px;font-weight:500;color:#94A3B8;text-decoration:none;">Contact</a>
-        </nav>
-        <p style="font-size:11px;color:#475569;text-transform:uppercase;letter-spacing:0.1em;font-weight:700;">© 2024
-          OriginLabs. All rights reserved.</p>
-      </div>
-    </div>
+  <!-- ═══════════════════════════════════════════
+       FOOTER
+  ════════════════════════════════════════════ -->
+  <footer class="relative z-10 w-full border-t dark:border-primary/10 border-slate-200 mt-20">
+    <div data-include="_includes/cta.html"></div>
+    <div data-include="_includes/footer.html"></div>
   </footer>
 
   <!-- ── Confirmation Screen ── -->
@@ -2048,31 +2087,12 @@
       });
     });
 
-    // ── Nav scripts ──
-    (function () {
-      function isDark() { return document.documentElement.classList.contains('dark'); }
-      function applyTheme(dark) {
-        document.documentElement.className = dark ? 'dark' : 'light';
-        localStorage.setItem('ol-theme', dark ? 'dark' : 'light');
-        var icon = document.getElementById('ol-toggle-icon');
-        if (icon) icon.textContent = dark ? 'dark_mode' : 'light_mode';
-        document.getElementById('ol-theme-toggle').style.background = dark ? '#1E2D45' : '#CBD5E1';
-        var thumb = document.getElementById('ol-theme-toggle-thumb');
-        if (thumb) thumb.style.transform = dark ? '' : 'translateX(20px)';
-      }
-      applyTheme(isDark());
-      document.getElementById('ol-theme-toggle').addEventListener('click', function () { applyTheme(!isDark()); });
-      var mToggle = document.getElementById('ol-menu-toggle');
-      var mMenu = document.getElementById('ol-mobile-menu');
-      var iOpen = document.getElementById('ol-icon-open');
-      var iClose = document.getElementById('ol-icon-close');
-      mToggle.addEventListener('click', function () {
-        var open = mMenu.classList.toggle('open');
-        iOpen.style.display = open ? 'none' : '';
-        iClose.style.display = open ? '' : 'none';
-      });
-    })();
+    // ── Theme & Nav are now handled by includes.js ──
   </script>
+
+
+  <script src="includes.js"></script>
+
 </body>
 
 </html>
