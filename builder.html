@@ -1,0 +1,2078 @@
+<!DOCTYPE html>
+<html class="dark" lang="en">
+
+<head>
+  <meta charset="utf-8" />
+  <meta content="width=device-width, initial-scale=1.0" name="viewport" />
+  <title>Build Your Project — OriginLabs</title>
+  <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700;800&display=swap"
+    rel="stylesheet" />
+  <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap"
+    rel="stylesheet" />
+  <script src="https://cdn.tailwindcss.com?plugins=forms"></script>
+  <script>
+    tailwind.config = { darkMode: 'class', theme: { extend: { colors: { primary: '#2563EB', 'primary-hover': '#1D4ED8' }, fontFamily: { display: ['Space Grotesk', 'sans-serif'] } } } }
+  </script>
+  <style>
+    :root {
+      --bg: #0C1220;
+      --surface: #111927;
+      --surface2: #1A2437;
+      --border: #1E2D45;
+      --primary: #2563EB;
+      --primary-h: #1D4ED8;
+      --text: #ffffff;
+      --muted: #94A3B8;
+      --faint: #475569;
+    }
+
+    *,
+    *::before,
+    *::after {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    html {
+      scroll-behavior: smooth;
+    }
+
+    body {
+      font-family: "Space Grotesk", sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      min-height: 100vh;
+      overflow-x: hidden;
+    }
+
+    /* ── Animated grid bg ── */
+    body::before {
+      content: '';
+      position: fixed;
+      inset: 0;
+      z-index: 0;
+      background-image:
+        linear-gradient(rgba(37, 99, 235, 0.045) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(37, 99, 235, 0.045) 1px, transparent 1px);
+      background-size: 48px 48px;
+      animation: gridShift 20s linear infinite;
+      pointer-events: none;
+    }
+
+    @keyframes gridShift {
+      0% {
+        background-position: 0 0;
+      }
+
+      100% {
+        background-position: 48px 48px;
+      }
+    }
+
+    /* ── Glow orbs ── */
+    .orb {
+      position: fixed;
+      border-radius: 50%;
+      pointer-events: none;
+      z-index: 0;
+      filter: blur(140px);
+    }
+
+    .orb-1 {
+      width: 600px;
+      height: 600px;
+      top: -200px;
+      left: -150px;
+      background: rgba(37, 99, 235, 0.1);
+      animation: orbFloat1 12s ease-in-out infinite;
+    }
+
+    .orb-2 {
+      width: 500px;
+      height: 500px;
+      bottom: -150px;
+      right: -150px;
+      background: rgba(99, 102, 241, 0.08);
+      animation: orbFloat2 15s ease-in-out infinite;
+    }
+
+    .orb-3 {
+      width: 300px;
+      height: 300px;
+      top: 50%;
+      left: 50%;
+      background: rgba(37, 99, 235, 0.04);
+      animation: orbFloat3 18s ease-in-out infinite;
+    }
+
+    @keyframes orbFloat1 {
+
+      0%,
+      100% {
+        transform: translate(0, 0)
+      }
+
+      50% {
+        transform: translate(40px, 30px)
+      }
+    }
+
+    @keyframes orbFloat2 {
+
+      0%,
+      100% {
+        transform: translate(0, 0)
+      }
+
+      50% {
+        transform: translate(-30px, -40px)
+      }
+    }
+
+    @keyframes orbFloat3 {
+
+      0%,
+      100% {
+        transform: translate(-50%, -50%) scale(1)
+      }
+
+      50% {
+        transform: translate(-50%, -50%) scale(1.3)
+      }
+    }
+
+    /* ── Layout ── */
+    .page {
+      position: relative;
+      z-index: 1;
+      max-width: 1340px;
+      margin: 0 auto;
+      padding: 0 24px 100px;
+      padding-top: 68px;
+    }
+
+    /* ── Header ── */
+    .header {
+      text-align: center;
+      padding: 60px 0 50px;
+      animation: fadeUp 0.7s ease both;
+    }
+
+    @keyframes fadeUp {
+      from {
+        opacity: 0;
+        transform: translateY(24px);
+      }
+
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    .badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 6px 16px;
+      border-radius: 999px;
+      background: rgba(37, 99, 235, 0.1);
+      border: 1px solid rgba(37, 99, 235, 0.25);
+      color: var(--primary);
+      font-size: 10px;
+      font-weight: 700;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+      margin-bottom: 22px;
+    }
+
+    .badge-dot {
+      width: 6px;
+      height: 6px;
+      border-radius: 50%;
+      background: var(--primary);
+      animation: pulseDot 2s ease-in-out infinite;
+    }
+
+    @keyframes pulseDot {
+
+      0%,
+      100% {
+        box-shadow: 0 0 0 0 rgba(37, 99, 235, 0.6);
+        transform: scale(1);
+      }
+
+      50% {
+        box-shadow: 0 0 0 5px rgba(37, 99, 235, 0);
+        transform: scale(1.2);
+      }
+    }
+
+    .header h1 {
+      font-size: clamp(38px, 5vw, 62px);
+      font-weight: 800;
+      line-height: 1.05;
+      letter-spacing: -0.03em;
+      margin-bottom: 16px;
+    }
+
+    .header h1 span {
+      color: var(--primary);
+      position: relative;
+      display: inline-block;
+    }
+
+    .header h1 span::after {
+      content: '';
+      position: absolute;
+      bottom: -4px;
+      left: 0;
+      right: 0;
+      height: 3px;
+      background: linear-gradient(90deg, var(--primary), transparent);
+      border-radius: 2px;
+      animation: underlineGrow 1s 0.5s ease both;
+    }
+
+    @keyframes underlineGrow {
+      from {
+        transform: scaleX(0);
+        transform-origin: left
+      }
+
+      to {
+        transform: scaleX(1)
+      }
+    }
+
+    .header p {
+      color: var(--muted);
+      font-size: 17px;
+      max-width: 480px;
+      margin: 0 auto;
+      line-height: 1.65;
+    }
+
+    /* ── Progress steps ── */
+    .steps {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 0;
+      margin-bottom: 52px;
+      animation: fadeUp 0.7s 0.15s ease both;
+    }
+
+    .step {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      font-size: 12px;
+      font-weight: 600;
+      letter-spacing: 0.05em;
+      text-transform: uppercase;
+      color: var(--faint);
+      transition: color 0.4s;
+    }
+
+    .step.active {
+      color: var(--text);
+    }
+
+    .step.done {
+      color: var(--primary);
+    }
+
+    .step-num {
+      width: 30px;
+      height: 30px;
+      border-radius: 50%;
+      border: 1.5px solid var(--border);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 11px;
+      font-weight: 700;
+      transition: all 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
+    }
+
+    .step.active .step-num {
+      border-color: var(--primary);
+      background: rgba(37, 99, 235, 0.15);
+      color: var(--primary);
+      box-shadow: 0 0 14px rgba(37, 99, 235, 0.3);
+    }
+
+    .step.done .step-num {
+      border-color: var(--primary);
+      background: var(--primary);
+      color: white;
+      box-shadow: 0 0 14px rgba(37, 99, 235, 0.4);
+    }
+
+    .step-line {
+      width: 60px;
+      height: 1px;
+      background: var(--border);
+      margin: 0 14px;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .step-line::after {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: var(--primary);
+      transform: scaleX(0);
+      transform-origin: left;
+      transition: transform 0.5s ease;
+    }
+
+    .step-line.lit::after {
+      transform: scaleX(1);
+    }
+
+    /* ── Builder grid ── */
+    .builder {
+      display: grid;
+      grid-template-columns: 1fr 1fr 360px;
+      gap: 20px;
+      align-items: start;
+      animation: fadeUp 0.7s 0.25s ease both;
+    }
+
+    /* ── Panel ── */
+    .panel {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 18px;
+      overflow: hidden;
+      transition: border-color 0.3s;
+    }
+
+    .panel:focus-within {
+      border-color: rgba(37, 99, 235, 0.3);
+    }
+
+    .panel-header {
+      padding: 18px 22px;
+      border-bottom: 1px solid var(--border);
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      background: rgba(255, 255, 255, 0.015);
+    }
+
+    .panel-icon {
+      width: 34px;
+      height: 34px;
+      border-radius: 9px;
+      background: rgba(37, 99, 235, 0.12);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+    }
+
+    .panel-icon .material-symbols-outlined {
+      font-size: 18px;
+      color: var(--primary);
+    }
+
+    .panel-title {
+      font-size: 10px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.14em;
+      color: var(--faint);
+    }
+
+    .panel-subtitle {
+      font-size: 14px;
+      font-weight: 600;
+      color: var(--text);
+      margin-top: 1px;
+    }
+
+    .panel-body {
+      padding: 18px;
+    }
+
+    /* ── Platform cards ── */
+    .platform-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 10px;
+    }
+
+    .platform-card {
+      background: var(--surface2);
+      border: 1.5px solid var(--border);
+      border-radius: 13px;
+      padding: 16px 14px;
+      cursor: grab;
+      transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+      user-select: none;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .platform-card::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 2px;
+      background: linear-gradient(90deg, var(--primary), #6366f1);
+      opacity: 0;
+      transition: opacity 0.25s;
+    }
+
+    .platform-card::after {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: radial-gradient(circle at 50% 0%, rgba(37, 99, 235, 0.08), transparent 70%);
+      opacity: 0;
+      transition: opacity 0.25s;
+    }
+
+    .platform-card:hover {
+      border-color: rgba(37, 99, 235, 0.55);
+      transform: translateY(-3px);
+      box-shadow: 0 12px 32px rgba(0, 0, 0, 0.35), 0 0 0 1px rgba(37, 99, 235, 0.1);
+    }
+
+    .platform-card:hover::before {
+      opacity: 1;
+    }
+
+    .platform-card:hover::after {
+      opacity: 1;
+    }
+
+    .platform-card:active {
+      cursor: grabbing;
+      transform: scale(0.96);
+    }
+
+    .platform-card.dragging {
+      opacity: 0.35;
+      transform: rotate(2deg);
+    }
+
+    .platform-card.selected {
+      border-color: var(--primary);
+      background: rgba(37, 99, 235, 0.1);
+      box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.15);
+    }
+
+    .platform-card.selected::before {
+      opacity: 1;
+    }
+
+    .platform-icon {
+      font-size: 26px;
+      margin-bottom: 10px;
+      display: block;
+    }
+
+    .platform-name {
+      font-size: 13px;
+      font-weight: 700;
+      margin-bottom: 3px;
+    }
+
+    .platform-desc {
+      font-size: 11px;
+      color: var(--muted);
+      line-height: 1.45;
+    }
+
+    .drag-hint {
+      display: flex;
+      align-items: center;
+      gap: 4px;
+      font-size: 10px;
+      color: var(--faint);
+      margin-top: 9px;
+      opacity: 0;
+      transform: translateY(4px);
+      transition: all 0.2s;
+    }
+
+    .platform-card:hover .drag-hint {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    .drag-hint .material-symbols-outlined {
+      font-size: 12px;
+    }
+
+    /* ── Feature chips ── */
+    .features-grid {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+    }
+
+    /* Category labels */
+    .feature-category {
+      width: 100%;
+      font-size: 9px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.14em;
+      color: var(--faint);
+      padding: 8px 2px 4px;
+      margin-top: 4px;
+      border-top: 1px solid var(--border);
+    }
+
+    .feature-category:first-child {
+      border-top: none;
+      margin-top: 0;
+      padding-top: 0;
+    }
+
+    .feature-chip {
+      display: inline-flex;
+      align-items: center;
+      gap: 7px;
+      padding: 7px 13px;
+      background: var(--surface2);
+      border: 1px solid var(--border);
+      border-radius: 999px;
+      font-size: 12px;
+      font-weight: 500;
+      color: var(--muted);
+      cursor: grab;
+      transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+      user-select: none;
+      white-space: nowrap;
+      position: relative;
+    }
+
+    .feature-chip .material-symbols-outlined {
+      font-size: 14px;
+      color: var(--primary);
+      transition: transform 0.2s;
+    }
+
+    .feature-chip:hover {
+      border-color: rgba(37, 99, 235, 0.55);
+      color: var(--text);
+      transform: translateY(-2px);
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+      background: rgba(37, 99, 235, 0.06);
+    }
+
+    .feature-chip:hover .material-symbols-outlined {
+      transform: scale(1.2);
+    }
+
+    .feature-chip:active {
+      cursor: grabbing;
+      transform: scale(0.95);
+    }
+
+    .feature-chip.dragging {
+      opacity: 0.3;
+      transform: rotate(3deg) scale(0.95);
+    }
+
+    .feature-chip.used {
+      opacity: 0.25;
+      pointer-events: none;
+      text-decoration: line-through;
+      text-decoration-color: var(--primary);
+    }
+
+    /* ── Drop zone ── */
+    .drop-zone {
+      min-height: 280px;
+      border: 2px dashed var(--border);
+      border-radius: 13px;
+      padding: 14px;
+      transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+      position: relative;
+    }
+
+    .drop-zone.drag-over {
+      border-color: var(--primary);
+      background: rgba(37, 99, 235, 0.06);
+      box-shadow: inset 0 0 40px rgba(37, 99, 235, 0.06), 0 0 0 3px rgba(37, 99, 235, 0.1);
+      transform: scale(1.01);
+    }
+
+    .drop-placeholder {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      min-height: 240px;
+      gap: 12px;
+      color: var(--faint);
+      text-align: center;
+      pointer-events: none;
+    }
+
+    .drop-placeholder .material-symbols-outlined {
+      font-size: 40px;
+      opacity: 0.3;
+      animation: floatIcon 3s ease-in-out infinite;
+    }
+
+    @keyframes floatIcon {
+
+      0%,
+      100% {
+        transform: translateY(0);
+      }
+
+      50% {
+        transform: translateY(-8px);
+      }
+    }
+
+    .drop-placeholder p {
+      font-size: 13px;
+      line-height: 1.6;
+      max-width: 170px;
+    }
+
+    /* ── Dropped items ── */
+    .dropped-platform {
+      background: rgba(37, 99, 235, 0.1);
+      border: 1.5px solid rgba(37, 99, 235, 0.4);
+      border-radius: 10px;
+      padding: 11px 14px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      margin-bottom: 10px;
+      font-size: 13px;
+      font-weight: 600;
+      animation: bounceIn 0.35s cubic-bezier(0.34, 1.56, 0.64, 1);
+    }
+
+    .dropped-feature {
+      display: inline-flex;
+      align-items: center;
+      gap: 7px;
+      padding: 6px 12px;
+      background: var(--surface2);
+      border: 1px solid rgba(37, 99, 235, 0.3);
+      border-radius: 999px;
+      font-size: 12px;
+      font-weight: 500;
+      color: var(--text);
+      margin: 3px;
+      animation: bounceIn 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+    }
+
+    .dropped-feature .material-symbols-outlined {
+      font-size: 13px;
+      color: var(--primary);
+    }
+
+    @keyframes bounceIn {
+      from {
+        opacity: 0;
+        transform: scale(0.6) translateY(10px);
+      }
+
+      to {
+        opacity: 1;
+        transform: scale(1) translateY(0);
+      }
+    }
+
+    .remove-btn {
+      width: 17px;
+      height: 17px;
+      border-radius: 50%;
+      background: rgba(255, 255, 255, 0.08);
+      border: none;
+      color: var(--muted);
+      font-size: 11px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      margin-left: 3px;
+      transition: all 0.15s;
+      flex-shrink: 0;
+      line-height: 1;
+    }
+
+    .remove-btn:hover {
+      background: rgba(239, 68, 68, 0.25);
+      color: #f87171;
+      transform: scale(1.2);
+    }
+
+    .dropped-features-wrap {
+      display: flex;
+      flex-wrap: wrap;
+    }
+
+    /* ── Summary panel ── */
+    .summary-panel {
+      position: sticky;
+      top: 88px;
+    }
+
+    .complexity-bar {
+      height: 5px;
+      border-radius: 999px;
+      background: var(--border);
+      margin: 10px 0 6px;
+      overflow: hidden;
+    }
+
+    .complexity-fill {
+      height: 100%;
+      border-radius: 999px;
+      background: linear-gradient(90deg, #2563EB, #6366f1, #8b5cf6);
+      background-size: 200% 100%;
+      transition: width 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+      width: 0%;
+      animation: shimmer 3s linear infinite;
+    }
+
+    @keyframes shimmer {
+      0% {
+        background-position: 200% 0
+      }
+
+      100% {
+        background-position: -200% 0
+      }
+    }
+
+    .complexity-label-row {
+      display: flex;
+      justify-content: space-between;
+      font-size: 10px;
+      color: var(--faint);
+    }
+
+    .complexity-level {
+      font-size: 12px;
+      font-weight: 700;
+      color: var(--primary);
+      margin-top: 6px;
+      min-height: 18px;
+      transition: all 0.3s;
+    }
+
+    .summary-item {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      padding: 7px 0;
+      border-bottom: 1px solid var(--border);
+      font-size: 12px;
+      color: var(--muted);
+      animation: fadeIn 0.3s ease;
+    }
+
+    @keyframes fadeIn {
+      from {
+        opacity: 0;
+        transform: translateX(-6px)
+      }
+
+      to {
+        opacity: 1;
+        transform: none
+      }
+    }
+
+    .summary-item:last-child {
+      border-bottom: none;
+    }
+
+    .summary-item .material-symbols-outlined {
+      font-size: 15px;
+      color: var(--primary);
+      flex-shrink: 0;
+    }
+
+    .summary-empty {
+      text-align: center;
+      padding: 24px 0;
+      color: var(--faint);
+      font-size: 13px;
+      line-height: 1.6;
+    }
+
+    .summary-empty .material-symbols-outlined {
+      font-size: 30px;
+      display: block;
+      margin-bottom: 8px;
+      opacity: 0.35;
+    }
+
+    /* ── Form fields ── */
+    .form-group {
+      margin-bottom: 11px;
+    }
+
+    .form-label {
+      font-size: 10px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+      color: var(--faint);
+      display: block;
+      margin-bottom: 5px;
+    }
+
+    .form-input {
+      width: 100%;
+      padding: 9px 12px;
+      background: var(--surface2);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      color: var(--text);
+      font-family: "Space Grotesk", sans-serif;
+      font-size: 13px;
+      transition: border-color 0.2s, box-shadow 0.2s;
+      outline: none;
+    }
+
+    .form-input:focus {
+      border-color: var(--primary);
+      box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.12);
+    }
+
+    .form-input::placeholder {
+      color: var(--faint);
+    }
+
+    .form-input.error {
+      border-color: #ef4444;
+      box-shadow: 0 0 0 3px rgba(239, 68, 68, 0.15);
+      animation: shake 0.4s ease;
+    }
+
+    @keyframes shake {
+
+      0%,
+      100% {
+        transform: translateX(0)
+      }
+
+      20% {
+        transform: translateX(-5px)
+      }
+
+      40% {
+        transform: translateX(5px)
+      }
+
+      60% {
+        transform: translateX(-3px)
+      }
+
+      80% {
+        transform: translateX(3px)
+      }
+    }
+
+    .form-row {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 10px;
+    }
+
+    /* ── Buttons ── */
+    .btn-primary {
+      width: 100%;
+      padding: 13px;
+      background: var(--primary);
+      border: none;
+      border-radius: 10px;
+      color: white;
+      font-family: "Space Grotesk", sans-serif;
+      font-size: 14px;
+      font-weight: 700;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+      box-shadow: 0 0 20px rgba(37, 99, 235, 0.3);
+      margin-top: 16px;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .btn-primary::before {
+      content: '';
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      width: 0;
+      height: 0;
+      background: rgba(255, 255, 255, 0.15);
+      border-radius: 50%;
+      transform: translate(-50%, -50%);
+      transition: width 0.4s, height 0.4s;
+    }
+
+    .btn-primary:hover:not(:disabled) {
+      background: var(--primary-h);
+      box-shadow: 0 0 40px rgba(37, 99, 235, 0.55);
+      transform: translateY(-2px);
+    }
+
+    .btn-primary:hover:not(:disabled)::before {
+      width: 300px;
+      height: 300px;
+    }
+
+    .btn-primary:active:not(:disabled) {
+      transform: translateY(0) scale(0.98);
+    }
+
+    .btn-primary:disabled {
+      opacity: 0.35;
+      cursor: not-allowed;
+      box-shadow: none;
+    }
+
+    .btn-primary .material-symbols-outlined {
+      font-size: 18px;
+    }
+
+    .btn-clear {
+      width: 100%;
+      padding: 9px;
+      background: transparent;
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      color: var(--muted);
+      font-family: "Space Grotesk", sans-serif;
+      font-size: 12px;
+      font-weight: 500;
+      cursor: pointer;
+      transition: all 0.2s;
+      margin-top: 8px;
+    }
+
+    .btn-clear:hover {
+      border-color: #ef4444;
+      color: #f87171;
+      background: rgba(239, 68, 68, 0.05);
+    }
+
+    /* ── Feature count badge ── */
+    .feature-count {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      width: 20px;
+      height: 20px;
+      border-radius: 50%;
+      background: var(--primary);
+      font-size: 10px;
+      font-weight: 700;
+      margin-left: auto;
+      transition: all 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+    }
+
+    .feature-count.bump {
+      animation: bump 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+    }
+
+    @keyframes bump {
+      0% {
+        transform: scale(1)
+      }
+
+      50% {
+        transform: scale(1.5)
+      }
+
+      100% {
+        transform: scale(1)
+      }
+    }
+
+    /* ── Confirmation screen ── */
+    .confirm-screen {
+      display: none;
+      position: fixed;
+      inset: 0;
+      z-index: 200;
+      background: rgba(8, 14, 24, 0.92);
+      backdrop-filter: blur(24px);
+      align-items: center;
+      justify-content: center;
+      padding: 24px;
+    }
+
+    .confirm-screen.show {
+      display: flex;
+      animation: confirmFadeIn 0.3s ease;
+    }
+
+    @keyframes confirmFadeIn {
+      from {
+        opacity: 0
+      }
+
+      to {
+        opacity: 1
+      }
+    }
+
+    .confirm-card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 24px;
+      padding: 48px 40px;
+      max-width: 540px;
+      width: 100%;
+      text-align: center;
+      animation: cardPop 0.5s cubic-bezier(0.34, 1.56, 0.64, 1);
+      position: relative;
+      overflow: hidden;
+    }
+
+    @keyframes cardPop {
+      from {
+        opacity: 0;
+        transform: scale(0.8) translateY(20px)
+      }
+
+      to {
+        opacity: 1;
+        transform: scale(1) translateY(0)
+      }
+    }
+
+    .confirm-card::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 3px;
+      background: linear-gradient(90deg, var(--primary), #6366f1, #8b5cf6, #6366f1, var(--primary));
+      background-size: 300% 100%;
+      animation: rainbowSlide 3s linear infinite;
+    }
+
+    @keyframes rainbowSlide {
+      0% {
+        background-position: 0% 0
+      }
+
+      100% {
+        background-position: 300% 0
+      }
+    }
+
+    /* Confetti particles */
+    .confetti-wrap {
+      position: absolute;
+      inset: 0;
+      pointer-events: none;
+      overflow: hidden;
+    }
+
+    .confetti-dot {
+      position: absolute;
+      width: 6px;
+      height: 6px;
+      border-radius: 50%;
+      animation: confettiFall 1.5s ease-in forwards;
+    }
+
+    @keyframes confettiFall {
+      0% {
+        opacity: 1;
+        transform: translateY(-10px) rotate(0deg);
+      }
+
+      100% {
+        opacity: 0;
+        transform: translateY(200px) rotate(720deg);
+      }
+    }
+
+    .confirm-icon {
+      width: 76px;
+      height: 76px;
+      border-radius: 50%;
+      background: rgba(37, 99, 235, 0.12);
+      border: 2px solid rgba(37, 99, 235, 0.35);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin: 0 auto 24px;
+      animation: iconSpin 0.6s 0.2s cubic-bezier(0.34, 1.56, 0.64, 1) both;
+      position: relative;
+      z-index: 1;
+    }
+
+    @keyframes iconSpin {
+      from {
+        opacity: 0;
+        transform: scale(0.3) rotate(-180deg);
+      }
+
+      to {
+        opacity: 1;
+        transform: scale(1) rotate(0deg);
+      }
+    }
+
+    .confirm-icon .material-symbols-outlined {
+      font-size: 38px;
+      color: var(--primary);
+    }
+
+    .confirm-card h2 {
+      font-size: 30px;
+      font-weight: 800;
+      margin-bottom: 10px;
+      letter-spacing: -0.02em;
+      animation: fadeUp 0.4s 0.3s ease both;
+    }
+
+    .confirm-card>p {
+      color: var(--muted);
+      font-size: 15px;
+      line-height: 1.65;
+      margin-bottom: 28px;
+      animation: fadeUp 0.4s 0.4s ease both;
+    }
+
+    .confirm-summary {
+      background: var(--surface2);
+      border: 1px solid var(--border);
+      border-radius: 14px;
+      padding: 18px 20px;
+      text-align: left;
+      margin-bottom: 20px;
+      animation: fadeUp 0.4s 0.45s ease both;
+    }
+
+    .confirm-summary-label {
+      font-size: 9px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.14em;
+      color: var(--faint);
+      margin-bottom: 12px;
+    }
+
+    .confirm-tag {
+      display: inline-flex;
+      align-items: center;
+      gap: 5px;
+      padding: 4px 10px;
+      border-radius: 999px;
+      background: rgba(37, 99, 235, 0.1);
+      border: 1px solid rgba(37, 99, 235, 0.2);
+      font-size: 11px;
+      font-weight: 500;
+      color: var(--primary);
+      margin: 2px;
+    }
+
+    .confirm-tag .material-symbols-outlined {
+      font-size: 12px;
+    }
+
+    .ref-number {
+      font-family: monospace;
+      font-size: 11px;
+      color: var(--faint);
+      margin-bottom: 24px;
+      letter-spacing: 0.1em;
+      animation: fadeUp 0.4s 0.5s ease both;
+    }
+
+    .btn-done {
+      padding: 14px 40px;
+      background: var(--primary);
+      border: none;
+      border-radius: 10px;
+      color: white;
+      font-family: "Space Grotesk", sans-serif;
+      font-size: 14px;
+      font-weight: 700;
+      cursor: pointer;
+      transition: all 0.2s;
+      box-shadow: 0 0 24px rgba(37, 99, 235, 0.4);
+      animation: fadeUp 0.4s 0.55s ease both;
+    }
+
+    .btn-done:hover {
+      background: var(--primary-h);
+      transform: translateY(-2px);
+      box-shadow: 0 0 36px rgba(37, 99, 235, 0.6);
+    }
+
+    /* ── Tooltip on used chips ── */
+    .feature-chip.used::before {
+      content: '✓ Added';
+      position: absolute;
+      bottom: calc(100% + 6px);
+      left: 50%;
+      transform: translateX(-50%);
+      background: var(--primary);
+      color: white;
+      font-size: 10px;
+      padding: 2px 7px;
+      border-radius: 4px;
+      white-space: nowrap;
+      pointer-events: none;
+      opacity: 0;
+    }
+
+    /* ── Mobile ── */
+    @media (max-width: 1100px) {
+      .builder {
+        grid-template-columns: 1fr 1fr;
+      }
+
+      .summary-panel {
+        grid-column: 1 / -1;
+        position: static;
+      }
+    }
+
+    @media (max-width: 700px) {
+      .builder {
+        grid-template-columns: 1fr;
+      }
+
+      .platform-grid {
+        grid-template-columns: 1fr 1fr;
+      }
+
+      .header h1 {
+        font-size: 34px;
+      }
+
+      .step-line {
+        width: 28px;
+      }
+
+      .form-row {
+        grid-template-columns: 1fr;
+      }
+
+      .confirm-card {
+        padding: 32px 24px;
+      }
+    }
+
+    /* ── Cursor ── */
+    .platform-card,
+    .feature-chip {
+      cursor: grab;
+    }
+
+    .platform-card:active,
+    .feature-chip:active {
+      cursor: grabbing;
+    }
+
+    a,
+    button {
+      cursor: pointer;
+    }
+
+    /* ── Nav glass ── */
+    .dark .ol-glass {
+      background: rgba(17, 25, 39, 0.80);
+      backdrop-filter: blur(14px);
+      -webkit-backdrop-filter: blur(14px);
+      border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+    }
+
+    .ol-nav-link {
+      position: relative;
+      padding: 6px 16px;
+      font-size: 0.875rem;
+      font-weight: 500;
+      color: #94A3B8;
+      border-radius: 8px;
+      text-decoration: none;
+      transition: color 0.2s;
+    }
+
+    .ol-nav-link:hover {
+      color: #fff;
+    }
+
+    .ol-nav-link.active {
+      color: var(--primary);
+    }
+
+    #ol-mobile-menu {
+      max-height: 0;
+      overflow: hidden;
+      opacity: 0;
+      transition: max-height 0.4s ease, opacity 0.3s ease;
+    }
+
+    #ol-mobile-menu.open {
+      max-height: 400px;
+      opacity: 1;
+    }
+
+    #ol-theme-toggle {
+      position: relative;
+      width: 44px;
+      height: 24px;
+      border-radius: 999px;
+      border: none;
+      background: #1E2D45;
+      cursor: pointer;
+      flex-shrink: 0;
+      transition: background 0.3s;
+    }
+
+    #ol-theme-toggle-thumb {
+      position: absolute;
+      top: 3px;
+      left: 3px;
+      width: 18px;
+      height: 18px;
+      border-radius: 50%;
+      background: var(--primary);
+      transition: transform 0.3s;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    @keyframes olGlowPulse {
+
+      0%,
+      100% {
+        box-shadow: 0 0 20px rgba(37, 99, 235, 0.35)
+      }
+
+      50% {
+        box-shadow: 0 0 40px rgba(37, 99, 235, 0.65)
+      }
+    }
+
+    .ol-btn-glow {
+      animation: olGlowPulse 2.5s ease-in-out infinite;
+    }
+
+    .dark .ol-logo-wrap {
+      background: transparent;
+      padding: 0;
+    }
+
+    .light .ol-logo-wrap {
+      background: #0C1220;
+      border-radius: 8px;
+      padding: 4px 10px;
+    }
+  </style>
+</head>
+
+<body>
+
+  <div class="orb orb-1"></div>
+  <div class="orb orb-2"></div>
+  <div class="orb orb-3"></div>
+
+  <!-- ═══ NAVIGATION ═══ -->
+  <header class="ol-glass fixed top-0 left-0 right-0 z-50">
+    <div class="max-w-[1440px] mx-auto px-6 lg:px-12 flex h-[68px] items-center justify-between">
+      <a href="index.html" class="ol-logo-wrap flex items-center">
+        <img src="OriginLabsLogo.png" alt="OriginLabs" style="height:32px;width:auto;object-fit:contain;">
+      </a>
+      <nav class="hidden lg:flex items-center gap-1">
+        <a href="services.html" class="ol-nav-link">Services</a>
+        <a href="builder.html" class="ol-nav-link active">Start Building</a>
+        <a href="about.html" class="ol-nav-link">About</a>
+      </nav>
+      <div class="hidden lg:flex items-center gap-3">
+        <button id="ol-theme-toggle" aria-label="Toggle theme">
+          <div id="ol-theme-toggle-thumb">
+            <span id="ol-toggle-icon" class="material-symbols-outlined text-white"
+              style="font-size:11px;">dark_mode</span>
+          </div>
+        </button>
+        <a href="contact.html"
+          class="ol-btn-glow flex h-9 items-center gap-2 rounded-lg px-5 text-white text-sm font-semibold"
+          style="background:var(--primary);text-decoration:none;">
+          Get a Quote
+          <span class="material-symbols-outlined" style="font-size:16px;">arrow_forward</span>
+        </a>
+      </div>
+      <button id="ol-menu-toggle" class="lg:hidden p-1" style="color:#94A3B8;background:none;border:none;">
+        <span id="ol-icon-open" class="material-symbols-outlined">menu</span>
+        <span id="ol-icon-close" class="material-symbols-outlined" style="display:none;">close</span>
+      </button>
+    </div>
+    <div id="ol-mobile-menu" style="border-top:1px solid rgba(30,45,69,0.6);">
+      <nav class="flex flex-col px-6 py-4 gap-1">
+        <a href="services.html"
+          style="display:block;padding:10px 12px;font-size:14px;color:#94A3B8;text-decoration:none;border-radius:8px;">Services</a>
+        <a href="builder.html"
+          style="display:block;padding:10px 12px;font-size:14px;color:var(--primary);text-decoration:none;border-radius:8px;background:rgba(37,99,235,0.1);">Start
+          Building</a>
+        <a href="about.html"
+          style="display:block;padding:10px 12px;font-size:14px;color:#94A3B8;text-decoration:none;border-radius:8px;">About</a>
+        <a href="contact.html"
+          style="display:block;padding:10px 12px;font-size:14px;color:#94A3B8;text-decoration:none;border-radius:8px;">Contact</a>
+      </nav>
+    </div>
+  </header>
+
+  <div class="page">
+
+    <!-- ── Header ── -->
+    <div class="header">
+      <div class="badge">
+        <div class="badge-dot"></div> Interactive Project Builder
+      </div>
+      <h1>Build Your <span>Project.</span></h1>
+      <p>Drag your platform and features into the build zone. We'll handle the rest.</p>
+    </div>
+
+    <!-- ── Steps ── -->
+    <div class="steps">
+      <div class="step active" id="step1">
+        <div class="step-num">1</div>
+        <span class="step-label">Platform</span>
+      </div>
+      <div class="step-line" id="line1"></div>
+      <div class="step" id="step2">
+        <div class="step-num">2</div>
+        <span class="step-label">Features</span>
+      </div>
+      <div class="step-line" id="line2"></div>
+      <div class="step" id="step3">
+        <div class="step-num">3</div>
+        <span class="step-label">Submit</span>
+      </div>
+    </div>
+
+    <!-- ── Builder ── -->
+    <div class="builder">
+
+      <!-- Zone 1: Platforms -->
+      <div class="panel">
+        <div class="panel-header">
+          <div class="panel-icon"><span class="material-symbols-outlined">foundation</span></div>
+          <div style="flex:1;">
+            <div class="panel-title">Step 01</div>
+            <div class="panel-subtitle">Choose your platform</div>
+          </div>
+        </div>
+        <div class="panel-body">
+          <div class="platform-grid">
+
+            <div class="platform-card" draggable="true" data-type="platform" data-id="wordpress" data-name="WordPress"
+              data-icon="🟦">
+              <span class="platform-icon">🟦</span>
+              <div class="platform-name">WordPress</div>
+              <div class="platform-desc">CMS, blogs, WooCommerce, business sites</div>
+              <div class="drag-hint"><span class="material-symbols-outlined">drag_indicator</span>Drag or tap</div>
+            </div>
+
+            <div class="platform-card" draggable="true" data-type="platform" data-id="drupal"
+              data-name="Enterprise Drupal" data-icon="🔷">
+              <span class="platform-icon">🔷</span>
+              <div class="platform-name">Enterprise Drupal</div>
+              <div class="platform-desc">Complex CMS, multi-site, enterprise scale</div>
+              <div class="drag-hint"><span class="material-symbols-outlined">drag_indicator</span>Drag or tap</div>
+            </div>
+
+            <div class="platform-card" draggable="true" data-type="platform" data-id="mern" data-name="MERN Stack"
+              data-icon="⚡">
+              <span class="platform-icon">⚡</span>
+              <div class="platform-name">MERN Stack</div>
+              <div class="platform-desc">Custom apps, dashboards, real-time features</div>
+              <div class="drag-hint"><span class="material-symbols-outlined">drag_indicator</span>Drag or tap</div>
+            </div>
+
+            <div class="platform-card" draggable="true" data-type="platform" data-id="static" data-name="Static Website"
+              data-icon="🌐">
+              <span class="platform-icon">🌐</span>
+              <div class="platform-name">Static Website</div>
+              <div class="platform-desc">HTML, CSS, Tailwind — blazing fast & secure</div>
+              <div class="drag-hint"><span class="material-symbols-outlined">drag_indicator</span>Drag or tap</div>
+            </div>
+
+            <div class="platform-card" draggable="true" data-type="platform" data-id="unsure" data-name="Not Sure Yet"
+              data-icon="🤔" style="grid-column:1/-1;">
+              <span class="platform-icon">🤔</span>
+              <div class="platform-name">Not Sure Yet</div>
+              <div class="platform-desc">Tell us your goals — we'll recommend the right stack</div>
+              <div class="drag-hint"><span class="material-symbols-outlined">drag_indicator</span>Drag or tap</div>
+            </div>
+
+          </div>
+        </div>
+      </div>
+
+      <!-- Zone 2: Features -->
+      <div class="panel">
+        <div class="panel-header">
+          <div class="panel-icon"><span class="material-symbols-outlined">widgets</span></div>
+          <div style="flex:1;">
+            <div class="panel-title">Step 02</div>
+            <div class="panel-subtitle">Add your features</div>
+          </div>
+          <div class="feature-count" id="feature-count" style="display:none;">0</div>
+        </div>
+        <div class="panel-body">
+          <div class="features-grid" id="features-source">
+
+            <div class="feature-category">Core &amp; Content</div>
+            <div class="feature-chip" draggable="true" data-type="feature" data-id="contact" data-name="Contact Form"
+              data-icon="mail"><span class="material-symbols-outlined">mail</span>Contact Form</div>
+            <div class="feature-chip" draggable="true" data-type="feature" data-id="blog" data-name="Blog / News"
+              data-icon="article"><span class="material-symbols-outlined">article</span>Blog / News</div>
+            <div class="feature-chip" draggable="true" data-type="feature" data-id="landing" data-name="Landing Pages"
+              data-icon="web"><span class="material-symbols-outlined">web</span>Landing Pages</div>
+            <div class="feature-chip" draggable="true" data-type="feature" data-id="multilang"
+              data-name="Multi-language" data-icon="translate"><span
+                class="material-symbols-outlined">translate</span>Multi-language</div>
+            <div class="feature-chip" draggable="true" data-type="feature" data-id="mobile"
+              data-name="Mobile-First Design" data-icon="smartphone"><span
+                class="material-symbols-outlined">smartphone</span>Mobile-First Design</div>
+
+            <div class="feature-category">E-commerce &amp; Sales</div>
+            <div class="feature-chip" draggable="true" data-type="feature" data-id="ecom"
+              data-name="E-commerce / WooCommerce" data-icon="shopping_bag"><span
+                class="material-symbols-outlined">shopping_bag</span>E-commerce</div>
+            <div class="feature-chip" draggable="true" data-type="feature" data-id="booking" data-name="Booking System"
+              data-icon="calendar_month"><span class="material-symbols-outlined">calendar_month</span>Booking System
+            </div>
+            <div class="feature-chip" draggable="true" data-type="feature" data-id="payment" data-name="Payment Gateway"
+              data-icon="payments"><span class="material-symbols-outlined">payments</span>Payment Gateway</div>
+
+            <div class="feature-category">CRM &amp; Marketing</div>
+            <div class="feature-chip" draggable="true" data-type="feature" data-id="crm" data-name="CRM Integration"
+              data-icon="hub"><span class="material-symbols-outlined">hub</span>CRM Integration</div>
+            <div class="feature-chip" draggable="true" data-type="feature" data-id="email" data-name="Email Campaigns"
+              data-icon="campaign"><span class="material-symbols-outlined">campaign</span>Email Campaigns</div>
+            <div class="feature-chip" draggable="true" data-type="feature" data-id="chat" data-name="Live Chat"
+              data-icon="chat"><span class="material-symbols-outlined">chat</span>Live Chat</div>
+            <div class="feature-chip" draggable="true" data-type="feature" data-id="whatsapp"
+              data-name="WhatsApp Integration" data-icon="forum"><span
+                class="material-symbols-outlined">forum</span>WhatsApp</div>
+
+            <div class="feature-category">SEO &amp; Analytics</div>
+            <div class="feature-chip" draggable="true" data-type="feature" data-id="seo" data-name="SEO Setup"
+              data-icon="search"><span class="material-symbols-outlined">search</span>SEO Setup</div>
+            <div class="feature-chip" draggable="true" data-type="feature" data-id="analytics"
+              data-name="Analytics Setup" data-icon="bar_chart"><span
+                class="material-symbols-outlined">bar_chart</span>Analytics Setup</div>
+            <div class="feature-chip" draggable="true" data-type="feature" data-id="perf"
+              data-name="Performance Optimisation" data-icon="bolt"><span
+                class="material-symbols-outlined">bolt</span>Performance Opt.</div>
+
+            <div class="feature-category">Advanced &amp; Technical</div>
+            <div class="feature-chip" draggable="true" data-type="feature" data-id="dashboard"
+              data-name="Admin Dashboard" data-icon="dashboard"><span
+                class="material-symbols-outlined">dashboard</span>Admin Dashboard</div>
+            <div class="feature-chip" draggable="true" data-type="feature" data-id="portal"
+              data-name="Patient / User Portal" data-icon="person_check"><span
+                class="material-symbols-outlined">person_check</span>User Portal</div>
+            <div class="feature-chip" draggable="true" data-type="feature" data-id="api" data-name="API Integration"
+              data-icon="api"><span class="material-symbols-outlined">api</span>API Integration</div>
+            <div class="feature-chip" draggable="true" data-type="feature" data-id="cloud" data-name="Cloud Deployment"
+              data-icon="cloud_upload"><span class="material-symbols-outlined">cloud_upload</span>Cloud Deployment</div>
+            <div class="feature-chip" draggable="true" data-type="feature" data-id="security" data-name="Security Audit"
+              data-icon="verified_user"><span class="material-symbols-outlined">verified_user</span>Security Audit</div>
+
+            <div class="feature-category">Ongoing</div>
+            <div class="feature-chip" draggable="true" data-type="feature" data-id="maintenance"
+              data-name="Maintenance Plan" data-icon="build"><span
+                class="material-symbols-outlined">build</span>Maintenance Plan</div>
+            <div class="feature-chip" draggable="true" data-type="feature" data-id="migration" data-name="CMS Migration"
+              data-icon="move_up"><span class="material-symbols-outlined">move_up</span>CMS Migration</div>
+            <div class="feature-chip" draggable="true" data-type="feature" data-id="training" data-name="Team Training"
+              data-icon="school"><span class="material-symbols-outlined">school</span>Team Training</div>
+
+          </div>
+        </div>
+      </div>
+
+      <!-- Zone 3: Drop + Summary -->
+      <div class="summary-panel">
+
+        <!-- Drop zone panel -->
+        <div class="panel" style="margin-bottom:16px;">
+          <div class="panel-header">
+            <div class="panel-icon"><span class="material-symbols-outlined">inbox</span></div>
+            <div>
+              <div class="panel-title">Your Build</div>
+              <div class="panel-subtitle">Drop items here</div>
+            </div>
+          </div>
+          <div class="panel-body" style="padding:12px;">
+            <div class="drop-zone" id="drop-zone">
+              <div class="drop-placeholder" id="drop-placeholder">
+                <span class="material-symbols-outlined">drag_pan</span>
+                <p>Start by dragging a platform, then add your features</p>
+              </div>
+              <div id="dropped-platform"></div>
+              <div class="dropped-features-wrap" id="dropped-features"></div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Summary panel -->
+        <div class="panel">
+          <div class="panel-header">
+            <div class="panel-icon"><span class="material-symbols-outlined">query_stats</span></div>
+            <div>
+              <div class="panel-title">Live Estimate</div>
+              <div class="panel-subtitle">Project complexity</div>
+            </div>
+          </div>
+          <div class="panel-body">
+
+            <!-- Complexity bar -->
+            <div style="margin-bottom:18px;">
+              <div class="complexity-bar">
+                <div class="complexity-fill" id="complexity-fill"></div>
+              </div>
+              <div class="complexity-label-row"><span>Simple</span><span>Enterprise</span></div>
+              <div class="complexity-level" id="complexity-label">— Select a platform to begin</div>
+            </div>
+
+            <!-- Summary list -->
+            <div id="summary-list">
+              <div class="summary-empty">
+                <span class="material-symbols-outlined">inventory_2</span>
+                Your project summary will appear here as you build.
+              </div>
+            </div>
+
+            <!-- Divider -->
+            <div style="border-top:1px solid var(--border);margin:16px 0;"></div>
+
+            <!-- Contact form -->
+            <div class="form-row">
+              <div class="form-group">
+                <label class="form-label">Your Name *</label>
+                <input class="form-input" id="input-name" type="text" placeholder="Vishak Kumar" />
+              </div>
+              <div class="form-group">
+                <label class="form-label">Company</label>
+                <input class="form-input" id="input-company" type="text" placeholder="Organisation" />
+              </div>
+            </div>
+            <div class="form-group">
+              <label class="form-label">Email Address *</label>
+              <input class="form-input" id="input-email" type="email" placeholder="you@company.com" />
+            </div>
+            <div class="form-group">
+              <label class="form-label">Phone / WhatsApp *</label>
+              <input class="form-input" id="input-phone" type="tel" placeholder="+91 98765 43210" />
+            </div>
+            <div class="form-group">
+              <label class="form-label">Tell us more (optional)</label>
+              <textarea class="form-input" id="input-note" rows="2" placeholder="Timeline, budget, specific goals..."
+                style="resize:vertical;min-height:56px;"></textarea>
+            </div>
+
+            <button class="btn-primary" id="submit-btn" disabled>
+              <span class="material-symbols-outlined">rocket_launch</span>
+              Submit Project Brief
+            </button>
+            <button class="btn-clear" id="clear-btn">↺ Clear &amp; Start Over</button>
+
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- ═══ FOOTER ═══ -->
+  <footer style="position:relative;z-index:10;border-top:1px solid rgba(37,99,235,0.1);">
+    <div style="max-width:1340px;margin:0 auto;padding:40px 24px;">
+      <div style="display:flex;flex-wrap:wrap;align-items:center;justify-content:space-between;gap:24px;">
+        <a href="index.html" class="ol-logo-wrap" style="display:flex;align-items:center;">
+          <img src="OriginLabsLogo.png" alt="OriginLabs" style="height:32px;width:auto;object-fit:contain;">
+        </a>
+        <nav style="display:flex;flex-wrap:wrap;gap:24px;align-items:center;">
+          <a href="services.html"
+            style="font-size:13px;font-weight:500;color:#94A3B8;text-decoration:none;">Services</a>
+          <a href="builder.html" style="font-size:13px;font-weight:500;color:var(--primary);text-decoration:none;">Start
+            Building</a>
+          <a href="about.html" style="font-size:13px;font-weight:500;color:#94A3B8;text-decoration:none;">About</a>
+          <a href="contact.html" style="font-size:13px;font-weight:500;color:#94A3B8;text-decoration:none;">Contact</a>
+        </nav>
+        <p style="font-size:11px;color:#475569;text-transform:uppercase;letter-spacing:0.1em;font-weight:700;">© 2024
+          OriginLabs. All rights reserved.</p>
+      </div>
+    </div>
+  </footer>
+
+  <!-- ── Confirmation Screen ── -->
+  <div class="confirm-screen" id="confirm-screen">
+    <div class="confirm-card">
+      <div class="confetti-wrap" id="confetti-wrap"></div>
+      <div class="confirm-icon">
+        <span class="material-symbols-outlined">check_circle</span>
+      </div>
+      <h2>You're All Set! 🎉</h2>
+      <p>Your project brief has been saved. Our team will review it and reach out within <strong
+          style="color:var(--text)">24 hours</strong> to kick things off.</p>
+
+      <div class="confirm-summary" id="confirm-summary"></div>
+      <div class="ref-number" id="ref-number"></div>
+
+      <a href="index.html" class="btn-done" style="display:inline-block;text-decoration:none;">
+        Back to OriginLabs →
+      </a>
+    </div>
+  </div>
+
+  <script>
+    // ── State ──────────────────────────────────────────────
+    let droppedPlatform = null;
+    let droppedFeatures = [];
+
+    // ── Drag from source ───────────────────────────────────
+    document.querySelectorAll('[draggable="true"]').forEach(el => {
+      el.addEventListener('dragstart', e => {
+        el.classList.add('dragging');
+        e.dataTransfer.effectAllowed = 'copy';
+        e.dataTransfer.setData('text/plain', JSON.stringify({
+          type: el.dataset.type,
+          id: el.dataset.id,
+          name: el.dataset.name,
+          icon: el.dataset.icon || el.querySelector('.material-symbols-outlined')?.textContent?.trim() || ''
+        }));
+      });
+      el.addEventListener('dragend', () => el.classList.remove('dragging'));
+    });
+
+    // ── Drop zone ──────────────────────────────────────────
+    const dropZone = document.getElementById('drop-zone');
+
+    dropZone.addEventListener('dragover', e => {
+      e.preventDefault();
+      dropZone.classList.add('drag-over');
+    });
+    dropZone.addEventListener('dragleave', e => {
+      if (!dropZone.contains(e.relatedTarget)) dropZone.classList.remove('drag-over');
+    });
+    dropZone.addEventListener('drop', e => {
+      e.preventDefault();
+      dropZone.classList.remove('drag-over');
+      try {
+        const data = JSON.parse(e.dataTransfer.getData('text/plain'));
+        if (data.type === 'platform') addPlatform(data);
+        if (data.type === 'feature') addFeature(data);
+      } catch (err) { }
+      updateSummary();
+    });
+
+    // ── Add platform ───────────────────────────────────────
+    function addPlatform(data) {
+      // Deselect previous selected card
+      document.querySelectorAll('.platform-card.selected').forEach(c => c.classList.remove('selected'));
+      const srcCard = document.querySelector(`.platform-card[data-id="${data.id}"]`);
+      if (srcCard) srcCard.classList.add('selected');
+
+      droppedPlatform = data;
+      const container = document.getElementById('dropped-platform');
+      container.innerHTML = `
+      <div class="dropped-platform">
+        <span style="font-size:20px;">${data.icon}</span>
+        <span style="flex:1;font-size:13px;">${data.name}</span>
+        <button class="remove-btn" onclick="removePlatform()" title="Remove">✕</button>
+      </div>`;
+      hidePlaceholder();
+      updateSteps(2);
+    }
+
+    function removePlatform() {
+      document.querySelectorAll('.platform-card.selected').forEach(c => c.classList.remove('selected'));
+      droppedPlatform = null;
+      document.getElementById('dropped-platform').innerHTML = '';
+      checkPlaceholder();
+      updateSummary();
+      updateSteps(1);
+    }
+
+    // ── Add feature ────────────────────────────────────────
+    function addFeature(data) {
+      if (droppedFeatures.find(f => f.id === data.id)) return;
+      droppedFeatures.push(data);
+
+      const wrap = document.getElementById('dropped-features');
+      const chip = document.createElement('div');
+      chip.className = 'dropped-feature';
+      chip.dataset.id = data.id;
+      chip.innerHTML = `<span class="material-symbols-outlined">${data.icon}</span>${data.name}<button class="remove-btn" onclick="removeFeature('${data.id}')" title="Remove">✕</button>`;
+      wrap.appendChild(chip);
+
+      // Mark source chip used
+      const src = document.querySelector(`.feature-chip[data-id="${data.id}"]`);
+      if (src) src.classList.add('used');
+
+      // Bump counter
+      bumpCounter();
+      hidePlaceholder();
+      if (droppedPlatform) updateSteps(2);
+    }
+
+    function removeFeature(id) {
+      droppedFeatures = droppedFeatures.filter(f => f.id !== id);
+      document.querySelector(`.dropped-feature[data-id="${id}"]`)?.remove();
+      const src = document.querySelector(`.feature-chip[data-id="${id}"]`);
+      if (src) src.classList.remove('used');
+      bumpCounter();
+      checkPlaceholder();
+      updateSummary();
+    }
+
+    function bumpCounter() {
+      const cnt = document.getElementById('feature-count');
+      const n = droppedFeatures.length;
+      cnt.textContent = n;
+      cnt.style.display = n > 0 ? 'flex' : 'none';
+      cnt.classList.remove('bump');
+      void cnt.offsetWidth;
+      cnt.classList.add('bump');
+    }
+
+    // ── Placeholder ────────────────────────────────────────
+    function hidePlaceholder() {
+      document.getElementById('drop-placeholder').style.display = 'none';
+    }
+    function checkPlaceholder() {
+      if (!droppedPlatform && droppedFeatures.length === 0) {
+        document.getElementById('drop-placeholder').style.display = 'flex';
+      }
+    }
+
+    // ── Summary + complexity ───────────────────────────────
+    function updateSummary() {
+      const fill = document.getElementById('complexity-fill');
+      const label = document.getElementById('complexity-label');
+      const list = document.getElementById('summary-list');
+      const submit = document.getElementById('submit-btn');
+
+      const total = droppedFeatures.length;
+      let pct = 0, lvl = '— Select a platform to begin';
+
+      if (droppedPlatform) {
+        if (total === 0) { pct = 12; lvl = '🟢 Simple — Clean & Focused'; }
+        else if (total <= 3) { pct = 35; lvl = '🟡 Standard — Well Rounded'; }
+        else if (total <= 7) { pct = 62; lvl = '🟠 Complex — Feature Rich'; }
+        else if (total <= 11) { pct = 82; lvl = '🔴 Enterprise — Full Scale'; }
+        else { pct = 96; lvl = '🚀 Enterprise+ — Let\'s Talk'; }
+      }
+
+      fill.style.width = pct + '%';
+      label.textContent = lvl;
+
+      if (!droppedPlatform && total === 0) {
+        list.innerHTML = `<div class="summary-empty"><span class="material-symbols-outlined">inventory_2</span>Your project summary will appear here as you build.</div>`;
+        submit.disabled = true;
+        return;
+      }
+
+      let html = '';
+      if (droppedPlatform) {
+        html += `<div class="summary-item"><span class="material-symbols-outlined">foundation</span><span><strong>Platform:</strong> ${droppedPlatform.name}</span></div>`;
+      }
+      html += `<div class="summary-item"><span class="material-symbols-outlined">widgets</span><span><strong>Features:</strong> ${total > 0 ? total + ' selected' : 'None yet'}</span></div>`;
+      droppedFeatures.forEach(f => {
+        html += `<div class="summary-item" style="padding-left:22px;color:var(--faint);font-size:11px;border-bottom-color:rgba(30,45,69,0.4)"><span class="material-symbols-outlined" style="font-size:12px;">${f.icon}</span>${f.name}</div>`;
+      });
+
+      list.innerHTML = html;
+      submit.disabled = !droppedPlatform;
+    }
+
+    // ── Steps ──────────────────────────────────────────────
+    function updateSteps(active) {
+      [1, 2, 3].forEach(n => {
+        const el = document.getElementById('step' + n);
+        el.classList.remove('active', 'done');
+        if (n < active) el.classList.add('done');
+        if (n === active) el.classList.add('active');
+      });
+      document.getElementById('line1')?.classList.toggle('lit', active > 1);
+      document.getElementById('line2')?.classList.toggle('lit', active > 2);
+    }
+
+    // ── Validate ───────────────────────────────────────────
+    function validateField(id) {
+      const el = document.getElementById(id);
+      const ok = el.value.trim() !== '';
+      el.classList.toggle('error', !ok);
+      if (!ok) setTimeout(() => el.classList.remove('error'), 2000);
+      return ok;
+    }
+
+    // ── Submit ─────────────────────────────────────────────
+    document.getElementById('submit-btn').addEventListener('click', () => {
+      const nameOk = validateField('input-name');
+      const emailOk = validateField('input-email');
+      const phoneOk = validateField('input-phone');
+      if (!nameOk || !emailOk || !phoneOk) return;
+
+      const payload = {
+        ref: 'OL-' + Date.now().toString(36).toUpperCase(),
+        name: document.getElementById('input-name').value.trim(),
+        email: document.getElementById('input-email').value.trim(),
+        phone: document.getElementById('input-phone').value.trim(),
+        company: document.getElementById('input-company').value.trim(),
+        note: document.getElementById('input-note').value.trim(),
+        platform: droppedPlatform,
+        features: droppedFeatures,
+        complexity: document.getElementById('complexity-label').textContent,
+        submittedAt: new Date().toISOString()
+      };
+
+      const existing = JSON.parse(localStorage.getItem('ol-briefs') || '[]');
+      existing.push(payload);
+      localStorage.setItem('ol-briefs', JSON.stringify(existing));
+
+      showConfirmation(payload);
+      updateSteps(3);
+    });
+
+    // ── Confirmation ───────────────────────────────────────
+    function showConfirmation(data) {
+      const screen = document.getElementById('confirm-screen');
+      const summary = document.getElementById('confirm-summary');
+
+      let tagsHtml = '';
+      if (data.platform) {
+        tagsHtml += `<div class="confirm-tag"><span class="material-symbols-outlined">foundation</span>${data.platform.name}</div>`;
+      }
+      data.features.forEach(f => {
+        tagsHtml += `<div class="confirm-tag"><span class="material-symbols-outlined">${f.icon}</span>${f.name}</div>`;
+      });
+
+      summary.innerHTML = `
+      <div class="confirm-summary-label">Project Brief — ${data.ref}</div>
+      <div style="margin-bottom:10px;font-size:13px;color:var(--muted);">
+        <strong style="color:var(--text);">${data.name}</strong>
+        ${data.company ? ' · ' + data.company : ''}
+        <span style="margin-left:8px;color:var(--faint);font-size:11px;">${data.email}</span>
+      </div>
+      <div>${tagsHtml}</div>
+      ${data.note ? `<div style="margin-top:10px;font-size:12px;color:var(--muted);border-top:1px solid var(--border);padding-top:10px;">"${data.note}"</div>` : ''}`;
+
+      document.getElementById('ref-number').textContent = 'Reference ID: ' + data.ref;
+
+      screen.classList.add('show');
+      document.body.style.overflow = 'hidden';
+
+      // Confetti
+      spawnConfetti();
+    }
+
+    function spawnConfetti() {
+      const wrap = document.getElementById('confetti-wrap');
+      wrap.innerHTML = '';
+      const colors = ['#2563EB', '#6366f1', '#8b5cf6', '#06b6d4', '#10b981', '#f59e0b'];
+      for (let i = 0; i < 30; i++) {
+        const dot = document.createElement('div');
+        dot.className = 'confetti-dot';
+        dot.style.cssText = `
+        left: ${Math.random() * 100}%;
+        top: ${Math.random() * 30}%;
+        background: ${colors[Math.floor(Math.random() * colors.length)]};
+        width: ${4 + Math.random() * 6}px;
+        height: ${4 + Math.random() * 6}px;
+        border-radius: ${Math.random() > 0.5 ? '50%' : '2px'};
+        animation-delay: ${Math.random() * 0.8}s;
+        animation-duration: ${1.2 + Math.random() * 0.8}s;
+      `;
+        wrap.appendChild(dot);
+      }
+    }
+
+    function closePage() {
+      document.getElementById('confirm-screen').classList.remove('show');
+      document.body.style.overflow = '';
+    }
+
+    // ── Clear ──────────────────────────────────────────────
+    document.getElementById('clear-btn').addEventListener('click', () => {
+      droppedPlatform = null;
+      droppedFeatures = [];
+      document.getElementById('dropped-platform').innerHTML = '';
+      document.getElementById('dropped-features').innerHTML = '';
+      document.querySelectorAll('.feature-chip').forEach(c => c.classList.remove('used'));
+      document.querySelectorAll('.platform-card').forEach(c => c.classList.remove('selected'));
+      ['input-name', 'input-email', 'input-phone', 'input-company', 'input-note'].forEach(id => {
+        document.getElementById(id).value = '';
+      });
+      document.getElementById('feature-count').style.display = 'none';
+      checkPlaceholder();
+      updateSummary();
+      updateSteps(1);
+    });
+
+    // ── Tap-to-add (mobile + desktop click) ───────────────
+    document.querySelectorAll('[draggable="true"]').forEach(el => {
+      el.addEventListener('click', () => {
+        const data = {
+          type: el.dataset.type,
+          id: el.dataset.id,
+          name: el.dataset.name,
+          icon: el.dataset.icon || el.querySelector('.material-symbols-outlined')?.textContent?.trim() || ''
+        };
+        if (data.type === 'platform') addPlatform(data);
+        if (data.type === 'feature') addFeature(data);
+        updateSummary();
+      });
+    });
+
+    // ── Nav scripts ──
+    (function () {
+      function isDark() { return document.documentElement.classList.contains('dark'); }
+      function applyTheme(dark) {
+        document.documentElement.className = dark ? 'dark' : 'light';
+        localStorage.setItem('ol-theme', dark ? 'dark' : 'light');
+        var icon = document.getElementById('ol-toggle-icon');
+        if (icon) icon.textContent = dark ? 'dark_mode' : 'light_mode';
+        document.getElementById('ol-theme-toggle').style.background = dark ? '#1E2D45' : '#CBD5E1';
+        var thumb = document.getElementById('ol-theme-toggle-thumb');
+        if (thumb) thumb.style.transform = dark ? '' : 'translateX(20px)';
+      }
+      applyTheme(isDark());
+      document.getElementById('ol-theme-toggle').addEventListener('click', function () { applyTheme(!isDark()); });
+      var mToggle = document.getElementById('ol-menu-toggle');
+      var mMenu = document.getElementById('ol-mobile-menu');
+      var iOpen = document.getElementById('ol-icon-open');
+      var iClose = document.getElementById('ol-icon-close');
+      mToggle.addEventListener('click', function () {
+        var open = mMenu.classList.toggle('open');
+        iOpen.style.display = open ? 'none' : '';
+        iClose.style.display = open ? '' : 'none';
+      });
+    })();
+  </script>
+</body>
+
+</html>
