@@ -39,7 +39,9 @@
         return fetch(src)
             .then(function (res) { return res.text(); })
             .then(function (html) {
-                el.outerHTML = html;        // replace placeholder with actual HTML
+                // Strip out any <meta> tags injected by servers (e.g. GitHub Pages CSP)
+                var cleanHtml = html.replace(/<meta\b[^>]*>/gi, '');
+                el.outerHTML = cleanHtml;   // replace placeholder with actual HTML
             })
             .catch(function (err) {
                 console.warn('[includes.js] Could not load partial:', src, err);
