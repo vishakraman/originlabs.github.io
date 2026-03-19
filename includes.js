@@ -152,8 +152,9 @@
         });
     }
 
-    /* ─── Custom cursor ─────────────────────────────────────────── */
+    /* ─── Custom cursor (pointer devices only) ──────────────────── */
     function initCursor() {
+        if (!window.matchMedia('(pointer: fine)').matches) return;
         if (!document.getElementById('custom-cursor')) {
             var cursorHTML = '<div id="custom-cursor" style="position:fixed;pointer-events:none;z-index:999999;top:0;left:0;">' +
                 '<div id="cursor-ring" style="width:36px;height:36px;border:1.5px solid rgba(37,99,235,0.8);border-radius:50%;position:absolute;transform:translate(-50%,-50%);transition:width 0.2s,height 0.2s,background 0.2s;"></div>' +

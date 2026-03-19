@@ -19,6 +19,7 @@
     rel="stylesheet" />
   <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap"
     rel="stylesheet" />
+  <link rel="stylesheet" href="site.css" />
   <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
   <script>
     tailwind.config = {
@@ -47,322 +48,63 @@
     }
   </script>
   <style>
-    /* ── Base ── */
-    body {
-      font-family: "Space Grotesk", sans-serif;
-      transition: background-color 0.3s ease, color 0.3s ease;
-    }
-
-    /* ── Theme transition ── */
-    *,
-    *::before,
-    *::after {
-      transition: background-color 0.3s ease, border-color 0.3s ease, color 0.2s ease, box-shadow 0.3s ease;
-    }
-
-    .float-1,
-    .float-2,
-    .btn-glow,
-    .anim-fade-up,
-    .anim-fade-in,
-    .anim-slide-r,
-    .anim-scale-in,
-    .cursor,
-    #cursor-ring,
-    #cursor-dot,
-    #cursor-crosshair-h,
-    #cursor-crosshair-v {
+    /* ── Animations (index only) ── */
+    .float-1, .float-2,
+    .anim-fade-up, .anim-fade-in, .anim-slide-r, .anim-scale-in,
+    .cursor {
       transition: none !important;
     }
 
-    #cursor-ring {
-      transition: width 0.2s, height 0.2s, background 0.2s !important;
+    @keyframes fadeUp {
+      from { opacity: 0; transform: translateY(28px) }
+      to   { opacity: 1; transform: translateY(0) }
+    }
+    @keyframes fadeIn {
+      from { opacity: 0 }
+      to   { opacity: 1 }
+    }
+    @keyframes slideRight {
+      from { opacity: 0; transform: translateX(-20px) }
+      to   { opacity: 1; transform: translateX(0) }
+    }
+    @keyframes scaleIn {
+      from { opacity: 0; transform: scale(0.88) }
+      to   { opacity: 1; transform: scale(1) }
     }
 
-    /* ── Custom cursor ── */
-    * {
-      cursor: none !important;
-    }
+    .anim-fade-up   { animation: fadeUp    0.7s cubic-bezier(.4,0,.2,1) both; }
+    .anim-fade-in   { animation: fadeIn    0.6s ease both; }
+    .anim-slide-r   { animation: slideRight 0.6s cubic-bezier(.4,0,.2,1) both; }
+    .anim-scale-in  { animation: scaleIn   0.8s cubic-bezier(.4,0,.2,1) both; }
 
-    body.cursor-hover #cursor-ring {
-      width: 52px;
-      height: 52px;
-      border-color: rgba(37, 99, 235, 0.4);
-      background: rgba(37, 99, 235, 0.08);
-    }
+    .delay-100 { animation-delay: .10s }
+    .delay-200 { animation-delay: .20s }
+    .delay-300 { animation-delay: .30s }
+    .delay-400 { animation-delay: .40s }
+    .delay-500 { animation-delay: .50s }
+    .delay-600 { animation-delay: .60s }
+    .delay-700 { animation-delay: .70s }
+    .delay-800 { animation-delay: .80s }
+    .delay-900 { animation-delay: .90s }
 
-    /* ── Glass ── */
-    .dark .glass {
-      background: rgba(17, 25, 39, 0.75);
-      backdrop-filter: blur(14px);
-      -webkit-backdrop-filter: blur(14px);
-      border: 1px solid rgba(255, 255, 255, 0.06);
-    }
-
-    .light .glass {
-      background: rgba(255, 255, 255, 0.80);
-      backdrop-filter: blur(14px);
-      -webkit-backdrop-filter: blur(14px);
-      border: 1px solid rgba(0, 0, 0, 0.08);
-    }
-
-    /* ── Noise overlay ── */
-    .noise-overlay {
-      position: fixed;
-      inset: 0;
-      pointer-events: none;
-      z-index: 1;
-      background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.03'/%3E%3C/svg%3E");
-    }
-
-    /* ── Animated grid ── */
-    .bg-grid {
-      background-image:
-        linear-gradient(rgba(37, 99, 235, 0.04) 1px, transparent 1px),
-        linear-gradient(90deg, rgba(37, 99, 235, 0.04) 1px, transparent 1px);
-      background-size: 48px 48px;
-    }
-
-    .light .bg-grid {
-      background-image:
-        linear-gradient(rgba(37, 99, 235, 0.06) 1px, transparent 1px),
-        linear-gradient(90deg, rgba(37, 99, 235, 0.06) 1px, transparent 1px);
-    }
+    /* ── Floating badges ── */
+    @keyframes floatY  { 0%,100%{transform:translateY(0)} 50%{transform:translateY(-8px)} }
+    @keyframes floatY2 { 0%,100%{transform:translateY(0)} 50%{transform:translateY(-6px)} }
+    .float-1 { animation: floatY  3.5s ease-in-out infinite; }
+    .float-2 { animation: floatY2 4.2s ease-in-out infinite 0.8s; }
 
     /* ── Services dot grid ── */
     .dot-grid {
-      background-image: radial-gradient(circle, rgba(37, 99, 235, 0.12) 1px, transparent 1px);
+      background-image: radial-gradient(circle, rgba(37,99,235,0.12) 1px, transparent 1px);
       background-size: 30px 30px;
     }
 
-    /* ── Nav links ── */
-    .nav-link {
-      position: relative;
-      padding-bottom: 4px;
-      font-size: 0.875rem;
-      font-weight: 500;
-      letter-spacing: 0.01em;
-    }
+    /* ── Service card hover ── */
+    .dark  .service-card:hover { box-shadow: 0 0 24px rgba(37,99,235,0.2);  border-color: rgba(37,99,235,0.4); }
+    .light .service-card:hover { box-shadow: 0 0 24px rgba(37,99,235,0.12); border-color: rgba(37,99,235,0.3); }
 
-    .dark .nav-link {
-      color: #94A3B8;
-    }
-
-    .light .nav-link {
-      color: #475569;
-    }
-
-    .nav-link::after {
-      content: '';
-      position: absolute;
-      bottom: 0;
-      left: 50%;
-      width: 0;
-      height: 2px;
-      background: #2563EB;
-      border-radius: 999px;
-      transition: width 0.3s ease, left 0.3s ease;
-    }
-
-    .dark .nav-link:hover {
-      color: #fff;
-    }
-
-    .light .nav-link:hover {
-      color: #0f172a;
-    }
-
-    .nav-link:hover::after {
-      width: 100%;
-      left: 0;
-    }
-
-    /* ── Mobile menu ── */
-    #mobile-menu {
-      max-height: 0;
-      overflow: hidden;
-      opacity: 0;
-      transition: max-height 0.4s ease, opacity 0.3s ease;
-    }
-
-    #mobile-menu.open {
-      max-height: 500px;
-      opacity: 1;
-    }
-
-    /* ── Animations ── */
-    @keyframes fadeUp {
-      from {
-        opacity: 0;
-        transform: translateY(28px)
-      }
-
-      to {
-        opacity: 1;
-        transform: translateY(0)
-      }
-    }
-
-    @keyframes fadeIn {
-      from {
-        opacity: 0
-      }
-
-      to {
-        opacity: 1
-      }
-    }
-
-    @keyframes slideRight {
-      from {
-        opacity: 0;
-        transform: translateX(-20px)
-      }
-
-      to {
-        opacity: 1;
-        transform: translateX(0)
-      }
-    }
-
-    @keyframes scaleIn {
-      from {
-        opacity: 0;
-        transform: scale(0.88)
-      }
-
-      to {
-        opacity: 1;
-        transform: scale(1)
-      }
-    }
-
-    .anim-fade-up {
-      animation: fadeUp 0.7s cubic-bezier(.4, 0, .2, 1) both;
-    }
-
-    .anim-fade-in {
-      animation: fadeIn 0.6s ease both;
-    }
-
-    .anim-slide-r {
-      animation: slideRight 0.6s cubic-bezier(.4, 0, .2, 1) both;
-    }
-
-    .anim-scale-in {
-      animation: scaleIn 0.8s cubic-bezier(.4, 0, .2, 1) both;
-    }
-
-    .delay-100 {
-      animation-delay: .10s
-    }
-
-    .delay-200 {
-      animation-delay: .20s
-    }
-
-    .delay-300 {
-      animation-delay: .30s
-    }
-
-    .delay-400 {
-      animation-delay: .40s
-    }
-
-    .delay-500 {
-      animation-delay: .50s
-    }
-
-    .delay-600 {
-      animation-delay: .60s
-    }
-
-    .delay-700 {
-      animation-delay: .70s
-    }
-
-    .delay-800 {
-      animation-delay: .80s
-    }
-
-    .delay-900 {
-      animation-delay: .90s
-    }
-
-    /* ── Floating badges ── */
-    @keyframes floatY {
-
-      0%,
-      100% {
-        transform: translateY(0)
-      }
-
-      50% {
-        transform: translateY(-8px)
-      }
-    }
-
-    @keyframes floatY2 {
-
-      0%,
-      100% {
-        transform: translateY(0)
-      }
-
-      50% {
-        transform: translateY(-6px)
-      }
-    }
-
-    .float-1 {
-      animation: floatY 3.5s ease-in-out infinite;
-    }
-
-    .float-2 {
-      animation: floatY2 4.2s ease-in-out infinite 0.8s;
-    }
-
-    /* ── Glow pulse ── */
-    @keyframes glowPulse {
-
-      0%,
-      100% {
-        box-shadow: 0 0 20px rgba(37, 99, 235, 0.35);
-      }
-
-      50% {
-        box-shadow: 0 0 40px rgba(37, 99, 235, 0.65);
-      }
-    }
-
-    .btn-glow {
-      animation: glowPulse 2.5s ease-in-out infinite;
-    }
-
-    /* ── Service card glow on hover ── */
-    .dark .service-card:hover {
-      box-shadow: 0 0 24px rgba(37, 99, 235, 0.2);
-      border-color: rgba(37, 99, 235, 0.4);
-    }
-
-    .light .service-card:hover {
-      box-shadow: 0 0 24px rgba(37, 99, 235, 0.12);
-      border-color: rgba(37, 99, 235, 0.3);
-    }
-
-    /* ── Blinking cursor in code ── */
-    @keyframes blink {
-
-      0%,
-      100% {
-        opacity: 1
-      }
-
-      50% {
-        opacity: 0
-      }
-    }
-
+    /* ── Blinking code cursor ── */
+    @keyframes blink { 0%,100%{opacity:1} 50%{opacity:0} }
     .cursor {
       display: inline-block;
       width: 2px;
@@ -373,167 +115,40 @@
       margin-left: 1px;
     }
 
-    /* ── Code syntax ── */
-    .sy-kw {
-      color: #7DD3FC;
-    }
-
-    .sy-fn {
-      color: #FBBF24;
-    }
-
-    .sy-str {
-      color: #86EFAC;
-    }
-
-    .sy-cmt {
-      color: #4B5563;
-    }
-
-    .sy-var {
-      color: #F9A8D4;
-    }
-
-    .sy-prop {
-      color: #FCA5A5;
-    }
-
-    .sy-num {
-      color: #C4B5FD;
-    }
-
-    .sy-tag {
-      color: #93C5FD;
-    }
-
-    .sy-op {
-      color: #94A3B8;
-    }
+    /* ── Code syntax colours ── */
+    .sy-kw   { color: #7DD3FC; }
+    .sy-fn   { color: #FBBF24; }
+    .sy-str  { color: #86EFAC; }
+    .sy-cmt  { color: #4B5563; }
+    .sy-var  { color: #F9A8D4; }
+    .sy-prop { color: #FCA5A5; }
+    .sy-num  { color: #C4B5FD; }
+    .sy-tag  { color: #93C5FD; }
+    .sy-op   { color: #94A3B8; }
 
     /* ── Code tab states ── */
-    .code-tab {
-      color: #64748B;
-    }
-
+    .code-tab { color: #64748B; }
     .code-tab.active-tab {
       background: #111927;
       color: #93C5FD;
-      border: 1px solid rgba(37, 99, 235, 0.3);
+      border: 1px solid rgba(37,99,235,0.3);
     }
 
-    /* ── Theme toggle ── */
-    #theme-toggle {
-      position: relative;
-      width: 44px;
-      height: 24px;
-      border-radius: 999px;
-      border: none;
-      cursor: none !important;
-      flex-shrink: 0;
-      transition: background 0.3s ease;
-    }
+    /* ── Marquee ── */
+    @keyframes ol-scroll-left  { from{transform:translateX(0)}    to{transform:translateX(-50%)} }
+    @keyframes ol-scroll-right { from{transform:translateX(-50%)} to{transform:translateX(0)} }
 
-    .dark #theme-toggle {
-      background: #1E2D45;
-    }
-
-    .light #theme-toggle {
-      background: #CBD5E1;
-    }
-
-    #theme-toggle-thumb {
-      position: absolute;
-      top: 3px;
-      left: 3px;
-      width: 18px;
-      height: 18px;
-      border-radius: 50%;
-      background: #2563EB;
-      transition: transform 0.3s cubic-bezier(.4, 0, .2, 1);
-      display: flex;
-      align-items: center;
-      justify-content: center;
-    }
-
-    .light #theme-toggle-thumb {
-      transform: translateX(20px);
-    }
-
-    /* ── Logo wrapper for light mode ── */
-    .dark .light-logo-wrap {
-      background: transparent;
-      padding: 0;
-    }
-
-    .light .light-logo-wrap {
-      background: #0C1220;
-      border-radius: 8px;
-      padding: 4px 10px;
-    }
-
-    /* ── Scrollbar ── */
-    .dark ::-webkit-scrollbar-track {
-      background: #0C1220;
-    }
-
-    .dark ::-webkit-scrollbar-thumb {
-      background: #1E2D45;
-      border-radius: 3px;
-    }
-
-    .light ::-webkit-scrollbar-track {
-      background: #f1f5f9;
-    }
-
-    .light ::-webkit-scrollbar-thumb {
-      background: #CBD5E1;
-      border-radius: 3px;
-    }
-
-
-    ::-webkit-scrollbar {
-      width: 6px;
-    }
-
-    /* ── Who We Are / What We Do marquee ── */
-    @keyframes ol-scroll-left {
-      from {
-        transform: translateX(0);
-      }
-
-      to {
-        transform: translateX(-50%);
-      }
-    }
-
-    @keyframes ol-scroll-right {
-      from {
-        transform: translateX(-50%);
-      }
-
-      to {
-        transform: translateX(0);
-      }
-    }
-
-    .ol-marquee-left {
-      animation: ol-scroll-left 35s linear infinite;
-    }
-
-    .ol-marquee-right {
-      animation: ol-scroll-right 35s linear infinite;
-    }
-
+    .ol-marquee-left  { animation: ol-scroll-left  35s linear infinite; }
+    .ol-marquee-right { animation: ol-scroll-right 35s linear infinite; }
     .ol-marquee-track:hover .ol-marquee-left,
-    .ol-marquee-track:hover .ol-marquee-right {
-      animation-play-state: paused;
-    }
+    .ol-marquee-track:hover .ol-marquee-right { animation-play-state: paused; }
 
     .ol-marquee-fade {
       -webkit-mask-image: linear-gradient(to right, transparent 0%, black 8%, black 92%, transparent 100%);
-      mask-image: linear-gradient(to right, transparent 0%, black 8%, black 92%, transparent 100%);
+              mask-image: linear-gradient(to right, transparent 0%, black 8%, black 92%, transparent 100%);
     }
 
+    /* ── Service pills ── */
     .ol-service-pill {
       display: inline-flex;
       align-items: center;
@@ -548,28 +163,12 @@
       flex-shrink: 0;
       transition: border-color 0.25s, background 0.25s, color 0.25s;
     }
+    .light .ol-service-pill { border-color: #e2e8f0; color: #475569; }
+    .ol-service-pill:hover  { border-color: #2563EB; background: rgba(37,99,235,0.08); color: #fff; }
+    .light .ol-service-pill:hover { color: #1e293b; }
+    .ol-service-pill .material-symbols-outlined { font-size: 17px; color: #2563EB; flex-shrink: 0; }
 
-    .light .ol-service-pill {
-      border-color: #e2e8f0;
-      color: #475569;
-    }
-
-    .ol-service-pill:hover {
-      border-color: #2563EB;
-      background: rgba(37, 99, 235, 0.08);
-      color: #fff;
-    }
-
-    .light .ol-service-pill:hover {
-      color: #1e293b;
-    }
-
-    .ol-service-pill .material-symbols-outlined {
-      font-size: 17px;
-      color: #2563EB;
-      flex-shrink: 0;
-    }
-
+    /* ── CTA outline button ── */
     .ol-cta-outline {
       display: inline-flex;
       align-items: center;
@@ -582,17 +181,8 @@
       color: #fff;
       transition: border-color 0.25s, background 0.25s;
     }
-
-    .light .ol-cta-outline {
-      border-color: #e2e8f0;
-      color: #0f172a;
-    }
-
-    .ol-cta-outline:hover {
-      border-color: #2563EB;
-      background: #1A2437;
-      color: #fff;
-    }
+    .light .ol-cta-outline { border-color: #e2e8f0; color: #0f172a; }
+    .ol-cta-outline:hover  { border-color: #2563EB; background: #1A2437; color: #fff; }
   </style>
 </head>
 

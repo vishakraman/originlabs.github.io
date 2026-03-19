@@ -19,6 +19,7 @@
         rel="stylesheet" />
     <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap"
         rel="stylesheet" />
+    <link rel="stylesheet" href="site.css" />
     <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
     <script>
         tailwind.config = {
@@ -38,256 +39,27 @@
         }
     </script>
     <style>
-        body {
-            font-family: "Space Grotesk", sans-serif;
-            transition: background-color 0.3s ease, color 0.3s ease;
-        }
+        .enterprise-glow { box-shadow: 0 0 30px -5px rgba(37,99,235,0.4); }
 
-        *,
-        *::before,
-        *::after {
-            transition: background-color 0.3s ease, border-color 0.3s ease, color 0.2s ease, box-shadow 0.3s ease;
-        }
-
-        .btn-glow,
-        #cursor-ring,
-        #cursor-dot,
-        #cursor-crosshair-h,
-        #cursor-crosshair-v {
-            transition: none !important;
-        }
-
-        #cursor-ring {
-            transition: width 0.2s, height 0.2s, background 0.2s !important;
-        }
-
-        /* Custom cursor */
-        * {
-            cursor: none !important;
-        }
-
-        body.cursor-hover #cursor-ring {
-            width: 52px;
-            height: 52px;
-            border-color: rgba(37, 99, 235, 0.4);
-            background: rgba(37, 99, 235, 0.08);
-        }
-
-        /* Glass */
-        .dark .glass {
-            background: rgba(17, 25, 39, 0.75);
-            backdrop-filter: blur(14px);
-            -webkit-backdrop-filter: blur(14px);
-            border: 1px solid rgba(255, 255, 255, 0.06);
-        }
-
-        .light .glass {
-            background: rgba(255, 255, 255, 0.80);
-            backdrop-filter: blur(14px);
-            -webkit-backdrop-filter: blur(14px);
-            border: 1px solid rgba(0, 0, 0, 0.08);
-        }
-
-        /* Noise overlay */
-        .noise-overlay {
-            position: fixed;
-            inset: 0;
-            pointer-events: none;
-            z-index: 1;
-            background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.03'/%3E%3C/svg%3E");
-        }
-
-        /* Animated grid */
-        .bg-grid {
-            background-image: linear-gradient(rgba(37, 99, 235, 0.04) 1px, transparent 1px), linear-gradient(90deg, rgba(37, 99, 235, 0.04) 1px, transparent 1px);
-            background-size: 48px 48px;
-        }
-
-        .light .bg-grid {
-            background-image: linear-gradient(rgba(37, 99, 235, 0.06) 1px, transparent 1px), linear-gradient(90deg, rgba(37, 99, 235, 0.06) 1px, transparent 1px);
-        }
-
-        /* Nav links */
-        .nav-link {
-            position: relative;
-            padding-bottom: 4px;
-            font-size: 0.875rem;
-            font-weight: 500;
-            letter-spacing: 0.01em;
-        }
-
-        .dark .nav-link {
-            color: #94A3B8;
-        }
-
-        .light .nav-link {
-            color: #475569;
-        }
-
-        .nav-link::after {
-            content: '';
-            position: absolute;
-            bottom: 0;
-            left: 50%;
-            width: 0;
-            height: 2px;
-            background: #2563EB;
-            border-radius: 999px;
-            transition: width 0.3s ease, left 0.3s ease;
-        }
-
-        .dark .nav-link:hover {
-            color: #fff;
-        }
-
-        .light .nav-link:hover {
-            color: #0f172a;
-        }
-
-        .nav-link:hover::after,
-        .nav-link.active::after {
-            width: 100%;
-            left: 0;
-        }
-
-        .nav-link.active {
-            color: #2563EB;
-        }
-
-        /* Mobile menu */
-        #mobile-menu {
-            max-height: 0;
-            overflow: hidden;
-            opacity: 0;
-            transition: max-height 0.4s ease, opacity 0.3s ease;
-        }
-
-        #mobile-menu.open {
-            max-height: 500px;
-            opacity: 1;
-        }
-
-        /* Glow pulse */
-        @keyframes glowPulse {
-
-            0%,
-            100% {
-                box-shadow: 0 0 20px rgba(37, 99, 235, 0.35);
-            }
-
-            50% {
-                box-shadow: 0 0 40px rgba(37, 99, 235, 0.65);
-            }
-        }
-
-        .btn-glow {
-            animation: glowPulse 2.5s ease-in-out infinite;
-        }
-
-        /* Theme toggle */
-        #theme-toggle {
-            position: relative;
-            width: 44px;
-            height: 24px;
-            border-radius: 999px;
-            border: none;
-            cursor: none !important;
-            flex-shrink: 0;
-            transition: background 0.3s ease;
-        }
-
-        .dark #theme-toggle {
-            background: #1E2D45;
-        }
-
-        .light #theme-toggle {
-            background: #CBD5E1;
-        }
-
-        #theme-toggle-thumb {
-            position: absolute;
-            top: 3px;
-            left: 3px;
-            width: 18px;
-            height: 18px;
-            border-radius: 50%;
-            background: #2563EB;
-            transition: transform 0.3s cubic-bezier(.4, 0, .2, 1);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-        }
-
-        .light #theme-toggle-thumb {
-            transform: translateX(20px);
-        }
-
-        /* Logo wrapper */
-        .dark .light-logo-wrap {
-            background: transparent;
-            padding: 0;
-        }
-
-        .light .light-logo-wrap {
-            background: #0C1220;
-            border-radius: 8px;
-            padding: 4px 10px;
-        }
-
-        /* Scrollbar */
-        .dark ::-webkit-scrollbar-track {
-            background: #0C1220;
-        }
-
-        .dark ::-webkit-scrollbar-thumb {
-            background: #1E2D45;
-            border-radius: 3px;
-        }
-
-        .light ::-webkit-scrollbar-track {
-            background: #f1f5f9;
-        }
-
-        .light ::-webkit-scrollbar-thumb {
-            background: #CBD5E1;
-            border-radius: 3px;
-        }
-
-        ::-webkit-scrollbar {
-            width: 6px;
-        }
-
-        /* Enterprise card glow */
-        .enterprise-glow {
-            box-shadow: 0 0 30px -5px rgba(37, 99, 235, 0.4);
-        }
-
-        /* Service card hover */
         .service-card:hover {
-            border-color: rgba(37, 99, 235, 0.4);
-            box-shadow: 0 0 24px rgba(37, 99, 235, 0.15);
+            border-color: rgba(37,99,235,0.4);
+            box-shadow: 0 0 24px rgba(37,99,235,0.15);
         }
 
-        /* Light mode card overrides */
-        .light .card-surface {
-            background: #ffffff;
-        }
+        .light .card-surface { background: #ffffff; }
 
-        /* ── Growth Stack cards ── */
-        .growth-card {
-            transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1), box-shadow 0.3s ease, border-color 0.3s ease;
-        }
+        .growth-card { transition: transform 0.3s cubic-bezier(0.4,0,0.2,1), box-shadow 0.3s ease, border-color 0.3s ease; }
 
         .dark .growth-card:hover {
             transform: translateY(-4px);
-            border-color: rgba(37, 99, 235, 0.4);
-            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3), 0 0 0 1px rgba(37, 99, 235, 0.1);
+            border-color: rgba(37,99,235,0.4);
+            box-shadow: 0 20px 40px rgba(0,0,0,0.3), 0 0 0 1px rgba(37,99,235,0.1);
         }
 
         .light .growth-card:hover {
             transform: translateY(-4px);
-            border-color: rgba(37, 99, 235, 0.35);
-            box-shadow: 0 20px 40px rgba(37, 99, 235, 0.08);
+            border-color: rgba(37,99,235,0.35);
+            box-shadow: 0 20px 40px rgba(37,99,235,0.08);
         }
     </style>
 </head>

@@ -17,6 +17,7 @@
     rel="stylesheet" />
   <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap"
     rel="stylesheet" />
+  <link rel="stylesheet" href="site.css" />
   <script src="https://cdn.tailwindcss.com?plugins=forms"></script>
   <script>
     tailwind.config = { darkMode: 'class', theme: { extend: { colors: { primary: '#2563EB', 'primary-hover': '#1D4ED8' }, fontFamily: { display: ['Space Grotesk', 'sans-serif'] } } } }
@@ -50,20 +51,7 @@
       color: var(--text);
     }
 
-    *,
-    *::before,
-    *::after {
-      box-sizing: border-box;
-      margin: 0;
-      padding: 0;
-    }
-
-    html {
-      scroll-behavior: smooth;
-    }
-
     body {
-      font-family: "Space Grotesk", sans-serif;
       background: var(--bg);
       color: var(--text);
       min-height: 100vh;
@@ -861,15 +849,19 @@
     .form-input {
       width: 100%;
       padding: 9px 12px;
-      background: var(--surface2);
       border: 1px solid var(--border);
       border-radius: 8px;
       color: var(--text);
+      -webkit-text-fill-color: var(--text);
       font-family: "Space Grotesk", sans-serif;
       font-size: 13px;
       transition: border-color 0.2s, box-shadow 0.2s;
       outline: none;
     }
+
+    /* Two-class selector beats Tailwind forms plugin's [type='text'] specificity */
+    .dark .form-input  { background: var(--surface2); }
+    .light .form-input { background: var(--surface2); }
 
     .form-input:focus {
       border-color: var(--primary);
@@ -1315,163 +1307,6 @@
       cursor: grabbing;
     }
 
-    a,
-    button {
-      cursor: pointer;
-    }
-
-    /* ── Shared site styles ── */
-    .noise-overlay {
-      position: fixed;
-      inset: 0;
-      pointer-events: none;
-      z-index: 1;
-      background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.03'/%3E%3C/svg%3E");
-    }
-
-    .dark-only {
-      display: block;
-    }
-
-    .light-only {
-      display: none;
-    }
-
-    .dark .glass {
-      background: rgba(17, 25, 39, 0.75);
-      backdrop-filter: blur(14px);
-      -webkit-backdrop-filter: blur(14px);
-      border: 1px solid rgba(255, 255, 255, 0.06);
-    }
-
-    .light .glass {
-      background: rgba(255, 255, 255, 0.80);
-      backdrop-filter: blur(14px);
-      -webkit-backdrop-filter: blur(14px);
-      border: 1px solid rgba(0, 0, 0, 0.08);
-    }
-
-    .nav-link {
-      position: relative;
-      padding-bottom: 4px;
-      font-size: 0.875rem;
-      font-weight: 500;
-      letter-spacing: 0.01em;
-    }
-
-    .dark .nav-link {
-      color: #94A3B8;
-    }
-
-    .light .nav-link {
-      color: #475569;
-    }
-
-    .nav-link::after {
-      content: '';
-      position: absolute;
-      bottom: 0;
-      left: 50%;
-      width: 0;
-      height: 2px;
-      background: #2563EB;
-      border-radius: 999px;
-      transition: width 0.3s ease, left 0.3s ease;
-    }
-
-    .dark .nav-link:hover {
-      color: #fff;
-    }
-
-    .light .nav-link:hover {
-      color: #0f172a;
-    }
-
-    .nav-link:hover::after,
-    .nav-link.active::after {
-      width: 100%;
-      left: 0;
-    }
-
-    .nav-link.active {
-      color: #2563EB;
-    }
-
-    #mobile-menu {
-      max-height: 0;
-      overflow: hidden;
-      opacity: 0;
-      transition: max-height 0.4s ease, opacity 0.3s ease;
-    }
-
-    #mobile-menu.open {
-      max-height: 500px;
-      opacity: 1;
-    }
-
-    @keyframes glowPulse {
-
-      0%,
-      100% {
-        box-shadow: 0 0 20px rgba(37, 99, 235, 0.35);
-      }
-
-      50% {
-        box-shadow: 0 0 40px rgba(37, 99, 235, 0.65);
-      }
-    }
-
-    .btn-glow {
-      animation: glowPulse 2.5s ease-in-out infinite;
-    }
-
-    #theme-toggle {
-      position: relative;
-      width: 44px;
-      height: 24px;
-      border-radius: 999px;
-      border: none;
-      cursor: none !important;
-      flex-shrink: 0;
-      transition: background 0.3s ease;
-    }
-
-    .dark #theme-toggle {
-      background: #1E2D45;
-    }
-
-    .light #theme-toggle {
-      background: #CBD5E1;
-    }
-
-    #theme-toggle-thumb {
-      position: absolute;
-      top: 3px;
-      left: 3px;
-      width: 18px;
-      height: 18px;
-      border-radius: 50%;
-      background: #2563EB;
-      transition: transform 0.3s cubic-bezier(.4, 0, .2, 1);
-      display: flex;
-      align-items: center;
-      justify-content: center;
-    }
-
-    .light #theme-toggle-thumb {
-      transform: translateX(20px);
-    }
-
-    .dark .light-logo-wrap {
-      background: transparent;
-      padding: 0;
-    }
-
-    .light .light-logo-wrap {
-      background: #0C1220;
-      border-radius: 8px;
-      padding: 4px 10px;
-    }
   </style>
 </head>
 
@@ -1729,28 +1564,28 @@
             <div class="form-row">
               <div class="form-group">
                 <label class="form-label">Your Name *</label>
-                <input class="form-input dark:text-white text-slate-900" id="input-name" type="text"
+                <input class="form-input" id="input-name" type="text"
                   placeholder="Vishak Kumar" />
               </div>
               <div class="form-group">
                 <label class="form-label">Company</label>
-                <input class="form-input dark:text-white text-slate-900" id="input-company" type="text"
+                <input class="form-input" id="input-company" type="text"
                   placeholder="Organisation" />
               </div>
             </div>
             <div class="form-group">
               <label class="form-label">Email Address *</label>
-              <input class="form-input dark:text-white text-slate-900" id="input-email" type="email"
+              <input class="form-input" id="input-email" type="email"
                 placeholder="you@company.com" />
             </div>
             <div class="form-group">
               <label class="form-label">Phone / WhatsApp *</label>
-              <input class="form-input dark:text-white text-slate-900" id="input-phone" type="tel"
+              <input class="form-input" id="input-phone" type="tel"
                 placeholder="+91 98765 43210" />
             </div>
             <div class="form-group">
               <label class="form-label">Tell us more (optional)</label>
-              <textarea class="form-input dark:text-white text-slate-900" id="input-note" rows="2"
+              <textarea class="form-input" id="input-note" rows="2"
                 placeholder="Timeline, budget, specific goals..." style="resize:vertical;min-height:56px;"></textarea>
             </div>
 
