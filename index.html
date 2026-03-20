@@ -168,6 +168,67 @@
     .light .ol-service-pill:hover { color: #1e293b; }
     .ol-service-pill .material-symbols-outlined { font-size: 17px; color: #2563EB; flex-shrink: 0; }
 
+    /* ══════════════════════════════════════════
+       ADVANCED ANIMATION LAYER — index.html
+    ══════════════════════════════════════════ */
+
+    /* ── 1. Scroll Reveal ──
+       Hidden only when JS has loaded (.js-loaded on <html>)
+       so elements stay visible if JS fails or is disabled. */
+    .js-loaded .sr-item {
+      opacity: 0;
+      transform: translateY(32px);
+      transition: opacity 0.65s cubic-bezier(0.4,0,0.2,1),
+                  transform 0.65s cubic-bezier(0.4,0,0.2,1);
+      will-change: transform, opacity;
+    }
+    @media (max-width: 767px) {
+      .js-loaded .sr-item { transform: translateY(16px); }
+    }
+    .js-loaded .sr-item.visible {
+      opacity: 1;
+      transform: translateY(0);
+    }
+    /* Disable if user prefers reduced motion */
+    @media (prefers-reduced-motion: reduce) {
+      .js-loaded .sr-item {
+        opacity: 1 !important;
+        transform: none !important;
+        transition: none !important;
+        will-change: auto !important;
+      }
+    }
+
+    /* ── 3. Hero Headline Shimmer (CSS-only) ── */
+    @keyframes shimmerGloss {
+      0%   { background-position: 200% center; }
+      100% { background-position: -200% center; }
+    }
+    @media (prefers-reduced-motion: no-preference) {
+      .headline-shimmer {
+        background-image: linear-gradient(
+          110deg,
+          #3b82f6 10%,
+          #60a5fa 28%,
+          #bfdbfe 40%,
+          #e0f2fe 48%,
+          #bfdbfe 56%,
+          #60a5fa 70%,
+          #3b82f6 90%
+        ) !important;
+        background-size: 300% 100% !important;
+        animation: shimmerGloss 4s linear infinite;
+      }
+    }
+
+    /* ── 4. Service Cards — GPU hint for tilt ── */
+    @media (pointer: fine) {
+      .service-card { will-change: transform; }
+    }
+
+    /* ── 5. Counter — prevent width jump during count ── */
+    [data-count] { font-variant-numeric: tabular-nums; }
+
     /* ── CTA outline button ── */
     .ol-cta-outline {
       display: inline-flex;
@@ -191,7 +252,7 @@
     (function () {
       var saved = localStorage.getItem('ol-theme');
       var isDark = saved ? saved === 'dark' : true;
-      document.documentElement.className = isDark ? 'dark' : 'light';
+      document.documentElement.className = (isDark ? 'dark' : 'light') + ' js-loaded';
     })();
 </script>
 
@@ -201,8 +262,8 @@
 
   <!-- Ambient glows — dark -->
   <div class="dark-only fixed inset-0 pointer-events-none overflow-hidden z-0">
-    <div class="absolute -top-32 -left-32 w-[600px] h-[600px] rounded-full bg-blue-600/[0.08] blur-[130px]"></div>
-    <div class="absolute top-1/3 -right-32 w-[500px] h-[500px] rounded-full bg-indigo-500/[0.06] blur-[120px]"></div>
+    <div id="orb-1" class="absolute -top-32 -left-32 w-[600px] h-[600px] rounded-full bg-blue-600/[0.08] blur-[130px]"></div>
+    <div id="orb-2" class="absolute top-1/3 -right-32 w-[500px] h-[500px] rounded-full bg-indigo-500/[0.06] blur-[120px]"></div>
     <div
       class="absolute bottom-0 left-1/2 w-[400px] h-[300px] -translate-x-1/2 rounded-full bg-blue-800/[0.05] blur-[100px]">
     </div>
@@ -246,7 +307,7 @@
             <h1
               class="font-display text-[2.6rem] lg:text-[3.6rem] xl:text-[4.2rem] font-extrabold leading-[1.05] tracking-[-0.03em] anim-fade-up delay-300">
               <span
-                class="text-transparent bg-clip-text bg-gradient-to-r from-blue-500 via-blue-400 to-slate-500">Digital
+                class="headline-shimmer text-transparent bg-clip-text bg-gradient-to-r from-blue-500 via-blue-400 to-slate-500">Digital
                 Excellence</span>
             </h1>
             <h1
@@ -276,17 +337,17 @@
 
           <div class="flex items-center gap-6 pt-2 anim-fade-up delay-700">
             <div class="flex flex-col">
-              <span class="font-display text-2xl font-bold dark:text-white text-slate-900">120+</span>
+              <span class="font-display text-2xl font-bold dark:text-white text-slate-900" data-count="120" data-suffix="+">120+</span>
               <span class="text-xs dark:text-slate-500 text-slate-400 mt-0.5">Projects Delivered</span>
             </div>
             <div class="w-px h-10 dark:bg-[#1E2D45] bg-slate-200"></div>
             <div class="flex flex-col">
-              <span class="font-display text-2xl font-bold dark:text-white text-slate-900">8 yrs</span>
+              <span class="font-display text-2xl font-bold dark:text-white text-slate-900" data-count="8" data-suffix=" yrs">8 yrs</span>
               <span class="text-xs dark:text-slate-500 text-slate-400 mt-0.5">Industry Experience</span>
             </div>
             <div class="w-px h-10 dark:bg-[#1E2D45] bg-slate-200"></div>
             <div class="flex flex-col">
-              <span class="font-display text-2xl font-bold dark:text-white text-slate-900">99%</span>
+              <span class="font-display text-2xl font-bold dark:text-white text-slate-900" data-count="99" data-suffix="%">99%</span>
               <span class="text-xs dark:text-slate-500 text-slate-400 mt-0.5">Client Satisfaction</span>
             </div>
           </div>
@@ -493,8 +554,8 @@
 
         <!-- Left — text -->
         <div class="space-y-8">
-          <div
-            class="inline-flex items-center gap-2 px-3 py-1.5 rounded-full dark:bg-blue-500/10 bg-blue-500/5 border dark:border-blue-500/20 border-blue-500/15 text-blue-500 text-[10px] font-bold tracking-[0.2em] uppercase">
+          <div data-sr-delay="0"
+            class="sr-item inline-flex items-center gap-2 px-3 py-1.5 rounded-full dark:bg-blue-500/10 bg-blue-500/5 border dark:border-blue-500/20 border-blue-500/15 text-blue-500 text-[10px] font-bold tracking-[0.2em] uppercase">
             <span class="relative flex h-1.5 w-1.5">
               <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-primary opacity-75"></span>
               <span class="relative inline-flex rounded-full h-1.5 w-1.5 bg-primary"></span>
@@ -502,18 +563,18 @@
             Who We Are
           </div>
 
-          <h2
-            class="font-display text-4xl md:text-5xl xl:text-[52px] leading-[1.1] font-extrabold tracking-[-0.03em] dark:text-white text-slate-900">
+          <h2 data-sr-delay="100"
+            class="sr-item font-display text-4xl md:text-5xl xl:text-[52px] leading-[1.1] font-extrabold tracking-[-0.03em] dark:text-white text-slate-900">
             We Are a Full-Service<br />
             <span class="text-primary">Digital Engineering Studio</span>
           </h2>
 
           <div class="space-y-5 max-w-xl">
-            <p class="dark:text-slate-400 text-slate-500 text-lg leading-relaxed">
+            <p data-sr-delay="200" class="sr-item dark:text-slate-400 text-slate-500 text-lg leading-relaxed">
               At OriginLabs, we bridge the gap between visionary ideas and robust engineering. We don't just build
               websites — we architect digital ecosystems that drive growth and define categories.
             </p>
-            <p class="dark:text-slate-400 text-slate-500 text-lg leading-relaxed">
+            <p data-sr-delay="300" class="sr-item dark:text-slate-400 text-slate-500 text-lg leading-relaxed">
               Our multidisciplinary team combines technical excellence with strategic product thinking, ensuring every
               line of code serves a measurable business purpose.
             </p>
@@ -523,8 +584,8 @@
         <!-- Right — 2×2 feature cards -->
         <div class="grid grid-cols-2 gap-4">
 
-          <div
-            class="who-card p-7 rounded-xl dark:bg-[#111927] bg-white border dark:border-[#1E2D45] border-slate-200 transition-all duration-300 hover:border-primary/50 dark:hover:shadow-[0_0_24px_rgba(37,99,235,0.12)] hover:shadow-[0_0_24px_rgba(37,99,235,0.08)] hover:-translate-y-0.5">
+          <div data-sr-delay="200"
+            class="sr-item who-card p-7 rounded-xl dark:bg-[#111927] bg-white border dark:border-[#1E2D45] border-slate-200 transition-all duration-300 hover:border-primary/50 dark:hover:shadow-[0_0_24px_rgba(37,99,235,0.12)] hover:shadow-[0_0_24px_rgba(37,99,235,0.08)] hover:-translate-y-0.5">
             <div class="w-10 h-10 rounded-lg bg-blue-500/10 flex items-center justify-center mb-5">
               <span class="material-symbols-outlined text-primary" style="font-size:20px;">layers</span>
             </div>
@@ -533,8 +594,8 @@
               scale with your evolving needs.</p>
           </div>
 
-          <div
-            class="who-card p-7 rounded-xl dark:bg-[#111927] bg-white border dark:border-[#1E2D45] border-slate-200 transition-all duration-300 hover:border-primary/50 dark:hover:shadow-[0_0_24px_rgba(37,99,235,0.12)] hover:shadow-[0_0_24px_rgba(37,99,235,0.08)] hover:-translate-y-0.5">
+          <div data-sr-delay="300"
+            class="sr-item who-card p-7 rounded-xl dark:bg-[#111927] bg-white border dark:border-[#1E2D45] border-slate-200 transition-all duration-300 hover:border-primary/50 dark:hover:shadow-[0_0_24px_rgba(37,99,235,0.12)] hover:shadow-[0_0_24px_rgba(37,99,235,0.08)] hover:-translate-y-0.5">
             <div class="w-10 h-10 rounded-lg bg-blue-500/10 flex items-center justify-center mb-5">
               <span class="material-symbols-outlined text-primary" style="font-size:20px;">speed</span>
             </div>
@@ -543,8 +604,8 @@
               Fast is the baseline, not a bonus.</p>
           </div>
 
-          <div
-            class="who-card p-7 rounded-xl dark:bg-[#111927] bg-white border dark:border-[#1E2D45] border-slate-200 transition-all duration-300 hover:border-primary/50 dark:hover:shadow-[0_0_24px_rgba(37,99,235,0.12)] hover:shadow-[0_0_24px_rgba(37,99,235,0.08)] hover:-translate-y-0.5">
+          <div data-sr-delay="400"
+            class="sr-item who-card p-7 rounded-xl dark:bg-[#111927] bg-white border dark:border-[#1E2D45] border-slate-200 transition-all duration-300 hover:border-primary/50 dark:hover:shadow-[0_0_24px_rgba(37,99,235,0.12)] hover:shadow-[0_0_24px_rgba(37,99,235,0.08)] hover:-translate-y-0.5">
             <div class="w-10 h-10 rounded-lg bg-blue-500/10 flex items-center justify-center mb-5">
               <span class="material-symbols-outlined text-primary" style="font-size:20px;">shield</span>
             </div>
@@ -553,8 +614,8 @@
               built into the foundation of every project.</p>
           </div>
 
-          <div
-            class="who-card p-7 rounded-xl dark:bg-[#111927] bg-white border dark:border-[#1E2D45] border-slate-200 transition-all duration-300 hover:border-primary/50 dark:hover:shadow-[0_0_24px_rgba(37,99,235,0.12)] hover:shadow-[0_0_24px_rgba(37,99,235,0.08)] hover:-translate-y-0.5">
+          <div data-sr-delay="500"
+            class="sr-item who-card p-7 rounded-xl dark:bg-[#111927] bg-white border dark:border-[#1E2D45] border-slate-200 transition-all duration-300 hover:border-primary/50 dark:hover:shadow-[0_0_24px_rgba(37,99,235,0.12)] hover:shadow-[0_0_24px_rgba(37,99,235,0.08)] hover:-translate-y-0.5">
             <div class="w-10 h-10 rounded-lg bg-blue-500/10 flex items-center justify-center mb-5">
               <span class="material-symbols-outlined text-primary" style="font-size:20px;">support_agent</span>
             </div>
@@ -572,19 +633,19 @@
       <!-- ── WHAT WE DO ── -->
       <div class="space-y-14">
         <div class="text-center space-y-5">
-          <div
-            class="inline-flex items-center gap-2 px-3 py-1.5 rounded-full dark:bg-blue-500/10 bg-blue-500/5 border dark:border-blue-500/20 border-blue-500/15 text-blue-500 text-[10px] font-bold tracking-[0.2em] uppercase">
+          <div data-sr-delay="0"
+            class="sr-item inline-flex items-center gap-2 px-3 py-1.5 rounded-full dark:bg-blue-500/10 bg-blue-500/5 border dark:border-blue-500/20 border-blue-500/15 text-blue-500 text-[10px] font-bold tracking-[0.2em] uppercase">
             <span class="relative flex h-1.5 w-1.5">
               <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-primary opacity-75"></span>
               <span class="relative inline-flex rounded-full h-1.5 w-1.5 bg-primary"></span>
             </span>
             What We Do
           </div>
-          <h2
-            class="font-display text-4xl md:text-5xl font-extrabold tracking-[-0.03em] dark:text-white text-slate-900">
+          <h2 data-sr-delay="100"
+            class="sr-item font-display text-4xl md:text-5xl font-extrabold tracking-[-0.03em] dark:text-white text-slate-900">
             Everything You Need.<br class="hidden sm:block" /> Nothing You Don't.
           </h2>
-          <p class="dark:text-slate-400 text-slate-500 text-lg max-w-xl mx-auto">From discovery to deployment — and
+          <p data-sr-delay="200" class="sr-item dark:text-slate-400 text-slate-500 text-lg max-w-xl mx-auto">From discovery to deployment — and
             everything in between.</p>
         </div>
 
@@ -697,19 +758,19 @@
 
       <!-- Section header -->
       <div class="text-center mb-16">
-        <div
-          class="inline-flex items-center gap-2 px-3 py-1 rounded-full dark:bg-primary/10 bg-primary/5 border dark:border-primary/20 border-primary/15 text-primary text-xs font-bold tracking-widest uppercase mb-5">
+        <div data-sr-delay="0"
+          class="sr-item inline-flex items-center gap-2 px-3 py-1 rounded-full dark:bg-primary/10 bg-primary/5 border dark:border-primary/20 border-primary/15 text-primary text-xs font-bold tracking-widest uppercase mb-5">
           <span class="relative flex h-2 w-2">
             <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-primary opacity-75"></span>
             <span class="relative inline-flex rounded-full h-2 w-2 bg-primary"></span>
           </span>
           Systems Online
         </div>
-        <h2
-          class="font-display text-4xl md:text-5xl lg:text-6xl font-bold tracking-tight dark:text-white text-slate-900 mb-5">
+        <h2 data-sr-delay="100"
+          class="sr-item font-display text-4xl md:text-5xl lg:text-6xl font-bold tracking-tight dark:text-white text-slate-900 mb-5">
           The Development <span class="text-primary italic">Laboratory</span>
         </h2>
-        <p class="text-lg dark:text-slate-400 text-slate-500 max-w-2xl mx-auto leading-relaxed">
+        <p data-sr-delay="200" class="sr-item text-lg dark:text-slate-400 text-slate-500 max-w-2xl mx-auto leading-relaxed">
           Precision-engineered digital solutions for the modern web. Select an architectural experiment to begin the
           synthesis process.
         </p>
@@ -719,8 +780,8 @@
       <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
 
         <!-- WordPress -->
-        <div
-          class="service-card flex flex-col dark:bg-[#111927] bg-white border dark:border-slate-800 border-slate-200 rounded-xl p-6 transition-all duration-300 group">
+        <div data-sr-delay="200"
+          class="sr-item service-card flex flex-col dark:bg-[#111927] bg-white border dark:border-slate-800 border-slate-200 rounded-xl p-6 transition-all duration-300 group">
           <div class="flex justify-between items-start mb-6">
             <span
               class="font-mono text-[10px] px-2 py-1 rounded dark:bg-slate-900 bg-slate-100 border dark:border-slate-700 border-slate-200 dark:text-primary text-slate-500 font-bold">WP
@@ -751,8 +812,8 @@
         </div>
 
         <!-- Drupal -->
-        <div
-          class="service-card flex flex-col dark:bg-[#111927] bg-white border dark:border-slate-800 border-slate-200 rounded-xl p-6 transition-all duration-300 group">
+        <div data-sr-delay="300"
+          class="sr-item service-card flex flex-col dark:bg-[#111927] bg-white border dark:border-slate-800 border-slate-200 rounded-xl p-6 transition-all duration-300 group">
           <div class="flex justify-between items-start mb-6">
             <span
               class="font-mono text-[10px] px-2 py-1 rounded dark:bg-slate-900 bg-slate-100 border dark:border-slate-700 border-slate-200 dark:text-primary text-slate-500 font-bold">DRUPAL
@@ -783,8 +844,8 @@
         </div>
 
         <!-- MERN -->
-        <div
-          class="service-card flex flex-col dark:bg-[#111927] bg-white border dark:border-slate-800 border-slate-200 rounded-xl p-6 transition-all duration-300 group">
+        <div data-sr-delay="400"
+          class="sr-item service-card flex flex-col dark:bg-[#111927] bg-white border dark:border-slate-800 border-slate-200 rounded-xl p-6 transition-all duration-300 group">
           <div class="flex justify-between items-start mb-6">
             <span
               class="font-mono text-[10px] px-2 py-1 rounded dark:bg-slate-900 bg-slate-100 border dark:border-slate-700 border-slate-200 dark:text-primary text-slate-500 font-bold">M
@@ -814,8 +875,8 @@
         </div>
 
         <!-- Security & Ops -->
-        <div
-          class="service-card flex flex-col dark:bg-[#111927] bg-white border dark:border-slate-800 border-slate-200 rounded-xl p-6 transition-all duration-300 group">
+        <div data-sr-delay="500"
+          class="sr-item service-card flex flex-col dark:bg-[#111927] bg-white border dark:border-slate-800 border-slate-200 rounded-xl p-6 transition-all duration-300 group">
           <div class="flex justify-between items-start mb-6">
             <span
               class="font-mono text-[10px] px-2 py-1 rounded dark:bg-slate-900 bg-slate-100 border dark:border-slate-700 border-slate-200 dark:text-primary text-slate-500 font-bold">S
@@ -873,16 +934,16 @@
 
       <!-- Section header -->
       <div class="text-center mb-24">
-        <div
-          class="inline-flex items-center gap-2 px-3 py-1 rounded-full dark:bg-primary/10 bg-primary/5 border dark:border-primary/20 border-primary/15 text-primary text-xs font-bold tracking-[0.2em] uppercase mb-6">
+        <div data-sr-delay="0"
+          class="sr-item inline-flex items-center gap-2 px-3 py-1 rounded-full dark:bg-primary/10 bg-primary/5 border dark:border-primary/20 border-primary/15 text-primary text-xs font-bold tracking-[0.2em] uppercase mb-6">
           <span class="relative flex h-2 w-2">
             <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-primary opacity-75"></span>
             <span class="relative inline-flex rounded-full h-2 w-2 bg-primary"></span>
           </span>
           How We Work
         </div>
-        <h2
-          class="font-display text-4xl md:text-5xl lg:text-6xl font-bold tracking-tight dark:text-white text-slate-900">
+        <h2 data-sr-delay="100"
+          class="sr-item font-display text-4xl md:text-5xl lg:text-6xl font-bold tracking-tight dark:text-white text-slate-900">
           A Process Built <span class="text-primary italic">for Clarity.</span>
         </h2>
       </div>
@@ -895,7 +956,7 @@
         <div class="space-y-24 md:space-y-32">
 
           <!-- Step 01 -->
-          <div class="group relative pl-12 md:pl-20">
+          <div data-sr-delay="0" class="sr-item group relative pl-12 md:pl-20">
             <div
               class="absolute left-[-5px] top-2 w-[12px] h-[12px] rounded-full bg-primary border-2 dark:border-[#0C1220] border-white z-10 transition-all duration-300 group-hover:scale-125"
               style="box-shadow: 0 0 15px rgba(37,99,235,0.6)"></div>
@@ -916,7 +977,7 @@
           </div>
 
           <!-- Step 02 -->
-          <div class="group relative pl-12 md:pl-20">
+          <div data-sr-delay="100" class="sr-item group relative pl-12 md:pl-20">
             <div
               class="absolute left-[-5px] top-2 w-[12px] h-[12px] rounded-full bg-primary border-2 dark:border-[#0C1220] border-white z-10 transition-all duration-300 group-hover:scale-125"
               style="box-shadow: 0 0 15px rgba(37,99,235,0.6)"></div>
@@ -938,7 +999,7 @@
           </div>
 
           <!-- Step 03 -->
-          <div class="group relative pl-12 md:pl-20">
+          <div data-sr-delay="200" class="sr-item group relative pl-12 md:pl-20">
             <div
               class="absolute left-[-5px] top-2 w-[12px] h-[12px] rounded-full bg-primary border-2 dark:border-[#0C1220] border-white z-10 transition-all duration-300 group-hover:scale-125"
               style="box-shadow: 0 0 15px rgba(37,99,235,0.6)"></div>
@@ -959,7 +1020,7 @@
           </div>
 
           <!-- Step 04 -->
-          <div class="group relative pl-12 md:pl-20">
+          <div data-sr-delay="300" class="sr-item group relative pl-12 md:pl-20">
             <div
               class="absolute left-[-5px] top-2 w-[12px] h-[12px] rounded-full bg-primary border-2 dark:border-[#0C1220] border-white z-10 transition-all duration-300 group-hover:scale-125"
               style="box-shadow: 0 0 15px rgba(37,99,235,0.6)"></div>
@@ -1008,6 +1069,232 @@
     }
   </script>
   <script src="includes.js"></script>
+
+  <!-- ═══════════════════════════════════════════
+       ADVANCED ANIMATION SYSTEM
+  ════════════════════════════════════════════ -->
+  <script>
+  (function () {
+    'use strict';
+
+    var reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    var pointerFine   = window.matchMedia('(pointer: fine)').matches;
+
+    /* ───────────────────────────────────────────
+       1. SCROLL REVEAL
+       Elements with .sr-item reveal on viewport
+       entry with stagger via data-sr-delay (ms).
+    ─────────────────────────────────────────── */
+    function setupScrollReveal() {
+      var items = document.querySelectorAll('.sr-item');
+      if (!items.length) return;
+
+      var observer = new IntersectionObserver(function (entries) {
+        entries.forEach(function (entry) {
+          if (!entry.isIntersecting) return;
+          var el    = entry.target;
+          var delay = parseInt(el.dataset.srDelay || '0', 10);
+          el.style.transitionDelay = delay + 'ms';
+          el.classList.add('visible');
+          // Clear delay after reveal so hover transitions aren't delayed
+          setTimeout(function () { el.style.transitionDelay = ''; }, delay + 700);
+          observer.unobserve(el);
+        });
+      }, { threshold: 0.12, rootMargin: '0px 0px -40px 0px' });
+
+      items.forEach(function (el) { observer.observe(el); });
+    }
+
+    /* ───────────────────────────────────────────
+       2. MAGNETIC CURSOR
+       Primary CTA (.btn-glow) pulls toward cursor
+       within 80px on pointer:fine devices.
+    ─────────────────────────────────────────── */
+    function setupMagneticCursor() {
+      if (!pointerFine) return;
+
+      document.querySelectorAll('.btn-glow').forEach(function (btn) {
+        var curX = 0, curY = 0, tgtX = 0, tgtY = 0, animating = false;
+        var RANGE = 80, STRENGTH = 0.42;
+
+        document.addEventListener('mousemove', function (e) {
+          var r  = btn.getBoundingClientRect();
+          var bx = r.left + r.width  / 2;
+          var by = r.top  + r.height / 2;
+          var dist = Math.hypot(e.clientX - bx, e.clientY - by);
+
+          if (dist < RANGE) {
+            var pull = 1 - dist / RANGE;
+            tgtX = (e.clientX - bx) * pull * STRENGTH;
+            tgtY = (e.clientY - by) * pull * STRENGTH;
+          } else {
+            tgtX = 0; tgtY = 0;
+          }
+
+          if (!animating) { animating = true; tick(); }
+        });
+
+        function lerp(a, b, t) { return a + (b - a) * t; }
+
+        function tick() {
+          curX = lerp(curX, tgtX, 0.15);
+          curY = lerp(curY, tgtY, 0.15);
+          btn.style.transform = 'translate(' + curX.toFixed(2) + 'px,' + curY.toFixed(2) + 'px)';
+
+          if (Math.abs(curX - tgtX) > 0.05 || Math.abs(curY - tgtY) > 0.05) {
+            requestAnimationFrame(tick);
+          } else {
+            btn.style.transform = 'translate(' + tgtX + 'px,' + tgtY + 'px)';
+            animating = false;
+          }
+        }
+      });
+    }
+
+    /* ───────────────────────────────────────────
+       4. SERVICE CARD 3D TILT
+       Cards tilt up to 8deg following cursor on
+       pointer:fine. Springs back on mouseleave.
+    ─────────────────────────────────────────── */
+    function setupCardTilt() {
+      if (!pointerFine) return;
+
+      document.querySelectorAll('.service-card').forEach(function (card) {
+        card.addEventListener('mousemove', function (e) {
+          var r  = card.getBoundingClientRect();
+          var x  = e.clientX - r.left  - r.width  / 2;
+          var y  = e.clientY - r.top   - r.height / 2;
+          var rY =  (x / (r.width  / 2)) * 8;
+          var rX = -(y / (r.height / 2)) * 8;
+          card.style.transform  = 'perspective(600px) rotateX(' + rX + 'deg) rotateY(' + rY + 'deg)';
+          card.style.transition = 'transform 0.1s ease, box-shadow 0.3s ease, border-color 0.3s ease';
+        });
+
+        card.addEventListener('mouseleave', function () {
+          card.style.transform  = '';
+          card.style.transition = 'transform 0.4s ease, box-shadow 0.3s ease, border-color 0.3s ease';
+          setTimeout(function () { card.style.transition = ''; }, 420);
+        });
+      });
+    }
+
+    /* ───────────────────────────────────────────
+       5. COUNTER ANIMATION
+       Stats count 0 → target on viewport entry.
+       easeOutQuart curve, 1.8s duration.
+    ─────────────────────────────────────────── */
+    function setupCounters() {
+      var counters = document.querySelectorAll('[data-count]');
+      if (!counters.length) return;
+
+      // Reset display immediately (elements are opacity:0 during hero fade-in)
+      counters.forEach(function (el) {
+        el.textContent = '0' + (el.dataset.suffix || '');
+      });
+
+      function easeOutQuart(t) { return 1 - Math.pow(1 - t, 4); }
+
+      function animateCount(el) {
+        var target   = parseInt(el.dataset.count,  10);
+        var suffix   = el.dataset.suffix || '';
+        var duration = 1800;
+        var start    = performance.now();
+
+        function tick(now) {
+          var t       = Math.min((now - start) / duration, 1);
+          var current = Math.round(easeOutQuart(t) * target);
+          el.textContent = current + suffix;
+          if (t < 1) requestAnimationFrame(tick);
+        }
+        requestAnimationFrame(tick);
+      }
+
+      var observer = new IntersectionObserver(function (entries) {
+        entries.forEach(function (entry) {
+          if (entry.isIntersecting) {
+            animateCount(entry.target);
+            observer.unobserve(entry.target);
+          }
+        });
+      }, { threshold: 0.5 });
+
+      counters.forEach(function (el) { observer.observe(el); });
+    }
+
+    /* ───────────────────────────────────────────
+       6. MARQUEE PAUSE ON TOUCH
+       touchstart pauses, touchend resumes.
+       Works alongside the existing CSS :hover pause.
+    ─────────────────────────────────────────── */
+    function setupMarqueeTouchPause() {
+      document.querySelectorAll('.ol-marquee-track').forEach(function (track) {
+        function pause() {
+          track.querySelectorAll('.ol-marquee-left, .ol-marquee-right').forEach(function (el) {
+            el.style.animationPlayState = 'paused';
+          });
+        }
+        function resume() {
+          track.querySelectorAll('.ol-marquee-left, .ol-marquee-right').forEach(function (el) {
+            el.style.animationPlayState = '';
+          });
+        }
+        track.addEventListener('touchstart',  pause,  { passive: true });
+        track.addEventListener('touchend',    resume, { passive: true });
+        track.addEventListener('touchcancel', resume, { passive: true });
+      });
+    }
+
+    /* ───────────────────────────────────────────
+       7. AMBIENT ORB PARALLAX
+       Hero orbs drift slowly toward cursor on
+       pointer:fine (max 20px, 0.05 lerp).
+    ─────────────────────────────────────────── */
+    function setupOrbParallax() {
+      if (!pointerFine) return;
+
+      var orb1 = document.getElementById('orb-1');
+      var orb2 = document.getElementById('orb-2');
+      if (!orb1 && !orb2) return;
+
+      var o1x = 0, o1y = 0, o2x = 0, o2y = 0;
+      var t1x = 0, t1y = 0, t2x = 0, t2y = 0;
+      var MAX = 20, LERP = 0.05;
+
+      document.addEventListener('mousemove', function (e) {
+        var nx = (e.clientX / window.innerWidth)  * 2 - 1; // -1…1
+        var ny = (e.clientY / window.innerHeight) * 2 - 1;
+        t1x =  nx * MAX;      t1y =  ny * MAX;
+        t2x = -nx * MAX * 0.7; t2y = -ny * MAX * 0.7; // second orb counter-drifts
+      });
+
+      function lerp(a, b, t) { return a + (b - a) * t; }
+
+      function rafOrbs() {
+        o1x = lerp(o1x, t1x, LERP); o1y = lerp(o1y, t1y, LERP);
+        o2x = lerp(o2x, t2x, LERP); o2y = lerp(o2y, t2y, LERP);
+        if (orb1) orb1.style.transform = 'translate(' + o1x.toFixed(1) + 'px,' + o1y.toFixed(1) + 'px)';
+        if (orb2) orb2.style.transform = 'translate(' + o2x.toFixed(1) + 'px,' + o2y.toFixed(1) + 'px)';
+        requestAnimationFrame(rafOrbs);
+      }
+      rafOrbs();
+    }
+
+    /* ── INIT ── */
+    document.addEventListener('DOMContentLoaded', function () {
+      // Marquee touch pause is not a motion effect — always active
+      setupMarqueeTouchPause();
+
+      if (!reducedMotion) {
+        setupScrollReveal();
+        setupMagneticCursor();
+        setupCardTilt();
+        setupCounters();
+        setupOrbParallax();
+      }
+    });
+
+  })();
+  </script>
 
 </body>
 
